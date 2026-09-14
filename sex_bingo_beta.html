@@ -962,7 +962,15 @@ function showScreen(id){
   }
   _renderScreen(id);
 }
-function navBack(){ if(navIndex > 0){ navIndex--; _renderScreen(navHistory[navIndex]); } }
+function navBack(){
+  if(navIndex > 0){
+    navIndex--;
+    _renderScreen(navHistory[navIndex]);
+  } else {
+    // некуда идти назад — уходим в меню, чтобы не застрять
+    _renderScreen('menu');
+  }
+}
 function navForward(){ if(navIndex < navHistory.length - 1){ navIndex++; _renderScreen(navHistory[navIndex]); } }
 
 let touchStartX = 0, touchStartY = 0, touchStartT = 0;
@@ -2144,13 +2152,18 @@ try{
   document.head.appendChild(link);
 }catch(e){}
 
-const initial = state.lastScreen && document.getElementById('screen-'+state.lastScreen)
-  ? state.lastScreen
-  : 'menu';
-navHistory = [initial];
+// Восстанавливаем только «рабочие» экраны. Служебные (dev/stats/help)
+// при перезапуске всегда отправляют в меню, иначе стрелка ← ведёт в никуда.
+const RESTORABLE = ['host', 'player', 'setup', 'list', 'log', 'manual'];
+const initial = RESTORABLE.includes(state.lastScreen) ? state.lastScreen : 'menu';
+navHistory = ['menu'];
 navIndex = 0;
+if(initial !== 'menu'){
+  navHistory.push(initial);
+  navIndex = 1;
+}
 _renderScreen(initial);
-
+  
 try{
   if(typeof BroadcastChannel === 'function'){
     const myId = Math.random().toString(36).slice(2);
