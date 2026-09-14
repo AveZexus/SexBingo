@@ -1,0 +1,1964 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="theme-color" content="#8b0000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Секс Бинго 18+</title>
+<style>
+@page { size: A4; margin: 12mm; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;-webkit-touch-callout:none}
+:root{
+  --bg:#0f0f0f; --card:#1c1c1c; --card2:#262626; --line:#333;
+  --red:#c00000; --red-d:#8b0000; --red-b:#ff4d5e;
+  --text:#f0f0f0; --muted:#8a8a8a;
+  --light:#2d4a1e; --med:#5c4a0e; --hard:#5c1a1a;
+  --logo-a:#8b0000; --logo-b:#c00000; --logo-c:#e63946;
+}
+body.light{
+  --bg:#f3f3f3; --card:#ffffff; --card2:#e8e8e8; --line:#d0d0d0;
+  --text:#1a1a1a; --muted:#666666;
+  --light:#c8e6b8; --med:#ffeaa7; --hard:#ffc9c9;
+  --logo-a:#c00000; --logo-b:#e63946; --logo-c:#ff8b95;
+}
+html,body{height:100dvh;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;background:var(--bg);color:var(--text);transition:background .2s,color .2s}
+body{display:flex;flex-direction:column;overscroll-behavior-y:none}
+.screen{display:none;flex-direction:column;min-height:100dvh;max-height:100dvh;padding:12px 12px max(14px,env(safe-area-inset-bottom));overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.screen.active{display:flex}
+header{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-shrink:0}
+.back{width:40px;height:40px;border-radius:12px;background:var(--card2);border:none;color:var(--text);font-size:20px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.back:active{background:var(--red-d);color:#fff}
+h1{font-size:17px;font-weight:700;letter-spacing:.5px;flex:1;min-width:0}
+h1 small{display:block;font-size:10px;font-weight:400;color:var(--muted);letter-spacing:1px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{width:40px;height:40px;border-radius:12px;background:var(--card2);border:none;color:var(--text);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+.icon-btn:active{background:var(--red-d);color:#fff}
+
+#screen-menu{overflow-y:auto;position:relative}
+.dev-btn{position:fixed;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:var(--card2);border:1px solid var(--line);color:var(--muted);font-size:16px;cursor:pointer;z-index:60;display:flex;align-items:center;justify-content:center;opacity:.45;font-family:inherit;padding:0}
+.dev-btn:active{opacity:1;background:var(--red-d);color:#fff}
+.logo{text-align:center;padding:26px 14px 20px;border-radius:20px;background:linear-gradient(135deg,var(--logo-a) 0%,var(--logo-b) 60%,var(--logo-c) 100%);margin-bottom:18px;box-shadow:0 8px 32px rgba(192,0,0,.35)}
+.logo h2{font-size:36px;font-weight:900;letter-spacing:4px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.3);line-height:1}
+.logo .dice{font-size:30px;margin-bottom:6px;display:block}
+.logo .slogan{margin-top:12px;font-size:12px;font-style:italic;color:#ffdcdc;letter-spacing:.3px;line-height:1.5}
+body.light .logo .slogan{color:#fff}
+.logo .adult{margin-top:8px;font-size:10px;color:rgba(255,255,255,.65);letter-spacing:2px}
+.big-card{display:flex;align-items:center;gap:14px;padding:18px 16px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:18px;margin-bottom:12px;cursor:pointer;transition:.15s;text-align:left;color:var(--text);width:100%;font-family:inherit}
+.big-card:active{background:var(--card2);transform:scale(.985);border-left-color:var(--red-b)}
+.big-card .big-ico{font-size:34px;flex-shrink:0;line-height:1}
+.big-card .big-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}
+.big-card .big-body b{display:block;font-size:18px;font-weight:800;letter-spacing:.3px}
+.big-card .big-body span{font-size:11.5px;color:var(--muted);line-height:1.35}
+.big-card .big-cta{flex-shrink:0;padding:8px 14px;border-radius:10px;background:var(--red);color:#fff;font-size:12px;font-weight:800;letter-spacing:.5px;white-space:nowrap}
+.small-card{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:.15s;text-align:left;color:var(--text);width:100%;font-family:inherit}
+.small-card:active{background:var(--card2);transform:scale(.985)}
+.small-card .small-ico{font-size:20px;flex-shrink:0}
+.small-card .small-body{flex:1;min-width:0}
+.small-card .small-body b{display:block;font-size:13.5px;font-weight:700;margin-bottom:2px}
+.small-card .small-body span{font-size:10.5px;color:var(--muted);line-height:1.3}
+.help-card{display:flex;align-items:center;gap:12px;padding:14px 16px;background:linear-gradient(135deg,rgba(192,0,0,.12) 0%,rgba(139,0,0,.18) 100%);border:1px solid rgba(255,77,94,.35);border-radius:14px;margin-top:14px;margin-bottom:8px;cursor:pointer;transition:.15s;text-align:left;color:var(--text);width:100%;font-family:inherit}
+.help-card:active{transform:scale(.985)}
+.help-card .help-ico{font-size:24px;flex-shrink:0}
+.help-card .help-body{flex:1;min-width:0}
+.help-card .help-body b{display:block;font-size:14.5px;font-weight:800;color:var(--red-b);margin-bottom:3px;letter-spacing:.3px}
+body.light .help-card .help-body b{color:var(--red-d)}
+.help-card .help-body span{font-size:11px;color:var(--muted);line-height:1.3}
+.help-card .help-arrow{color:var(--red-b);font-size:18px;font-weight:900;flex-shrink:0}
+
+.help-section{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border-left:4px solid var(--red);flex-shrink:0}
+.help-section h2{font-size:15px;font-weight:800;color:var(--red-b);margin-bottom:10px;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
+body.light .help-section h2{color:var(--red-d)}
+.help-section h2 .h-ico{font-size:20px}
+.help-section p{font-size:13px;line-height:1.55;color:var(--text);margin-bottom:8px}
+.help-section p:last-child{margin-bottom:0}
+.help-section ul{list-style:none;padding:0;margin:0}
+.help-section li{font-size:13px;line-height:1.5;color:var(--text);padding:6px 0 6px 22px;position:relative;border-bottom:1px solid rgba(127,127,127,.1)}
+.help-section li:last-child{border-bottom:none}
+.help-section li::before{content:"•";position:absolute;left:8px;top:6px;color:var(--red-b);font-weight:900;font-size:14px}
+.help-section li b{color:var(--red-b);font-weight:700}
+.help-warn{background:linear-gradient(135deg,rgba(192,0,0,.18),rgba(139,0,0,.25));border:1px solid rgba(255,77,94,.4);border-radius:12px;padding:14px 16px;font-size:12.5px;line-height:1.5;color:var(--text);margin-bottom:12px;flex-shrink:0}
+.help-warn b{color:var(--red-b);font-weight:800;display:block;margin-bottom:6px;font-size:13px;letter-spacing:.3px}
+.help-tip{font-size:11.5px;color:var(--muted);font-style:italic;line-height:1.5;padding:10px 12px;background:rgba(127,127,127,.08);border-radius:10px;margin-top:8px}
+
+.host-display{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;min-height:0;overflow:hidden}
+.big-number{font-size:clamp(60px,20vw,110px);font-weight:900;color:var(--red-b);line-height:1;margin-bottom:14px;text-shadow:0 0 40px rgba(255,77,94,.4);transition:transform .2s}
+.big-number.pop{transform:scale(1.15)}
+.cat-tag{display:inline-block;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px}
+.cat-tag.c0{background:var(--light);color:#2c5c0f}
+.cat-tag.c1{background:var(--med);color:#6b5100}
+.cat-tag.c2{background:var(--hard);color:#8b1a1a}
+body:not(.light) .cat-tag.c0{color:#b6e39b}
+body:not(.light) .cat-tag.c1{color:#ffe066}
+body:not(.light) .cat-tag.c2{color:#ff9d9d}
+.wish-text{font-size:clamp(15px,4.5vw,22px);line-height:1.35;font-weight:500;max-width:600px;padding:0 6px;word-wrap:break-word}
+.host-history{margin-top:10px;padding:8px 12px;background:var(--card);border-radius:10px;max-height:64px;overflow-y:auto;font-size:11px;line-height:1.6;color:var(--muted);flex-shrink:0}
+.host-history b{color:var(--text);font-weight:600}
+.host-bingo-alert{display:none;margin-top:10px;padding:14px;background:linear-gradient(135deg,#8b0000,#e63946);border-radius:12px;text-align:center;font-weight:900;font-size:17px;letter-spacing:2px;color:#ffd700;text-shadow:0 2px 8px rgba(0,0,0,.5);animation:pulse 1s infinite alternate;flex-shrink:0}
+.host-bingo-alert.show{display:block}
+.actions{display:flex;gap:8px;margin-top:10px;flex-shrink:0}
+.btn{flex:1;padding:16px;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.5px;transition:.15s;color:#fff}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:linear-gradient(135deg,#c00000,#e63946);box-shadow:0 4px 16px rgba(192,0,0,.4)}
+.btn-primary:disabled{background:var(--card2);color:var(--muted);box-shadow:none;cursor:default}
+.btn-secondary{background:var(--card2);color:var(--text);flex:0 0 auto;padding:16px 20px}
+
+.player-input{display:flex;gap:8px;margin-bottom:12px;flex-shrink:0;width:100%;max-width:100%}
+.player-input input{flex:1 1 0;min-width:0;padding:12px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--text);font-size:20px;font-weight:700;text-align:center;font-family:inherit;outline:none;letter-spacing:2px}
+.player-input input:focus{border-color:var(--red)}
+.player-input input::placeholder{color:var(--muted);font-weight:400;letter-spacing:0}
+.player-input button{flex:0 0 60px;padding:0;background:var(--red);color:#fff;border:none;border-radius:12px;font-size:22px;cursor:pointer;font-family:inherit}
+.player-input button:active{background:var(--red-d)}
+.card-label{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);margin:6px 0;text-transform:uppercase;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.card-label .score{color:var(--red-b)}
+.grid{display:grid;gap:6px;margin-bottom:14px;width:100%}
+.cell{aspect-ratio:1;min-height:60px;background:var(--card);border:2px solid var(--line);border-radius:10px;padding:4px;display:flex;align-items:center;justify-content:center;text-align:center;position:relative;overflow:hidden;cursor:pointer;transition:.2s}
+.cell .num{position:absolute;top:4px;left:6px;font-size:14px;font-weight:700;color:var(--muted);line-height:1;z-index:1;letter-spacing:0}
+.cell .t{font-size:clamp(10px,3vw,15px);font-weight:500;line-height:1.05;letter-spacing:-.3px;padding:14px 2px 2px;word-break:break-word;hyphens:auto}
+.cell.hit{background:rgba(192,0,0,.15);border-color:var(--red-b);opacity:.55}
+body.light .cell.hit{background:rgba(192,0,0,.08)}
+.cell.hit .t,.cell.hit .num{text-decoration:line-through;text-decoration-color:var(--red-b);text-decoration-thickness:2px}
+.cell.bingo{background:linear-gradient(135deg,#8b0000,#e63946);border-color:#ffd700;opacity:1;color:#fff;animation:pulse .8s ease-in-out infinite alternate}
+.cell.bingo .num,.cell.bingo .t{color:#fff}
+@keyframes pulse{from{box-shadow:0 0 0 0 rgba(255,215,0,.7)}to{box-shadow:0 0 0 8px rgba(255,215,0,0)}}
+.bingo-banner{margin-top:8px;padding:14px;background:linear-gradient(135deg,#8b0000,#e63946);border-radius:14px;text-align:center;font-weight:900;font-size:22px;letter-spacing:3px;color:#ffd700;text-shadow:0 2px 8px rgba(0,0,0,.5);animation:pulse 1s infinite alternate;display:none;flex-shrink:0}
+.bingo-banner.show{display:block}
+
+.list-search{width:100%;padding:12px 14px;border-radius:12px;background:var(--card);border:2px solid var(--line);color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-bottom:10px;flex-shrink:0}
+.list-search:focus{border-color:var(--red)}
+.list{flex:1;overflow-y:auto;padding-bottom:12px;-webkit-overflow-scrolling:touch;min-height:0}
+.item{display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:10px;margin-bottom:5px;background:var(--card);border-left:4px solid var(--line)}
+.item.c0{border-left-color:#4a7d2c;background:linear-gradient(90deg,rgba(74,125,44,.15),var(--card))}
+.item.c1{border-left-color:#a68a1c;background:linear-gradient(90deg,rgba(166,138,28,.15),var(--card))}
+.item.c2{border-left-color:#a03b3b;background:linear-gradient(90deg,rgba(160,59,59,.15),var(--card))}
+.item .n{font-size:12px;font-weight:800;color:var(--muted);min-width:30px;text-align:right;padding-top:2px}
+.item .t{font-size:12.5px;line-height:1.4;flex:1}
+.legend{display:flex;gap:8px;margin-bottom:10px;font-size:10px;color:var(--muted);flex-wrap:wrap;flex-shrink:0}
+.legend span{display:flex;align-items:center;gap:4px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.legend .d0{background:#4a7d2c}.legend .d1{background:#a68a1c}.legend .d2{background:#a03b3b}
+
+.setup-hero{background:var(--card);border-radius:16px;padding:18px;margin-bottom:14px;border:1px solid var(--line)}
+.setup-hero h2{font-size:16px;margin-bottom:6px;color:var(--red-b)}
+body.light .setup-hero h2{color:var(--red-d)}
+.setup-hero p{font-size:12px;color:var(--muted);line-height:1.5}
+.check-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);border-radius:14px;margin-bottom:10px;cursor:pointer;user-select:none;border:2px solid transparent;transition:.15s}
+.check-row:active{background:var(--card2)}
+.check-row input{width:22px;height:22px;accent-color:var(--red);flex-shrink:0;pointer-events:none}
+.check-row .lbl{flex:1;font-size:14px;line-height:1.3}
+.check-row .lbl small{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.check-row.checked{border-color:var(--red);background:var(--card2)}
+.layout-pick{display:flex;gap:8px;margin-bottom:14px}
+.layout-btn{flex:1;padding:14px 8px;border-radius:12px;background:var(--card);border:2px solid var(--line);color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-align:center}
+.layout-btn small{display:block;font-size:10px;font-weight:500;margin-top:3px}
+.layout-btn.active{border-color:var(--red);color:var(--text);background:var(--card2)}
+.layout-btn.active small{color:var(--red-b)}
+
+.tabs{display:flex;gap:6px;margin-bottom:10px;flex-shrink:0}
+.tab{flex:1;padding:12px;border-radius:12px;background:var(--card);border:2px solid var(--line);color:var(--muted);font-family:inherit;font-size:13px;font-weight:700;cursor:pointer;letter-spacing:.5px}
+.tab.active{border-color:var(--red);color:var(--text);background:var(--card2)}
+.tab .prog{display:block;font-size:10px;font-weight:500;color:var(--muted);margin-top:2px;letter-spacing:0}
+.tab.active .prog{color:var(--red-b)}
+.manual-item{cursor:pointer;position:relative;padding-right:36px}
+.manual-item.selected{border-left-color:var(--red-b);background:rgba(192,0,0,.18)}
+.manual-item.selected::after{content:"✓";position:absolute;right:12px;top:50%;transform:translateY(-50%);color:var(--red-b);font-weight:900;font-size:16px}
+
+.dev-warn{padding:10px 14px;background:rgba(192,0,0,.15);border-left:3px solid var(--red);border-radius:10px;font-size:11.5px;line-height:1.45;color:var(--red-b);margin-bottom:12px;flex-shrink:0}
+.dev-add{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;flex-shrink:0}
+.dev-add input{padding:12px 14px;border-radius:12px;background:var(--card);border:2px solid var(--line);color:var(--text);font-size:14px;font-family:inherit;outline:none}
+.dev-add input:focus{border-color:var(--red)}
+.dev-cat-pick{display:flex;gap:6px}
+.cat-btn{flex:1;padding:10px;border-radius:10px;border:2px solid var(--line);background:var(--card);color:var(--muted);font-family:inherit;font-size:11px;font-weight:700;letter-spacing:.5px;cursor:pointer}
+.cat-btn.active.c0{border-color:#4a7d2c;color:#4a7d2c;background:rgba(74,125,44,.15)}
+.cat-btn.active.c1{border-color:#a68a1c;color:#a68a1c;background:rgba(166,138,28,.15)}
+.cat-btn.active.c2{border-color:#a03b3b;color:#a03b3b;background:rgba(160,59,59,.15)}
+.dev-item{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:10px;margin-bottom:5px;background:var(--card);border-left:4px solid var(--line)}
+.dev-item.c0{border-left-color:#4a7d2c;background:linear-gradient(90deg,rgba(74,125,44,.15),var(--card))}
+.dev-item.c1{border-left-color:#a68a1c;background:linear-gradient(90deg,rgba(166,138,28,.15),var(--card))}
+.dev-item.c2{border-left-color:#a03b3b;background:linear-gradient(90deg,rgba(160,59,59,.15),var(--card))}
+.dev-num{font-size:11px;font-weight:800;color:var(--muted);min-width:26px;text-align:right;flex-shrink:0}
+.dev-text{flex:1;font-size:12.5px;line-height:1.3;word-break:break-word;min-width:0}
+.dev-cat-badge{font-size:8.5px;font-weight:800;letter-spacing:.5px;padding:3px 6px;border-radius:6px;flex-shrink:0}
+.dev-cat-badge.c0{background:var(--light);color:#2c5c0f}
+.dev-cat-badge.c1{background:var(--med);color:#6b5100}
+.dev-cat-badge.c2{background:var(--hard);color:#8b1a1a}
+body:not(.light) .dev-cat-badge.c0{color:#b6e39b}
+body:not(.light) .dev-cat-badge.c1{color:#ffe066}
+body:not(.light) .dev-cat-badge.c2{color:#ff9d9d}
+.dev-icon{width:32px;height:32px;border-radius:8px;background:var(--card2);border:none;color:var(--text);font-size:14px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
+.dev-icon:active{background:var(--red-d);color:#fff}
+.dev-section{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px;border-left:4px solid var(--red);flex-shrink:0}
+.dev-section h3{font-size:12.5px;font-weight:800;letter-spacing:.5px;color:var(--red-b);margin-bottom:8px;text-transform:uppercase}
+body.light .dev-section h3{color:var(--red-d)}
+.dev-section .dev-status{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5}
+.dev-section .dev-status b{color:var(--text);font-weight:700}
+.dev-row{display:flex;gap:8px;margin-bottom:8px}
+.dev-row .btn,.dev-row .btn-alt{flex:1;padding:11px 12px;border-radius:10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;border:none;letter-spacing:.3px;text-align:center;display:flex;align-items:center;justify-content:center;color:#fff}
+.dev-row .btn{background:var(--red)}
+.dev-row .btn-alt{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;font-size:13px;color:var(--text)}
+.toggle-switch{position:relative;width:48px;height:28px;background:var(--card2);border-radius:14px;cursor:pointer;transition:.2s;border:1px solid var(--line);flex-shrink:0}
+.toggle-switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--muted);border-radius:50%;transition:.2s}
+.toggle-switch.on{background:var(--red);border-color:var(--red)}
+.toggle-switch.on::after{left:23px;background:#fff}
+
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat-cell{background:var(--card);border-radius:12px;padding:14px;border-left:3px solid var(--red)}
+.stat-cell .stat-val{font-size:24px;font-weight:900;color:var(--red-b);line-height:1;margin-bottom:6px}
+.stat-cell .stat-lbl{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;line-height:1.3}
+.stat-wide{grid-column:1/-1}
+
+.log-table{width:100%;border-collapse:collapse;font-size:12px}
+.log-table th{background:var(--card2);padding:8px 6px;text-align:left;font-weight:700;letter-spacing:.5px;color:var(--muted);font-size:10px;text-transform:uppercase;position:sticky;top:0;z-index:1}
+.log-table td{padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+.log-table tr.c0 td:first-child{box-shadow:inset 4px 0 0 #4a7d2c}
+.log-table tr.c1 td:first-child{box-shadow:inset 4px 0 0 #a68a1c}
+.log-table tr.c2 td:first-child{box-shadow:inset 4px 0 0 #a03b3b}
+.log-table .col-num{width:34px;color:var(--muted);font-weight:700}
+.log-table .col-time{width:52px;color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
+.log-table .col-idx{width:30px;color:var(--muted);font-weight:700;text-align:center}
+.log-table .col-idx b{color:var(--red-b)}
+.log-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:12px;background:var(--card);border:1px solid var(--line);min-height:0}
+.empty-log{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
+.log-banner{padding:8px 12px;background:rgba(192,0,0,.2);border-radius:10px;text-align:center;font-size:12px;color:var(--red-b);margin-bottom:8px;flex-shrink:0}
+.log-banner button{background:transparent;border:1px solid var(--red-b);color:var(--red-b);padding:4px 10px;border-radius:6px;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;margin-left:6px}
+
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;padding:20px;z-index:100;text-align:center}
+.modal.show{display:flex}
+.modal-inner{max-width:400px;width:100%;background:var(--card);border-radius:20px;padding:28px 22px;border:2px solid var(--red);text-align:center;max-height:90dvh;overflow-y:auto}
+.modal h3{font-size:22px;color:var(--red-b);margin-bottom:12px;letter-spacing:2px}
+body.light .modal h3{color:var(--red-d)}
+.modal p{font-size:14px;line-height:1.6;color:var(--muted);margin-bottom:22px}
+.modal button{width:100%;padding:15px;background:var(--red);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:8px}
+.modal input[type=text]{width:100%;padding:12px 14px;border-radius:12px;background:var(--card2);border:2px solid var(--line);color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-bottom:10px}
+.modal input[type=text]:focus{border-color:var(--red)}
+.a2hs-check{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;margin:14px 0;background:rgba(127,127,127,.1);border-radius:10px;cursor:pointer;user-select:none;border:1px solid var(--line)}
+.a2hs-check input{width:20px;height:20px;accent-color:var(--red);flex-shrink:0;pointer-events:none;margin:0}
+.a2hs-check span{font-size:13px;color:var(--muted)}
+.modal-btns{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.btn-a2hs{background:linear-gradient(135deg,#c00000,#e63946);color:#fff;border:none;padding:15px;border-radius:14px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
+.btn-a2hs-alt{background:var(--card2);color:var(--text);border:none;padding:14px;border-radius:14px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
+.btn-a2hs-ghost{background:transparent;color:var(--muted);border:1px solid var(--line);padding:12px;border-radius:14px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+
+.bingo-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#8b0000 0%,#c00000 45%,#e63946 100%);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:500;padding:24px;text-align:center;animation:bingoIn .35s ease-out}
+.bingo-overlay.show{display:flex}
+@keyframes bingoIn{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:scale(1)}}
+.bingo-overlay-emoji{font-size:56px;margin-bottom:16px;animation:bounceEmoji 1s infinite alternate}
+@keyframes bounceEmoji{from{transform:translateY(0)}to{transform:translateY(-14px)}}
+.bingo-overlay-text{font-size:clamp(64px,22vw,130px);font-weight:900;color:#ffd700;letter-spacing:6px;line-height:1;text-shadow:0 4px 24px rgba(0,0,0,.55);animation:bingoPulse .7s infinite alternate}
+@keyframes bingoPulse{from{transform:scale(1)}to{transform:scale(1.07)}}
+.bingo-overlay-sub{margin-top:20px;font-size:17px;color:#ffdcdc;font-style:italic;letter-spacing:1px}
+.bingo-overlay-close{margin-top:38px;padding:16px 44px;background:rgba(0,0,0,.35);color:#fff;border:2px solid rgba(255,255,255,.45);border-radius:14px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer}
+
+.toast{position:fixed;bottom:max(20px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(120px);background:var(--card2);padding:11px 18px;border-radius:12px;font-size:13px;transition:.3s;z-index:200;pointer-events:none;border:1px solid var(--line);max-width:90vw;text-align:center;color:var(--text)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+@media print {
+  body{background:#fff;color:#000;overflow:visible;height:auto}
+  .screen,.toast,.modal,.actions,header,.icon-btn,.back,.player-input,.card-label,.bingo-banner,.bingo-overlay,.host-bingo-alert,.dev-btn{display:none !important}
+  .print-area{display:block !important;padding:0}
+  .print-area h1{display:block !important;color:#000;font-size:20px;margin-bottom:4px;text-align:center}
+  .print-area .sub{text-align:center;color:#666;font-size:11px;margin-bottom:14px}
+  .print-area table{width:100%;border-collapse:collapse;color:#000;font-size:11px}
+  .print-area th,.print-area td{border:1px solid #999;padding:5px 7px;text-align:left}
+  .print-area th{background:#eee !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-area tr.c0 td:first-child{background:#d9ead3 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-area tr.c1 td:first-child{background:#fff2cc !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-area tr.c2 td:first-child{background:#f4cccc !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-area .print-card{width:100%;border-collapse:collapse;margin-bottom:12px}
+  .print-area .print-card td{border:2px solid #000;height:58px;padding:3px;font-size:9px;vertical-align:top}
+  .print-area .print-card td .num{font-weight:700;color:#c00}
+}
+.print-area{display:none}
+</style>
+</head>
+<body>
+
+<div class="modal show" id="modal18">
+  <div class="modal-inner">
+    <h3>🔞 18+</h3>
+    <p>Эта игра содержит откровенный контент для взрослых. Продолжая, ты подтверждаешь, что тебе 18 или больше и ты играешь по обоюдному согласию всех участников.</p>
+    <button onclick="accept18()">Мне 18+, продолжить</button>
+  </div>
+</div>
+
+<div class="modal" id="modal-a2hs">
+  <div class="modal-inner">
+    <h3>📲 На главный экран?</h3>
+    <p>Установи игру как приложение — иконка 🎲 появится на рабочем столе. Открывается на весь экран, без адресной строки, работает офлайн.</p>
+    <label class="a2hs-check">
+      <input type="checkbox" id="a2hs-never">
+      <span>Больше не показывать</span>
+    </label>
+    <div class="modal-btns">
+      <button class="btn-a2hs" id="a2hs-install-btn" onclick="a2hsInstall()">Установить</button>
+      <button class="btn-a2hs-alt" id="a2hs-how-btn" onclick="a2hsHowTo()" style="display:none">Как это сделать?</button>
+      <button class="btn-a2hs-ghost" onclick="a2hsClose()">Позже</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-protocol">
+  <div class="modal-inner">
+    <h3>⚠️ Файл открыт нестандартно</h3>
+    <p>Приложение запущено через <code id="proto-code">content://</code>. Android может очистить сохранённые данные при закрытии вкладки — потеряется карточка, лог и настройки.</p>
+    <p><b>Решение:</b> установи игру на главный экран — тогда все данные будут в безопасности.</p>
+    <button onclick="protocolInstall()">Установить на главный экран</button>
+    <button style="background:var(--card2);color:var(--text)" onclick="protocolDismiss()">Продолжить без установки</button>
+  </div>
+</div>
+
+<div class="modal" id="modal-dev-edit">
+  <div class="modal-inner">
+    <h3>Редактировать #<span id="dev-edit-num">1</span></h3>
+    <input type="text" id="dev-edit-text" maxlength="200" placeholder="Текст пункта…">
+    <div class="dev-cat-pick" style="margin-bottom:8px">
+      <button class="cat-btn c0" data-edit-cat="0" onclick="devEditPickCat(0)">ЛАЙТ</button>
+      <button class="cat-btn c1" data-edit-cat="1" onclick="devEditPickCat(1)">МЕДИУМ</button>
+      <button class="cat-btn c2" data-edit-cat="2" onclick="devEditPickCat(2)">ХАРД</button>
+    </div>
+    <div class="modal-btns">
+      <button class="btn-a2hs" onclick="devEditSave()">Сохранить</button>
+      <button class="btn-a2hs-ghost" onclick="devEditCancel()">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-round-name">
+  <div class="modal-inner">
+    <h3>📝 Назови раунд</h3>
+    <p>Пригодится в архиве, чтобы потом понять, что это был за вечер.</p>
+    <input type="text" id="round-name-input" maxlength="60" placeholder="Раунд N">
+    <div class="modal-btns">
+      <button class="btn-a2hs" onclick="confirmRoundName()">Сохранить в архив</button>
+      <button class="btn-a2hs-ghost" onclick="cancelRoundName()">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<div class="bingo-overlay" id="bingo-overlay">
+  <div class="bingo-overlay-emoji">🎉🎲🎉</div>
+  <div class="bingo-overlay-text">БИНГО!</div>
+  <div class="bingo-overlay-sub" id="bingo-overlay-sub">Покажи ведущему!</div>
+  <button class="bingo-overlay-close" onclick="closeBingoOverlay()">Продолжить</button>
+</div>
+
+<div class="screen active" id="screen-menu">
+  <button class="dev-btn" onclick="showScreen('dev')" title="Разраб">⚙️</button>
+  <div class="logo">
+    <span class="dice">🎲</span>
+    <h2>СЕКС<br>БИНГО</h2>
+    <div class="slogan">Угадай или …<br>здесь не осуждают, тут творят и вытворяют!</div>
+    <div class="adult">18+ · только для взрослых</div>
+  </div>
+  <button class="big-card" onclick="openHost()">
+    <span class="big-ico">🎡</span>
+    <span class="big-body"><b>Ведущий</b><span>Вращать барабан-бан-бан, пишем логи</span></span>
+    <span class="big-cta">Начать →</span>
+  </button>
+  <button class="big-card" onclick="openHostPlayer()">
+    <span class="big-ico">🃏</span>
+    <span class="big-body"><b>Ведущий + Игрок</b><span>Один телефон: и крутить, и играть самому</span></span>
+    <span class="big-cta">Начать →</span>
+  </button>
+  <button class="big-card" onclick="openPlayer()">
+    <span class="big-ico">🎴</span>
+    <span class="big-body"><b>Игрок</b><span>Начать игру с картой (можно распечатать)</span></span>
+    <span class="big-cta">Начать →</span>
+  </button>
+  <button class="small-card" onclick="showLog()">
+    <span class="small-ico">📋</span>
+    <span class="small-body"><b>Журнал раунда</b><span>Таблица выпавших чисел · экспорт · печать</span></span>
+  </button>
+  <button class="small-card" onclick="showScreen('list')">
+    <span class="small-ico">📜</span>
+    <span class="small-body"><b>Список</b><span>Все пункты с категориями</span></span>
+  </button>
+  <button class="help-card" onclick="showScreen('help')">
+    <span class="help-ico">❓</span>
+    <span class="help-body"><b>Как в это играть???</b><span>Правила и описание работы приложения</span></span>
+    <span class="help-arrow">›</span>
+  </button>
+</div>
+
+<div class="screen" id="screen-host">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Ведущий<small>РАУНД <span id="host-round">1</span> · ВЫПАЛО <span id="host-count">0</span>/<span id="host-total">150</span></small></h1>
+    <button class="icon-btn" onclick="openPlayerFromHost()" title="Моя карточка игрока">🎴</button>
+    <button class="icon-btn" onclick="showLog()" title="Журнал">📋</button>
+  </header>
+  <div class="host-display">
+    <div class="big-number" id="host-number">—</div>
+    <span class="cat-tag" id="host-cat" style="display:none"></span>
+    <div class="wish-text" id="host-text">Нажми «Крутить», чтобы начать</div>
+  </div>
+  <div class="host-history" id="host-history" style="display:none"></div>
+  <div class="host-bingo-alert" id="host-bingo-alert">🎉 У ИГРОКА БИНГО!</div>
+  <div class="actions">
+    <button class="btn btn-secondary" onclick="resetHost()" title="Новый раунд">↻</button>
+    <button class="btn btn-secondary" onclick="announceBingo()" title="Объявить БИНГО">📢</button>
+    <button class="btn btn-primary" id="btn-spin" onclick="spin()">КРУТИТЬ</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-setup">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Моя карточка<small id="setup-sub">ВЫБЕРИ РАСКЛАДКУ И РЕЖИМ</small></h1>
+  </header>
+  <div class="setup-hero">
+    <h2>Раскладка</h2>
+    <p>Больше клеток — длиннее партия.</p>
+  </div>
+  <div class="layout-pick">
+    <button class="layout-btn active" data-layout="3x5" onclick="pickLayout('3x5')">3×5<small>15 клеток</small></button>
+    <button class="layout-btn" data-layout="4x4" onclick="pickLayout('4x4')">4×4<small>16 клеток</small></button>
+    <button class="layout-btn" data-layout="5x5" onclick="pickLayout('5x5')">5×5<small>25 клеток</small></button>
+  </div>
+  <div class="setup-hero">
+    <h2>Как собираем?</h2>
+    <p>Отметь то, что хочешь выбрать вручную. Или жми «Продолжить» без галочек — компьютер подберёт всё сам.</p>
+  </div>
+  <div class="check-row" id="chk-wishes-row" onclick="toggleSetupChk('wishes')">
+    <input type="checkbox" id="chk-wishes" onclick="event.stopPropagation();toggleSetupChk('wishes')">
+    <span class="lbl">Выбрать <b>желания</b> вручную<small id="setup-count-w">15 пунктов из общего списка</small></span>
+  </div>
+  <div class="check-row" id="chk-taboos-row" onclick="toggleSetupChk('taboos')">
+    <input type="checkbox" id="chk-taboos" onclick="event.stopPropagation();toggleSetupChk('taboos')">
+    <span class="lbl">Выбрать <b>табу</b> вручную<small id="setup-count-t">15 пунктов, чего точно не будет</small></span>
+  </div>
+  <div class="actions" style="margin-top:auto">
+    <button class="btn btn-primary" onclick="setupStart()">Продолжить →</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-manual">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Выбор вручную<small id="manual-sub">ЖЕЛАНИЯ · 0/15</small></h1>
+    <button class="icon-btn" onclick="manualLucky()" title="А вдруг повезёт!">🎲</button>
+  </header>
+  <div class="tabs">
+    <button class="tab active" id="tab-w" onclick="manualTab('wishes')">♥ ЖЕЛАНИЯ<span class="prog" id="tab-w-prog">0/15</span></button>
+    <button class="tab" id="tab-t" onclick="manualTab('taboos')">✗ ТАБУ<span class="prog" id="tab-t-prog">0/15</span></button>
+  </div>
+  <input class="list-search" type="search" id="manual-search" placeholder="Поиск по тексту или номеру…">
+  <div class="list" id="manual-list"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" onclick="manualClear()" title="Сбросить всё">↻</button>
+    <button class="btn btn-primary" onclick="manualNext()" id="manual-next-btn">Дальше →</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-player">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Моя карточка<small id="player-sub">ВВОДИ НОМЕРА ОТ ВЕДУЩЕГО</small></h1>
+    <button class="icon-btn" onclick="printCard()" title="Печать карточки">🖨</button>
+  </header>
+  <div class="player-input">
+    <input type="tel" inputmode="numeric" pattern="[0-9]*" id="player-input" placeholder="№" maxlength="4">
+    <button onclick="markFromInput()">✓</button>
+  </div>
+  <div class="card-label">♥ ЖЕЛАНИЯ <span class="score" id="score-w"></span></div>
+  <div class="grid" id="grid-wishes"></div>
+  <div class="card-label">✗ ТАБУ <span class="score" id="score-t"></span></div>
+  <div class="grid" id="grid-taboos"></div>
+  <div class="bingo-banner" id="bingo-banner">🎉 БИНГО! 🎉</div>
+  <div class="actions">
+    <button class="btn btn-secondary" onclick="undoLast()" title="Отменить последнее" style="flex:0 0 auto">↶</button>
+    <button class="btn btn-secondary" onclick="goToSetup()" title="Собрать новую карточку" style="flex:1">🔄</button>
+    <button class="btn btn-secondary" onclick="resetMarks()" title="Очистить отметки" style="flex:1">↻ Сброс</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-log">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Журнал<small id="log-sub">РАУНД 1 · 0 ЧИСЕЛ</small></h1>
+    <button class="icon-btn" onclick="exportCSV()" title="Экспорт CSV">📤</button>
+    <button class="icon-btn" onclick="printLog()" title="Печать / PDF">🖨</button>
+  </header>
+  <div id="log-banner-host" class="log-banner" style="display:none"></div>
+  <div class="log-wrap" id="log-wrap"></div>
+  <div class="actions">
+    <button class="btn btn-secondary" onclick="showArchive()" title="Архив">🗂 Архив</button>
+    <button class="btn btn-secondary" onclick="clearLog()" title="Очистить">🗑</button>
+  </div>
+</div>
+
+<div class="screen" id="screen-list">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Список<small id="list-total">· ЖЕЛАНИЯ И ТАБУ</small></h1>
+  </header>
+  <input class="list-search" type="search" id="list-search" placeholder="Поиск по тексту или номеру…">
+  <div class="legend">
+    <span><i class="d0"></i>ЛАЙТ</span>
+    <span><i class="d1"></i>МЕДИУМ</span>
+    <span><i class="d2"></i>ХАРД</span>
+  </div>
+  <div class="list" id="list-content"></div>
+</div>
+
+<div class="screen" id="screen-dev">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Разраб<small>РЕДАКТОР СПИСКА · <span id="dev-count">0</span> ПУНКТОВ</small></h1>
+    <button class="icon-btn" onclick="devResetAll()" title="Сброс к стандарту">↺</button>
+  </header>
+  <div class="dev-warn">⚠️ Изменение списка сбросит карточку игрока — её нужно будет собрать заново. Лог ведущего останется.</div>
+
+  <div class="dev-section">
+    <h3>🎛 Настройки</h3>
+    <div class="toggle-row">
+      <span>🔊 Звук при выпадении</span>
+      <div class="toggle-switch" id="toggle-sound" onclick="toggleSound()"></div>
+    </div>
+    <div class="toggle-row">
+      <span>🌞 Светлая тема</span>
+      <div class="toggle-switch" id="toggle-theme" onclick="toggleTheme()"></div>
+    </div>
+  </div>
+
+  <div class="dev-section">
+    <h3>📊 Статистика сессии</h3>
+    <div class="dev-status" id="dev-stats-mini">—</div>
+    <div class="dev-row">
+      <button class="btn" onclick="showScreen('stats')">Открыть статистику</button>
+    </div>
+  </div>
+
+  <div class="dev-section">
+    <h3>📲 Установка на главный экран</h3>
+    <div class="dev-status" id="dev-a2hs-status">Статус: —</div>
+    <div class="dev-row">
+      <button class="btn" onclick="a2hsShow(true)">Показать окно</button>
+      <button class="btn-alt" onclick="a2hsReset()">↺ Сбросить</button>
+    </div>
+  </div>
+
+  <div class="dev-section">
+    <h3>💾 Данные</h3>
+    <div class="dev-status" id="dev-storage-status">Хранилище: —</div>
+    <div class="dev-row">
+      <button class="btn" onclick="exportAll()">Экспорт JSON</button>
+      <label class="btn-alt" style="cursor:pointer">
+        Импорт JSON
+        <input type="file" accept=".json,application/json" style="display:none" onchange="importAll(this.files[0]);this.value=''">
+      </label>
+    </div>
+  </div>
+
+  <div class="dev-add">
+    <input type="text" id="dev-new-text" placeholder="Текст нового пункта…" maxlength="200">
+    <div class="dev-cat-pick">
+      <button class="cat-btn c0 active" data-cat="0" onclick="devPickCat(0)">ЛАЙТ</button>
+      <button class="cat-btn c1" data-cat="1" onclick="devPickCat(1)">МЕДИУМ</button>
+      <button class="cat-btn c2" data-cat="2" onclick="devPickCat(2)">ХАРД</button>
+    </div>
+    <button class="btn btn-primary" onclick="devAdd()">+ Добавить пункт</button>
+  </div>
+  <div class="list" id="dev-list"></div>
+</div>
+
+<div class="screen" id="screen-stats">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Статистика<small id="stats-sub">ЗА ВСЁ ВРЕМЯ</small></h1>
+  </header>
+  <div class="stats-grid" id="stats-content"></div>
+  <div class="help-section">
+    <h2><span class="h-ico">📖</span> Что считается</h2>
+    <ul>
+      <li><b>Раунды</b> — архивные + текущий (если в нём есть числа).</li>
+      <li><b>Числа</b> — сколько всего раз выпадал лототрон.</li>
+      <li><b>Средняя длительность</b> — по раундам, у которых есть начало и конец.</li>
+      <li><b>Первый запуск</b> — самая старая дата среди архивных раундов.</li>
+    </ul>
+  </div>
+</div>
+
+<div class="screen" id="screen-help">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Как в это играть?<small>ПРАВИЛА И РАБОТА С ПРИЛОЖЕНИЕМ</small></h1>
+  </header>
+  <div class="help-warn">
+    <b>🔞 18+ · ТОЛЬКО ДЛЯ ВЗРОСЛЫХ</b>
+    Играйте только по обоюдному согласию. У каждого участника есть право сказать «стоп» в любой момент.
+  </div>
+  <div class="help-section">
+    <h2><span class="h-ico">🎲</span> Что это вообще такое</h2>
+    <p>«Секс Бинго» — игра для пары или тематической компании. Ведущий тянет числа, игроки зачёркивают совпавшие пункты. Кто первый закрыл линию — «БИНГО!».</p>
+  </div>
+  <div class="help-section">
+    <h2><span class="h-ico">📜</span> Базовые правила</h2>
+    <ul>
+      <li>Участников — от 2 до ∞. Оптимально 2–8.</li>
+      <li>Каждый собирает карточку: <b>3×5 (15 клеток), 4×4 (16) или 5×5 (25)</b>.</li>
+      <li>Желания и табу не пересекаются.</li>
+      <li>Ведущий объявляет и номер, и текст пункта.</li>
+      <li>Линия или вся карточка — «БИНГО!».</li>
+    </ul>
+  </div>
+  <div class="help-section">
+    <h2><span class="h-ico">🎡</span> Режим «Ведущий»</h2>
+    <p>Телефон — лототрон. Жми «КРУТИТЬ», объявляй вслух. Полезные кнопки: 📋 журнал, 📤 CSV, 🖨 PDF, 📢 объявить БИНГО, ↻ новый раунд.</p>
+    <div class="help-tip">При новом раунде можно ввести название — оно сохранится в архиве.</div>
+  </div>
+  <div class="help-section">
+    <h2><span class="h-ico">🎴</span> Режим «Игрок»</h2>
+    <ul>
+      <li><b>↶</b> — отменить последнюю отметку (до 20 шагов).</li>
+      <li><b>🔄</b> — собрать новую карточку.</li>
+      <li><b>↻ Сброс</b> — очистить все отметки.</li>
+      <li><b>🖨</b> — распечатать карточку.</li>
+    </ul>
+  </div>
+  <div class="help-section">
+    <h2><span class="h-ico">⚙️</span> Разраб</h2>
+    <p>Настройки звука и темы, статистика, установка на главный экран, экспорт/импорт JSON, редактор списка.</p>
+  </div>
+  <div class="help-section">
+    <h2><span class="h-ico">📲</span> Установка на главный экран</h2>
+    <p>При первом запуске приложение предложит добавить себя. Если файл открыт через <code>content://</code> — Android может стирать данные, установка решает проблему.</p>
+  </div>
+  <div class="help-section" style="text-align:center;border-left-color:#666">
+    <p style="font-size:12px;color:var(--muted);font-style:italic">Спасибо ❤️ что играете. Веселитесь, но не забывайте про уважение и здравый смысл.</p>
+  </div>
+</div>
+
+<div class="print-area" id="print-area"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_WISHES = [
+"Секс под дождем за окном","Проснуться и заняться любовью на рассвете","Медленный танец, переходящий в секс","Смотреть друг другу в глаза весь процесс","Секс у камина на мягком ковре","Ванна вдвоем с пеной и свечами","Секс под открытым звездным небом","Массаж всего тела с маслом","Шепотом говорить нежности во время секса","Заниматься этим под любимую медленную музыку",
+"Долгие прелюдии без спешки (час+)","Секс в гостиничном номере с панорамным видом","Заниматься этим, глядя на свое отражение в зеркале","Кормить друг друга фруктами во время прелюдии","Секс после душа, когда волосы мокрые","Целовать каждую родинку на теле партнера","Секс в гамаке","Утренний секс с кофе в постель после","Заниматься этим под одеялом, спрятавшись от мира","Уснуть сразу после, обнявшись",
+"Меня полностью связывают шелковым шарфом","Я связываю партнера и делаю с ним всё, что хочу","Мне завязывают глаза, и я не знаю, что будет дальше","Партнер говорит мне, что делать (командует)","Я говорю партнеру, что делать (командую)","Игра в «строгого учителя и ученика»","Игра в «начальника и подчиненного»","Легкие шлепки по ягодицам во время процесса","Меня хвалят или ругают за мои действия","Я должен попросить разрешения, чтобы кончить",
+"Партнер делает мне «минет» под принуждением (игра)","Я заставляю партнера смотреть мне в глаза","Поза, где я полностью контролирую глубину и ритм","Меня удерживают, когда я пытаюсь вырваться (игра)","Секс с элементами ролевой игры «полицейский/преступник»","Я ношу ошейник (символический) во время игры","На меня писает партнёр","Я писаю на партнера","Порка ремнем (легкая, игровая)","Полное подчинение с произнесением «господин/госпожа»",
+"Секс в автомобиле на безлюдной дороге","Секс в лесу, опершись о дерево","Заниматься этим у окна с открытыми шторами (ночью)","Секс на крыше","В безлюдном кинотеатре на последнем ряду","В примерочной кабинке магазина","На пляже ночью у воды","В лифте, пока он едет","На лестничной клетке/пожарной лестнице","В парке на скамейке глубокой ночью",
+"Секс в поезде/самолете в туалете","Дрочить партнеру сквозь одежду в людном месте","Использовать вибратор в ресторане под столом (дистанционно)","Секс во время видеозвонка (для партнера)","Флирт с незнакомцем в баре, зная, что мы уйдем вместе","Получить комплимент от другого человека при партнере","Секс в чужой квартире","Заниматься сексом на работе","Секс в спортзале","Чтобы нас случайно кто-то застал",
+"Секс втроем с двумя девушками","Секс втроем с двумя мужчинами","Секс вчетвером (любой состав и не обязательно свинг)","Смотреть, как партнер занимается сексом с другим","Заниматься сексом с незнакомцем в баре","Оргия (большая группа людей)","Секс с парой (свинг если вы пара или мжм/жмж если вы одиночка)","Фантазия о сексе с другом/подругой партнера","Мастурбировать вместе с друзьями","Устроить «золотой дождь» в компании",
+"Двойное проникновение (с игрушкой или живым партнером)","Секс с близнецом/близняшкой своего партнера","Фантазия, что вы звезда порно и у вас «сцена»","Участие в секс-вечеринке по билетам","Анонимный секс в темной комнате (никто не знает кто с кем)","Секс под наблюдением зрителей","Секс с человеком намного старше/младше","Секс с представителем другой расы","Групповой оральный секс (двойной минет)","Закрытый свинг (секс в разных комнатах после обмена партнёрами)",
+"Использование наручников","Использование вибратора/массажера во время процесса","Использование страпона (женщина с фаллоимитатором)","Анальный секс с игрушками или живой","Покрытие тела шоколадом/медом и слизывание","Секс с хлыстом (флагелляция)","Использование кляпа (нельзя говорить)","Секс в латексе/коже","Ношение трусиков/белья другого пола","Фетиш на ноги (ступни) — массаж, поцелуи, трение",
+"Фетиш на ягодицы (шлепки, поцелуи, разглядывание)","Секс с использованием льда и горячего воска (безопасного)","Запрет на мастурбацию несколько дней перед сексом","Электрические игрушки (электростимуляция)","Использование вакуумных банок для массажа","Секс в чулках и подвязках","Секс в мужской рубашке на девушке","Фетиш на брюнеток/блондинок/рыжих (конкретно)","Использование бондаж-верёвок (шимбари)","Игра с повязкой на глаза и наушниками (сенсорная депривация)",
+"Секс с «доктором» (медицинский осмотр)","Ролевая игра «строитель/сантехник и домохозяйка»","Игра в «зоопарк» (с костюмами животных)","Игра в супергероя спасающего сексом","Секс с девственницей/девственником","Игра в «похищение» с мешком на голове","Секс в церкви или на кладбище","Ролевая игра «конкуренты на работе»","Игра «отчим и падчерица / мачеха и пасынок»","Секс с беременной",
+"Секс во время месячных","Глотать сперму или просить кончить на лицо","Сделать парню «глубокий минет»","Игра в «косплей» (персонажи аниме/фильмов)","Секс, где один притворяется спящим","Игра «почтальон и одинокая женщина»","Фантазия, что вы шпионы, и вас поймали","Секс после ссоры","Игра в «гипнотизера» (внушение действий)","Секс с элементом кормления (молочный фетиш)",
+"Секс в бассейне","Использование VR-очков с порно во время секса","Секс под водой","Дрочить партнеру через специальное приложение (удаленно)","Секс с роботом / секс-куклой","Секс на музыкальном фестивале (дискотеке)","Снять проститутку","Секс в снегу (или в джакузи зимой)","Тантрический секс (очень долгий с медитацией)","Секс с элементами йоги (сложные позы)",
+"Сделать фото/видео процесса для личного архива","Трансляция процесса в тематический чат или друзьям","Секс с одновременной игрой в приставку или комп","Заняться сексом при просмотре порно","Секс в костюме пилота/стюардессы","Секс в средневековых доспехах (или костюмах)","Заняться сексом в сексшопе","Использование звуков природы для усиления ощущений","Секс с зеркалами со всех сторон","Эротический гипноз (вхождение в транс)",
+"Попробовать БДСМ с ограничением дыхания","Секс после месячного воздержания","Заниматься этим в полной темноте, когда ничего не видно","Секс на стадионе","Устроить «эротический пикник» с едой на теле","Секс вверх ногами (с подвешиванием)","Использовать в процессе свечи для ваксплея","Секс с полной сменой ролей (он одевается в женщину, а она в мужчину)","Секс в другой стране","Сняться в порно"
+];
+
+const DEFAULT_CATS = [
+0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,
+1,1,1,1,1,1,1,1,1,1, 1,1,0,1,1,1,2,2,1,1,
+1,1,1,1,1,1,1,1,1,1, 1,1,1,1,0,0,1,1,1,1,
+2,2,2,2,2,2,2,1,2,2, 2,2,1,2,2,2,1,0,2,2,
+1,0,2,1,0,2,1,1,1,1, 0,1,1,2,1,0,0,0,1,1,
+1,1,1,0,1,2,2,1,1,1, 1,1,1,1,1,1,0,0,1,1,
+0,1,2,1,2,1,2,1,0,1, 0,2,0,0,1,1,1,0,0,1,
+2,0,0,1,0,2,1,1,1,2
+];
+
+const CAT_NAME = ["ЛАЙТ","МЕДИУМ","ХАРД"];
+const LS_KEY = "sexbingo_v3";
+const LS_WISHES = "sexbingo_wishes_v1";
+const LS_A2HS = "sexbingo_a2hs_hidden";
+const LS_PROTO = "sexbingo_proto_warned";
+const LS_SOUND = "sexbingo_sound";
+const LS_THEME = "sexbingo_theme";
+const LS_OLD_KEYS = ["sexbingo_v2", "sexbingo_v1"];
+
+const LAYOUTS = {
+  '3x5': { cols:3, rows:5, total:15, name:'3×5' },
+  '4x4': { cols:4, rows:4, total:16, name:'4×4' },
+  '5x5': { cols:5, rows:5, total:25, name:'5×5' }
+};
+
+function layoutOf(key){ return LAYOUTS[key] || LAYOUTS['3x5']; }
+
+let WISHES = DEFAULT_WISHES.slice();
+let CATS = DEFAULT_CATS.slice();
+let pendingLayout = '3x5';
+
+function loadWishes(){
+  try{
+    const s = localStorage.getItem(LS_WISHES);
+    if(s){
+      const p = JSON.parse(s);
+      if(Array.isArray(p.items) && p.items.length >= 25){
+        WISHES = p.items.map(x=>String(x.text||''));
+        CATS = p.items.map(x=>{
+          const c = parseInt(x.cat, 10);
+          return [0,1,2].includes(c) ? c : 1;
+        });
+        return;
+      }
+    }
+  }catch(e){}
+  WISHES = DEFAULT_WISHES.slice();
+  CATS = DEFAULT_CATS.slice();
+}
+function saveWishes(){
+  try{
+    const items = WISHES.map((text,i)=>({text, cat: CATS[i]}));
+    localStorage.setItem(LS_WISHES, JSON.stringify({items}));
+    return true;
+  }catch(e){
+    toast('Не удалось сохранить список — память устройства заполнена');
+    return false;
+  }
+}
+function wishText(n){ return WISHES[n-1] || '(пункт удалён)'; }
+function wishCat(n){ const c = CATS[n-1]; return [0,1,2].includes(c) ? c : 1; }
+loadWishes();
+
+let state = {
+  accepted18: false,
+  host: { log: [], current: null, round: 1, startedAt: Date.now() },
+  archive: [],
+  player: {
+    wishes: [], taboos: [], marksW: [], marksT: [],
+    bingo: false, setupDone: false, _bingoSet: [],
+    layout: '3x5', undoStack: []
+  },
+  lastScreen: 'menu'
+};
+
+let manual = { wishes: [], taboos: [], tab: 'wishes' };
+let devCat = 0;
+let devEditIndex = -1;
+let devEditCat = 0;
+
+// настройки
+let soundEnabled = localStorage.getItem(LS_SOUND) === '1';
+let lightTheme = localStorage.getItem(LS_THEME) === '1';
+
+function applyTheme(){
+  document.body.classList.toggle('light', lightTheme);
+  const meta = document.querySelector('meta[name=theme-color]');
+  if(meta) meta.setAttribute('content', lightTheme ? '#c00000' : '#8b0000');
+  const tgl = document.getElementById('toggle-theme');
+  if(tgl) tgl.classList.toggle('on', lightTheme);
+  const tglS = document.getElementById('toggle-sound');
+  if(tglS) tglS.classList.toggle('on', soundEnabled);
+}
+
+function toggleTheme(){
+  lightTheme = !lightTheme;
+  try{ localStorage.setItem(LS_THEME, lightTheme ? '1' : '0'); }catch(e){}
+  applyTheme();
+}
+function toggleSound(){
+  soundEnabled = !soundEnabled;
+  try{ localStorage.setItem(LS_SOUND, soundEnabled ? '1' : '0'); }catch(e){}
+  applyTheme();
+  if(soundEnabled) playDing();
+}
+
+// звук через Web Audio
+let audioCtx = null;
+function playDing(){
+  if(!soundEnabled) return;
+  try{
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended') audioCtx.resume();
+    const t0 = audioCtx.currentTime;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(880, t0);
+    o.frequency.exponentialRampToValueAtTime(1400, t0 + 0.09);
+    g.gain.setValueAtTime(0.001, t0);
+    g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.42);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t0); o.stop(t0 + 0.45);
+  }catch(e){}
+}
+
+function save(){
+  try{
+    localStorage.setItem(LS_KEY, JSON.stringify(state));
+    return true;
+  }catch(e){
+    toast('Не удалось сохранить — память устройства заполнена');
+    return false;
+  }
+}
+
+function load(){
+  try{
+    const s = localStorage.getItem(LS_KEY);
+    if(s){
+      const p = JSON.parse(s);
+      state = Object.assign(state, p);
+      if(!Array.isArray(state.host.log)) state.host.log = [];
+      if(!Array.isArray(state.archive)) state.archive = [];
+      if(!state.player) state.player = {
+        wishes:[], taboos:[], marksW:[], marksT:[],
+        bingo:false, setupDone:false, _bingoSet:[], layout:'3x5', undoStack:[]
+      };
+      if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
+      if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
+      if(typeof state.player.layout !== 'string' || !LAYOUTS[state.player.layout]) state.player.layout = '3x5';
+      if(typeof state.lastScreen !== 'string') state.lastScreen = 'menu';
+      return;
+    }
+  }catch(e){}
+  for(const key of LS_OLD_KEYS){
+    try{
+      const old = localStorage.getItem(key);
+      if(!old) continue;
+      const p = JSON.parse(old);
+      if(p.accepted18) state.accepted18 = true;
+      if(p.host && Array.isArray(p.host.drawn)){
+        state.host.log = p.host.drawn.map(n => ({n, t: Date.now()}));
+        state.host.current = p.host.current || null;
+        state.host.round = p.host.round || 1;
+      }
+      if(p.player && p.player.wishes && p.player.wishes.length===15){
+        state.player = Object.assign(p.player, { setupDone: true, _bingoSet: [], layout:'3x5', undoStack: [] });
+      }
+      break;
+    }catch(e){}
+  }
+}
+
+function fmtTime(ts){
+  const d = new Date(ts);
+  return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
+}
+function fmtDate(ts){ return new Date(ts).toLocaleDateString('ru-RU'); }
+function fmtDateFull(ts){
+  const d = new Date(ts);
+  return d.toLocaleDateString('ru-RU') + ' ' + String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
+}
+function fmtDuration(ms){
+  if(!isFinite(ms) || ms <= 0) return '—';
+  const totalMin = Math.round(ms / 60000);
+  if(totalMin < 60) return totalMin + ' мин';
+  const h = Math.floor(totalMin / 60);
+  const m = totalMin % 60;
+  return h + ' ч ' + (m ? m + ' мин' : '');
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function logText(row){ return row.text !== undefined ? row.text : wishText(row.n); }
+function logCat(row){ return row.cat !== undefined ? row.cat : wishCat(row.n); }
+
+let navHistory = ['menu'];
+let navIndex = 0;
+
+function _renderScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  const el = document.getElementById('screen-'+id);
+  if(el) el.classList.add('active');
+  if(id==='host') renderHost();
+  if(id==='player') renderPlayer();
+  if(id==='list') renderList('');
+  if(id==='setup') renderSetup();
+  if(id==='manual') renderManual();
+  if(id==='dev') renderDev();
+  if(id==='log') renderLog();
+  if(id==='stats') renderStats();
+  window.scrollTo(0,0);
+  state.lastScreen = id;
+  save();
+}
+function showScreen(id){
+  if(navHistory[navIndex] !== id){
+    navHistory = navHistory.slice(0, navIndex+1);
+    navHistory.push(id);
+    navIndex = navHistory.length - 1;
+    if(navHistory.length > 40){ navHistory.shift(); navIndex--; }
+  }
+  _renderScreen(id);
+}
+function navBack(){ if(navIndex > 0){ navIndex--; _renderScreen(navHistory[navIndex]); } }
+function navForward(){ if(navIndex < navHistory.length - 1){ navIndex++; _renderScreen(navHistory[navIndex]); } }
+
+let touchStartX = 0, touchStartY = 0, touchStartT = 0;
+document.addEventListener('touchstart', e=>{
+  if(e.touches.length !== 1) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+  touchStartT = Date.now();
+}, {passive:true});
+document.addEventListener('touchend', e=>{
+  if(e.changedTouches.length !== 1) return;
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const dt = Date.now() - touchStartT;
+  if(dt > 800) return;
+  if(Math.abs(dx) < 120) return;
+  if(Math.abs(dy) > Math.abs(dx) * 0.5) return;
+  const t = e.target;
+  if(t && t.closest){
+    if(t.closest('.grid')) return;
+    if(t.closest('.player-input')) return;
+    if(t.closest('.dev-add')) return;
+    if(t.closest('.dev-item')) return;
+    if(t.closest('.modal')) return;
+    if(t.closest('.bingo-overlay')) return;
+  }
+  if(dx > 0) navBack(); else navForward();
+}, {passive:true});
+
+function openHost(){ showScreen('host'); }
+function openHostPlayer(){ showScreen('host'); toast('Открой 🎴 в шапке — это твоя карточка', 2200); }
+function openPlayer(){
+  if(state.player.setupDone && state.player.wishes.length >= 15){
+    showScreen('player');
+  } else {
+    showScreen('setup');
+  }
+}
+function openPlayerFromHost(){
+  if(state.player.setupDone && state.player.wishes.length >= 15){
+    showScreen('player');
+  } else {
+    showScreen('setup');
+  }
+}
+
+function accept18(){
+  state.accepted18 = true;
+  document.getElementById('modal18').classList.remove('show');
+  save();
+  if(!checkProtocolWarning()){
+    if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 900);
+  }
+}
+
+function toast(msg, ms=1800){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(()=>t.classList.remove('show'), ms);
+}
+
+function checkProtocolWarning(){
+  const proto = location.protocol;
+  if(proto === 'file:' || proto === 'http:' || proto === 'https:') return false;
+  if(localStorage.getItem(LS_PROTO) === '1') return false;
+  document.getElementById('proto-code').textContent = proto + '//';
+  document.getElementById('modal-protocol').classList.add('show');
+  try{ localStorage.setItem(LS_PROTO, '1'); }catch(e){}
+  return true;
+}
+function protocolDismiss(){
+  document.getElementById('modal-protocol').classList.remove('show');
+  if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 500);
+}
+function protocolInstall(){
+  document.getElementById('modal-protocol').classList.remove('show');
+  setTimeout(()=>a2hsShow(true), 300);
+}
+
+let deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredInstallPrompt = e;
+});
+function a2hsIsStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+}
+function a2hsShouldShow(){
+  if(a2hsIsStandalone()) return false;
+  if(localStorage.getItem(LS_A2HS) === '1') return false;
+  return true;
+}
+function a2hsShow(force){
+  if(!force && !a2hsShouldShow()) return;
+  const btnInstall = document.getElementById('a2hs-install-btn');
+  const btnHow = document.getElementById('a2hs-how-btn');
+  if(deferredInstallPrompt){
+    btnInstall.style.display = 'block';
+    btnHow.style.display = 'none';
+  } else {
+    btnInstall.style.display = 'none';
+    btnHow.style.display = 'block';
+  }
+  document.getElementById('a2hs-never').checked = false;
+  document.getElementById('modal-a2hs').classList.add('show');
+}
+function a2hsClose(){
+  if(document.getElementById('a2hs-never').checked){
+    try{ localStorage.setItem(LS_A2HS, '1'); }catch(e){}
+  }
+  document.getElementById('modal-a2hs').classList.remove('show');
+  renderDev();
+}
+async function a2hsInstall(){
+  if(!deferredInstallPrompt){ a2hsHowTo(); return; }
+  deferredInstallPrompt.prompt();
+  const res = await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  if(res && res.outcome === 'accepted'){
+    try{ localStorage.setItem(LS_A2HS, '1'); }catch(e){}
+    document.getElementById('modal-a2hs').classList.remove('show');
+    toast('🎉 Установлено!');
+  } else {
+    a2hsClose();
+  }
+}
+function a2hsHowTo(){
+  alert(
+    'Как добавить на главный экран:\n\n' +
+    '1. Chrome → ⋮ (три точки справа сверху)\n' +
+    '2. «Добавить на главный экран» / «Установить приложение»\n' +
+    '3. Подтверди название\n\n' +
+    'Если пункта нет — Chrome открыл файл через content://.\n' +
+    'Тогда загрузи файл на Google Drive, открой ссылку в Chrome и добавь оттуда.\n\n' +
+    'На iPhone: Safari → «Поделиться» → «На экран "Домой"».'
+  );
+}
+function a2hsReset(){
+  try{ localStorage.removeItem(LS_A2HS); }catch(e){}
+  toast('Напоминание включено заново');
+  renderDev();
+}
+
+function showBingoOverlay(subText){
+  document.getElementById('bingo-overlay-sub').textContent = subText || 'Покажи ведущему!';
+  document.getElementById('bingo-overlay').classList.add('show');
+  if(navigator.vibrate) navigator.vibrate([100,60,100,60,100,60,220]);
+}
+function closeBingoOverlay(){ document.getElementById('bingo-overlay').classList.remove('show'); }
+function announceBingo(){ showBingoOverlay('Игрок собрал линию! 🎉'); }
+
+// ============ SETUP ============
+function pickLayout(key){
+  if(!LAYOUTS[key]) return;
+  pendingLayout = key;
+  document.querySelectorAll('.layout-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.layout === key);
+  });
+  const L = layoutOf(key);
+  document.getElementById('setup-count-w').textContent = L.total + ' пунктов из общего списка';
+  document.getElementById('setup-count-t').textContent = L.total + ' пунктов, чего точно не будет';
+  document.getElementById('setup-sub').textContent = 'РАСКЛАДКА ' + L.name + ' · ' + L.total + ' КЛЕТОК';
+}
+function renderSetup(){
+  document.getElementById('chk-wishes').checked = false;
+  document.getElementById('chk-taboos').checked = false;
+  document.getElementById('chk-wishes-row').classList.remove('checked');
+  document.getElementById('chk-taboos-row').classList.remove('checked');
+  pickLayout(pendingLayout || state.player.layout || '3x5');
+}
+function toggleSetupChk(which){
+  const c = document.getElementById(which === 'wishes' ? 'chk-wishes' : 'chk-taboos');
+  c.checked = !c.checked;
+  document.getElementById(which === 'wishes' ? 'chk-wishes-row' : 'chk-taboos-row')
+    .classList.toggle('checked', c.checked);
+}
+function setupAutoOnly(){
+  const c = makeCard(pendingLayout);
+  state.player = c;
+  save();
+  toast('Карточка собрана случайно');
+  showScreen('player');
+}
+function setupStart(){
+  const L = layoutOf(pendingLayout);
+  const total = L.total;
+  const wantW = document.getElementById('chk-wishes').checked;
+  const wantT = document.getElementById('chk-taboos').checked;
+  if(!wantW && !wantT){ setupAutoOnly(); return; }
+
+  if(WISHES.length < total * 2){
+    toast('Для раскладки ' + L.name + ' нужно минимум ' + (total*2) + ' пунктов');
+    return;
+  }
+  const all = Array.from({length: WISHES.length},(_,i)=>i+1);
+  shuffle(all);
+  manual.wishes = all.slice(0,total).sort((a,b)=>a-b);
+  const rest = all.slice(total);
+  shuffle(rest);
+  manual.taboos = rest.slice(0,total).sort((a,b)=>a-b);
+  manual.tab = wantW ? 'wishes' : 'taboos';
+  showScreen('manual');
+}
+
+// ============ MANUAL ============
+function manualTab(t){
+  manual.tab = t;
+  document.getElementById('tab-w').classList.toggle('active', t==='wishes');
+  document.getElementById('tab-t').classList.toggle('active', t==='taboos');
+  renderManual();
+}
+function renderManual(){
+  const L = layoutOf(pendingLayout);
+  const arr = manual[manual.tab];
+  const set = new Set(arr);
+  document.getElementById('manual-sub').textContent =
+    (manual.tab==='wishes'?'ЖЕЛАНИЯ':'ТАБУ') + ' · ' + arr.length + '/' + L.total;
+  document.getElementById('tab-w-prog').textContent = manual.wishes.length + '/' + L.total;
+  document.getElementById('tab-t-prog').textContent = manual.taboos.length + '/' + L.total;
+  const q = (document.getElementById('manual-search').value||'').toLowerCase();
+  const list = document.getElementById('manual-list');
+  list.innerHTML = '';
+  for(let i=0;i<WISHES.length;i++){
+    const n = i+1;
+    if(q && !((n+' '+WISHES[i]).toLowerCase().includes(q))) continue;
+    const el = document.createElement('div');
+    el.className = 'item c'+CATS[i]+' manual-item'+(set.has(n)?' selected':'');
+    el.innerHTML = `<span class="n">${n}</span><span class="t">${escapeHtml(WISHES[i])}</span>`;
+    el.onclick = ()=>manualToggle(n);
+    list.appendChild(el);
+  }
+  const btn = document.getElementById('manual-next-btn');
+  btn.textContent = (manual.tab === 'wishes') ? 'К табу →' : 'Готово ✓';
+}
+function manualToggle(n){
+  const L = layoutOf(pendingLayout);
+  const arr = manual[manual.tab];
+  const other = manual.tab === 'wishes' ? manual.taboos : manual.wishes;
+  const idx = arr.indexOf(n);
+  if(idx >= 0){
+    arr.splice(idx,1);
+  } else {
+    if(other.indexOf(n) >= 0){ toast('Этот пункт уже в другом списке'); return; }
+    if(arr.length >= L.total){ toast('Уже ' + L.total + ' — сначала убери что-нибудь'); return; }
+    arr.push(n);
+    arr.sort((a,b)=>a-b);
+  }
+  if(navigator.vibrate) navigator.vibrate(15);
+  renderManual();
+}
+function manualLucky(){
+  const L = layoutOf(pendingLayout);
+  const arr = manual[manual.tab];
+  const other = manual.tab === 'wishes' ? manual.taboos : manual.wishes;
+  const need = L.total - arr.length;
+  if(need <= 0){ toast('Уже всё выбрано'); return; }
+  const have = new Set(arr);
+  const otherSet = new Set(other);
+  const pool = [];
+  for(let i=1;i<=WISHES.length;i++) if(!have.has(i) && !otherSet.has(i)) pool.push(i);
+  if(pool.length < need){ toast('Недостаточно свободных пунктов'); return; }
+  shuffle(pool);
+  arr.push(...pool.slice(0,need));
+  arr.sort((a,b)=>a-b);
+  if(navigator.vibrate) navigator.vibrate([30,20,30]);
+  renderManual();
+  toast('Компьютер добавил ' + need + ' шт. А вдруг повезёт! 🎲', 2200);
+}
+function manualClear(){
+  if(!confirm('Сбросить текущий список?')) return;
+  manual[manual.tab] = [];
+  renderManual();
+}
+function manualNext(){
+  const L = layoutOf(pendingLayout);
+  if(manual.tab === 'wishes'){
+    if(manual.wishes.length < L.total){
+      const have = new Set(manual.wishes);
+      const otherSet = new Set(manual.taboos);
+      const pool = [];
+      for(let i=1;i<=WISHES.length;i++) if(!have.has(i) && !otherSet.has(i)) pool.push(i);
+      shuffle(pool);
+      manual.wishes.push(...pool.slice(0, L.total-manual.wishes.length));
+      manual.wishes.sort((a,b)=>a-b);
+    }
+    manualTab('taboos');
+    return;
+  }
+  if(manual.taboos.length < L.total){
+    const have = new Set(manual.taboos);
+    const otherSet = new Set(manual.wishes);
+    const pool = [];
+    for(let i=1;i<=WISHES.length;i++) if(!have.has(i) && !otherSet.has(i)) pool.push(i);
+    shuffle(pool);
+    manual.taboos.push(...pool.slice(0, L.total-manual.taboos.length));
+    manual.taboos.sort((a,b)=>a-b);
+  }
+  state.player = {
+    wishes: manual.wishes.slice(),
+    taboos: manual.taboos.slice(),
+    marksW: Array(L.total).fill(false),
+    marksT: Array(L.total).fill(false),
+    bingo: false,
+    setupDone: true,
+    _bingoSet: [],
+    layout: pendingLayout,
+    undoStack: []
+  };
+  save();
+  toast('Карточка готова');
+  showScreen('player');
+}
+
+// ============ ВЕДУЩИЙ ============
+function renderHost(){
+  const n = state.host.current;
+  const total = state.host.log.length;
+  document.getElementById('host-count').textContent = total;
+  document.getElementById('host-total').textContent = WISHES.length;
+  document.getElementById('host-round').textContent = state.host.round;
+  if(n === null || n === undefined){
+    document.getElementById('host-number').textContent = '—';
+    document.getElementById('host-cat').style.display='none';
+    document.getElementById('host-text').textContent = 'Нажми «Крутить», чтобы начать';
+  }else{
+    document.getElementById('host-number').textContent = n;
+    const cat = document.getElementById('host-cat');
+    if(WISHES[n-1] !== undefined){
+      cat.textContent = CAT_NAME[wishCat(n)];
+      cat.className = 'cat-tag c'+wishCat(n);
+      cat.style.display = 'inline-block';
+    } else cat.style.display='none';
+    document.getElementById('host-text').textContent = wishText(n);
+  }
+  const h = document.getElementById('host-history');
+  if(total === 0){ h.style.display='none'; h.innerHTML=''; }
+  else{
+    h.style.display='block';
+    h.innerHTML = state.host.log.slice().reverse().slice(0,15)
+      .map(x=>`<b>${x.n}</b> · ${escapeHtml(logText(x))}`).join('<br>');
+  }
+  document.getElementById('btn-spin').disabled = total >= WISHES.length;
+  const alert = document.getElementById('host-bingo-alert');
+  if(state.player && state.player.bingo) alert.classList.add('show');
+  else alert.classList.remove('show');
+}
+function spin(){
+  if(state.host.log.length >= WISHES.length){ toast('Все числа уже выпали'); return; }
+  const used = new Set(state.host.log.map(x=>x.n));
+  const pool = [];
+  for(let i=1;i<=WISHES.length;i++) if(!used.has(i)) pool.push(i);
+  const n = pool[Math.floor(Math.random()*pool.length)];
+  state.host.log.push({ n, t: Date.now(), text: wishText(n), cat: wishCat(n) });
+  state.host.current = n;
+  playDing();
+  const el = document.getElementById('host-number');
+  el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  if(navigator.vibrate) navigator.vibrate(40);
+  renderHost();
+  save();
+}
+function resetHost(){
+  if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
+  const def = 'Раунд ' + state.host.round;
+  const inp = document.getElementById('round-name-input');
+  inp.value = def;
+  inp.placeholder = def;
+  document.getElementById('modal-round-name').classList.add('show');
+  setTimeout(()=>inp.focus(), 100);
+}
+function confirmRoundName(){
+  const inp = document.getElementById('round-name-input');
+  const name = (inp.value || '').trim() || ('Раунд ' + state.host.round);
+  document.getElementById('modal-round-name').classList.remove('show');
+  state.archive.unshift({
+    round: state.host.round,
+    name: name,
+    startedAt: state.host.startedAt,
+    finishedAt: Date.now(),
+    log: state.host.log.slice()
+  });
+  if(state.archive.length > 20) state.archive.length = 20;
+  state.host.log = [];
+  state.host.current = null;
+  state.host.round += 1;
+  state.host.startedAt = Date.now();
+  if(state.player) state.player.bingo = false;
+  renderHost();
+  save();
+  toast('Раунд сохранён: ' + name);
+}
+function cancelRoundName(){
+  document.getElementById('modal-round-name').classList.remove('show');
+}
+
+// ============ ЖУРНАЛ ============
+let logViewMode = 'current';
+function showLog(){
+  logViewMode = 'current';
+  showScreen('log');
+  renderLog();
+}
+function renderLog(){
+  const sub = document.getElementById('log-sub');
+  const wrap = document.getElementById('log-wrap');
+  const banner = document.getElementById('log-banner-host');
+  let log;
+  if(logViewMode === 'current'){
+    log = state.host.log;
+    banner.style.display = 'none';
+  } else {
+    const r = state.archive[logViewMode.archiveIndex];
+    log = r ? r.log : [];
+    banner.style.display = 'block';
+    banner.innerHTML = `📂 Архив · ${r ? escapeHtml(r.name || ('Раунд ' + r.round)) : '?'} · ${r ? fmtDate(r.startedAt) : ''} <button onclick="closeArchiveView()">← К текущему</button>`;
+  }
+  sub.textContent = logViewMode === 'current'
+    ? `РАУНД ${state.host.round} · ${log.length} ЧИСЕЛ · ${fmtDate(state.host.startedAt)}`
+    : `АРХИВ · ${log.length} ЧИСЕЛ`;
+  if(log.length === 0){
+    wrap.innerHTML = '<div class="empty-log">Пока пусто.<br>Возвращайся на экран ведущего и крути числа — они появятся здесь.</div>';
+    return;
+  }
+  let html = '<table class="log-table"><thead><tr>' +
+    '<th class="col-idx">#</th><th class="col-num">№</th><th class="col-time">Время</th>' +
+    '<th>Текст</th></tr></thead><tbody>';
+  log.forEach((row, i)=>{
+    const cat = logCat(row);
+    html += `<tr class="c${cat}"><td class="col-idx"><b>${i+1}</b></td>` +
+      `<td class="col-num"><b>${row.n}</b></td>` +
+      `<td class="col-time">${fmtTime(row.t)}</td>` +
+      `<td>${escapeHtml(logText(row))}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+function closeArchiveView(){ logViewMode = 'current'; renderLog(); }
+function clearLog(){
+  if(state.host.log.length === 0){ toast('Уже пусто'); return; }
+  if(!confirm('Удалить журнал без сохранения в архив?')) return;
+  state.host.log = [];
+  state.host.current = null;
+  state.host.startedAt = Date.now();
+  renderLog();
+  save();
+  toast('Журнал очищен');
+}
+function showArchive(){
+  if(state.archive.length === 0){ toast('Архив пуст'); return; }
+  const list = state.archive.map((r,i)=>{
+    const nm = r.name || ('Раунд ' + r.round);
+    return `${i+1}. ${nm} (${r.log.length} чисел, ${fmtDate(r.startedAt)})`;
+  }).join('\n');
+  const ans = prompt('Архив раундов:\n\n' + list + '\n\nВведи номер для просмотра (или отмена):');
+  if(!ans) return;
+  const idx = parseInt(ans,10) - 1;
+  if(idx < 0 || idx >= state.archive.length){ toast('Неверный номер'); return; }
+  logViewMode = { archiveIndex: idx };
+  renderLog();
+}
+
+// ============ СТАТИСТИКА ============
+function renderStats(){
+  const wrap = document.getElementById('stats-content');
+  const rounds = state.archive.slice();
+  const hasCurrent = state.host.log.length > 0;
+  const totalRounds = rounds.length + (hasCurrent ? 1 : 0);
+  const totalNumbers = rounds.reduce((s,r)=>s + r.log.length, 0) + state.host.log.length;
+
+  const durations = rounds
+    .filter(r => r.startedAt && r.finishedAt && r.finishedAt > r.startedAt)
+    .map(r => r.finishedAt - r.startedAt);
+  const avgDuration = durations.length
+    ? durations.reduce((s,v)=>s+v,0) / durations.length
+    : 0;
+
+  const firstTs = rounds.length
+    ? Math.min(...rounds.map(r=>r.startedAt).filter(Boolean))
+    : (hasCurrent ? state.host.startedAt : 0);
+
+  const lastTs = hasCurrent
+    ? state.host.startedAt
+    : (rounds.length ? rounds[0].startedAt : 0);
+
+  const cells = [
+    {v: totalRounds, l: 'Раундов'},
+    {v: totalNumbers, l: 'Чисел выпало'},
+    {v: fmtDuration(avgDuration), l: 'Средняя длительность', wide:false},
+    {v: rounds.length, l: 'В архиве'},
+    {v: firstTs ? fmtDateFull(firstTs) : '—', l: 'Первый запуск', wide:true},
+  ];
+
+  wrap.innerHTML = cells.map(c=>`
+    <div class="stat-cell ${c.wide?'stat-wide':''}">
+      <div class="stat-val">${escapeHtml(String(c.v))}</div>
+      <div class="stat-lbl">${escapeHtml(c.l)}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('stats-sub').textContent = firstTs
+    ? 'С ' + fmtDate(firstTs)
+    : 'ПУСТО';
+
+  // мини-сводка в Разрабе
+  const mini = document.getElementById('dev-stats-mini');
+  if(mini){
+    mini.innerHTML = `Раундов: <b>${totalRounds}</b> · Чисел: <b>${totalNumbers}</b>` +
+      (avgDuration ? ` · средняя <b>${fmtDuration(avgDuration)}</b>` : '');
+  }
+}
+
+// ============ ЭКСПОРТ / ПЕЧАТЬ ============
+function exportCSV(){
+  if(logViewMode !== 'current'){ toast('Сначала закрой архив'); return; }
+  if(state.host.log.length === 0){ toast('Нечего экспортировать'); return; }
+  const rows = [['#','Число','Категория','Текст','Время']];
+  state.host.log.forEach((row,i)=>{
+    rows.push([i+1, row.n, CAT_NAME[logCat(row)], logText(row), fmtTime(row.t)]);
+  });
+  const csv = '\uFEFF' + rows.map(r=>r.map(c=>{
+    const s = String(c).replace(/"/g,'""');
+    return /[",\n;]/.test(s) ? `"${s}"` : s;
+  }).join(';')).join('\n');
+  downloadFile(csv, `sex_bingo_round${state.host.round}_${dateStamp()}.csv`, 'text/csv;charset=utf-8');
+}
+function printLog(){
+  if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
+  const pa = document.getElementById('print-area');
+  let html = `<h1>СЕКС БИНГО · РАУНД ${state.host.round}</h1>`;
+  html += `<div class="sub">Дата: ${fmtDate(state.host.startedAt)} · Выпало чисел: ${state.host.log.length} из ${WISHES.length}</div>`;
+  html += '<table><thead><tr><th style="width:34px">#</th><th style="width:46px">№</th><th style="width:60px">Время</th><th style="width:80px">Категория</th><th>Текст</th></tr></thead><tbody>';
+  state.host.log.forEach((row,i)=>{
+    const cat = logCat(row);
+    html += `<tr class="c${cat}"><td>${i+1}</td><td><b>${row.n}</b></td><td>${fmtTime(row.t)}</td><td>${CAT_NAME[cat]}</td><td>${escapeHtml(logText(row))}</td></tr>`;
+  });
+  html += '</tbody></table>';
+  pa.innerHTML = html;
+  window.print();
+}
+function printCard(){
+  const L = layoutOf(state.player.layout);
+  if(!state.player.wishes || state.player.wishes.length < L.total){ toast('Нет карточки'); return; }
+  const pa = document.getElementById('print-area');
+  const buildGrid = (nums, title) => {
+    let h = `<h1>СЕКС БИНГО · ${title} (${L.name})</h1>`;
+    h += `<div class="sub">Имя: _______________________   Дата: ____________</div>`;
+    h += '<table class="print-card"><tbody>';
+    for(let r=0;r<L.rows;r++){
+      h += '<tr>';
+      for(let c=0;c<L.cols;c++){
+        const num = nums[r*L.cols+c];
+        h += `<td><span class="num">${num}.</span><br>${escapeHtml(wishText(num))}</td>`;
+      }
+      h += '</tr>';
+    }
+    h += '</tbody></table>';
+    return h;
+  };
+  pa.innerHTML = buildGrid(state.player.wishes, 'ЖЕЛАНИЯ') +
+                 '<div style="page-break-before:always"></div>' +
+                 buildGrid(state.player.taboos, 'ТАБУ');
+  window.print();
+}
+function dateStamp(){
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function downloadFile(content, name, type){
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+  toast('Файл ' + name + ' сохранён');
+}
+
+// ============ ИГРОК ============
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function makeCard(layoutKey){
+  const L = layoutOf(layoutKey || '3x5');
+  const total = L.total;
+  const all = Array.from({length: WISHES.length},(_,i)=>i+1);
+  shuffle(all);
+  const wishes = all.slice(0,total).sort((a,b)=>a-b);
+  const rest = all.slice(total);
+  shuffle(rest);
+  const taboos = rest.slice(0,total).sort((a,b)=>a-b);
+  return {
+    wishes, taboos,
+    marksW: Array(total).fill(false),
+    marksT: Array(total).fill(false),
+    bingo: false,
+    setupDone: true,
+    _bingoSet: [],
+    layout: layoutKey || '3x5',
+    undoStack: []
+  };
+}
+function goToSetup(){
+  if(!confirm('Собрать новую карточку? Текущие отметки сбросятся.')) return;
+  pendingLayout = state.player.layout || '3x5';
+  state.player = {
+    wishes: [], taboos: [], marksW: [], marksT: [],
+    bingo: false, setupDone: false, _bingoSet: [],
+    layout: state.player.layout || '3x5', undoStack: []
+  };
+  save();
+  showScreen('setup');
+}
+function resetMarks(){
+  if(!confirm('Очистить все отметки?')) return;
+  const L = layoutOf(state.player.layout);
+  state.player.marksW = Array(L.total).fill(false);
+  state.player.marksT = Array(L.total).fill(false);
+  state.player.bingo = false;
+  state.player._bingoSet = [];
+  state.player.undoStack = [];
+  renderPlayer();
+  save();
+}
+function renderPlayer(){
+  const L = layoutOf(state.player.layout);
+  if(!state.player.setupDone || !state.player.wishes || state.player.wishes.length !== L.total){
+    showScreen('setup');
+    return;
+  }
+  document.getElementById('player-sub').textContent = 'РАСКЛАДКА ' + L.name + ' · ВВОДИ НОМЕРА';
+  renderGrid('wishes','marksW','grid-wishes','score-w', L);
+  renderGrid('taboos','marksT','grid-taboos','score-t', L);
+  checkBingo();
+}
+function renderGrid(dataKey, marksKey, gridId, scoreId, L){
+  const data = state.player[dataKey];
+  const marks = state.player[marksKey];
+  const grid = document.getElementById(gridId);
+  grid.style.gridTemplateColumns = `repeat(${L.cols}, 1fr)`;
+  grid.innerHTML = '';
+  const score = marks.filter(Boolean).length;
+  document.getElementById(scoreId).textContent = score + '/' + L.total;
+  const bingoSet = new Set(state.player._bingoSet || []);
+  data.forEach((num, i)=>{
+    const d = document.createElement('div');
+    d.className = 'cell' + (marks[i]?' hit':'') + (bingoSet.has(dataKey+i)?' bingo':'');
+    const cat = wishCat(num);
+    if(cat===0) d.style.borderLeftColor = '#4a7d2c';
+    if(cat===1) d.style.borderLeftColor = '#a68a1c';
+    if(cat===2) d.style.borderLeftColor = '#a03b3b';
+    d.innerHTML = `<span class="num">${num}</span><span class="t">${escapeHtml(wishText(num))}</span>`;
+    d.onclick = () => {
+      const prev = state.player[marksKey][i];
+      state.player[marksKey][i] = !prev;
+      pushUndo({grid:dataKey, index:i, prev});
+      refreshGridCell(grid, i, marksKey, dataKey, scoreId, L);
+      save();
+    };
+    grid.appendChild(d);
+  });
+}
+function refreshGridCell(grid, i, marksKey, dataKey, scoreId, L){
+  const marks = state.player[marksKey];
+  const cell = grid.children[i];
+  if(!cell) return;
+  cell.classList.toggle('hit', !!marks[i]);
+  const sc = marks.filter(Boolean).length;
+  document.getElementById(scoreId).textContent = sc + '/' + L.total;
+  // обновляем бинго-подсветку
+  const prevBingo = new Set(state.player._bingoSet || []);
+  checkBingo();
+  const newBingo = new Set(state.player._bingoSet || []);
+  prevBingo.forEach(key=>{
+    if(!newBingo.has(key) && key.startsWith(dataKey)){
+      const idx = parseInt(key.slice(dataKey.length), 10);
+      const c = grid.children[idx];
+      if(c) c.classList.remove('bingo');
+    }
+  });
+  newBingo.forEach(key=>{
+    if(!prevBingo.has(key) && key.startsWith(dataKey)){
+      const idx = parseInt(key.slice(dataKey.length), 10);
+      const c = grid.children[idx];
+      if(c) c.classList.add('bingo');
+    }
+  });
+}
+function pushUndo(op){
+  if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
+  state.player.undoStack.push(op);
+  if(state.player.undoStack.length > 20) state.player.undoStack.shift();
+}
+function undoLast(){
+  const stack = state.player.undoStack;
+  if(!stack || !stack.length){ toast('Нечего отменять'); return; }
+  const op = stack.pop();
+  const L = layoutOf(state.player.layout);
+  if(op.grid === 'wishes'){
+    state.player.marksW[op.index] = op.prev;
+  } else {
+    state.player.marksT[op.index] = op.prev;
+  }
+  renderPlayer();
+  save();
+  toast('Отменено');
+}
+function markFromInput(){
+  const inp = document.getElementById('player-input');
+  const raw = inp.value.trim();
+  if(!/^\d+$/.test(raw)){ toast('Введи число 1–' + WISHES.length); return; }
+  const v = parseInt(raw, 10);
+  if(v<1 || v>WISHES.length){ toast('Введи число 1–' + WISHES.length); return; }
+  let found = false;
+  const iw = state.player.wishes.indexOf(v);
+  if(iw >= 0){
+    const prev = state.player.marksW[iw];
+    if(!prev){ pushUndo({grid:'wishes', index:iw, prev:false}); }
+    state.player.marksW[iw] = true;
+    found = true;
+  }
+  const it = state.player.taboos.indexOf(v);
+  if(it >= 0){
+    const prev = state.player.marksT[it];
+    if(!prev){ pushUndo({grid:'taboos', index:it, prev:false}); }
+    state.player.marksT[it] = true;
+    found = true;
+  }
+  inp.value = '';
+  if(found){
+    if(navigator.vibrate) navigator.vibrate(30);
+    renderPlayer();
+    save();
+  }else{
+    toast('Числа ' + v + ' нет в твоей карточке');
+  }
+}
+function checkBingo(){
+  const L = layoutOf(state.player.layout);
+  const cols = L.cols, rows = L.rows, total = L.total;
+  const bingoSet = new Set();
+  function check(marks, dataKey){
+    let bingoCount = 0;
+    // строки
+    for(let r=0;r<rows;r++){
+      let all = true;
+      for(let c=0;c<cols;c++) if(!marks[r*cols+c]) all=false;
+      if(all){
+        for(let c=0;c<cols;c++) bingoSet.add(dataKey+(r*cols+c));
+        bingoCount++;
+      }
+    }
+    // столбцы
+    for(let c=0;c<cols;c++){
+      let all = true;
+      for(let r=0;r<rows;r++) if(!marks[r*cols+c]) all=false;
+      if(all){
+        for(let r=0;r<rows;r++) bingoSet.add(dataKey+(r*cols+c));
+        bingoCount++;
+      }
+    }
+    // полная карточка
+    if(marks.every(Boolean)){
+      for(let i=0;i<total;i++) bingoSet.add(dataKey+i);
+      bingoCount++;
+    }
+    return bingoCount;
+  }
+  const bw = check(state.player.marksW, 'wishes');
+  const bt = check(state.player.marksT, 'taboos');
+  state.player._bingoSet = Array.from(bingoSet);
+  const hasBingo = (bw + bt) > 0;
+  const banner = document.getElementById('bingo-banner');
+  if(hasBingo){
+    banner.classList.add('show');
+    if(!state.player.bingo){
+      state.player.bingo = true;
+      showBingoOverlay('Ты собрал линию! Скажи ведущему.');
+    }
+  }else{
+    banner.classList.remove('show');
+  }
+}
+
+// ============ СПИСОК ============
+function renderList(q){
+  const list = document.getElementById('list-content');
+  const query = q.trim().toLowerCase();
+  list.innerHTML = '';
+  document.getElementById('list-total').textContent = '· ' + WISHES.length + ' ПУНКТОВ';
+  for(let i=0;i<WISHES.length;i++){
+    const n = i+1;
+    const text = WISHES[i];
+    if(query && !((n + ' ' + text.toLowerCase()).includes(query))) continue;
+    const el = document.createElement('div');
+    el.className = 'item c' + CATS[i];
+    el.innerHTML = `<span class="n">${n}</span><span class="t">${escapeHtml(text)}</span>`;
+    list.appendChild(el);
+  }
+}
+
+// ============ РАЗРАБ ============
+function renderDev(){
+  document.getElementById('dev-count').textContent = WISHES.length;
+
+  const status = document.getElementById('dev-a2hs-status');
+  if(status){
+    const standalone = a2hsIsStandalone();
+    const hidden = localStorage.getItem(LS_A2HS) === '1';
+    if(standalone) status.innerHTML = 'Статус: <b>уже установлено как приложение</b>';
+    else if(hidden) status.innerHTML = 'Статус: <b>не показывать</b>';
+    else status.innerHTML = 'Статус: <b>напоминание активно</b>';
+  }
+
+  const stStatus = document.getElementById('dev-storage-status');
+  if(stStatus){
+    const proto = location.protocol;
+    let info = 'протокол: ' + proto;
+    if(proto !== 'file:' && proto !== 'http:' && proto !== 'https:'){
+      info += ' · <b style="color:var(--red-b)">риск потери данных!</b>';
+    }
+    try{
+      const used = (localStorage.getItem(LS_KEY) || '').length
+        + (localStorage.getItem(LS_WISHES) || '').length;
+      info += ' · ~' + Math.round(used/1024) + ' КБ';
+    }catch(e){}
+    stStatus.innerHTML = 'Хранилище: ' + info;
+  }
+
+  // мини-статистика
+  const rounds = state.archive.length;
+  const totalNumbers = state.archive.reduce((s,r)=>s + r.log.length, 0) + state.host.log.length;
+  const mini = document.getElementById('dev-stats-mini');
+  if(mini){
+    const durations = state.archive
+      .filter(r => r.startedAt && r.finishedAt && r.finishedAt > r.startedAt)
+      .map(r => r.finishedAt - r.startedAt);
+    const avg = durations.length ? durations.reduce((s,v)=>s+v,0)/durations.length : 0;
+    mini.innerHTML = `Раундов: <b>${rounds + (state.host.log.length ? 1 : 0)}</b> · ` +
+      `Чисел: <b>${totalNumbers}</b>` +
+      (avg ? ` · средняя <b>${fmtDuration(avg)}</b>` : '');
+  }
+
+  // тумблеры
+  const ts = document.getElementById('toggle-sound');
+  if(ts) ts.classList.toggle('on', soundEnabled);
+  const th = document.getElementById('toggle-theme');
+  if(th) th.classList.toggle('on', lightTheme);
+
+  document.querySelectorAll('.cat-btn[data-cat]').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.cat)===devCat);
+  });
+  const list = document.getElementById('dev-list');
+  list.innerHTML = '';
+  for(let i=0;i<WISHES.length;i++){
+    const el = document.createElement('div');
+    el.className = 'dev-item c' + CATS[i];
+    el.innerHTML = `
+      <span class="dev-num">${i+1}</span>
+      <span class="dev-text">${escapeHtml(WISHES[i])}</span>
+      <span class="dev-cat-badge c${CATS[i]}">${CAT_NAME[CATS[i]]}</span>
+      <button class="dev-icon" onclick="devEdit(${i})" title="Редактировать">✏️</button>
+      <button class="dev-icon" onclick="devDel(${i})" title="Удалить">🗑</button>
+    `;
+    list.appendChild(el);
+  }
+}
+function devPickCat(c){
+  devCat = c;
+  document.querySelectorAll('.cat-btn[data-cat]').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.cat)===c);
+  });
+}
+function devAdd(){
+  const inp = document.getElementById('dev-new-text');
+  const text = inp.value.trim();
+  if(!text){ toast('Введи текст'); return; }
+  if(text.length > 200){ toast('Слишком длинно (макс 200)'); return; }
+  WISHES.push(text);
+  CATS.push(devCat);
+  inp.value = '';
+  saveWishes();
+  afterWishesChange();
+  renderDev();
+  toast('Добавлено #' + WISHES.length);
+}
+function devEdit(i){
+  devEditIndex = i;
+  devEditCat = CATS[i];
+  document.getElementById('dev-edit-num').textContent = i+1;
+  document.getElementById('dev-edit-text').value = WISHES[i];
+  document.querySelectorAll('.cat-btn[data-edit-cat]').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.editCat)===devEditCat);
+  });
+  document.getElementById('modal-dev-edit').classList.add('show');
+}
+function devEditPickCat(c){
+  devEditCat = c;
+  document.querySelectorAll('.cat-btn[data-edit-cat]').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.editCat)===c);
+  });
+}
+function devEditSave(){
+  const text = document.getElementById('dev-edit-text').value.trim();
+  if(!text){ toast('Пустой текст'); return; }
+  if(text.length > 200){ toast('Слишком длинно (макс 200)'); return; }
+  WISHES[devEditIndex] = text;
+  CATS[devEditIndex] = devEditCat;
+  saveWishes();
+  afterWishesChange();
+  document.getElementById('modal-dev-edit').classList.remove('show');
+  renderDev();
+  toast('Обновлено #' + (devEditIndex+1));
+}
+function devEditCancel(){
+  document.getElementById('modal-dev-edit').classList.remove('show');
+}
+function devDel(i){
+  if(WISHES.length <= 25){ toast('Минимум 25 пунктов (для раскладки 5×5)'); return; }
+  if(!confirm('Удалить пункт #' + (i+1) + '?\n\n"' + WISHES[i] + '"')) return;
+  WISHES.splice(i,1);
+  CATS.splice(i,1);
+  saveWishes();
+  afterWishesChange();
+  renderDev();
+  toast('Удалено. Осталось ' + WISHES.length);
+}
+function devResetAll(){
+  if(!confirm('Сбросить список к стандартному набору?\nВсе твои правки будут потеряны.')) return;
+  WISHES.length = 0;
+  WISHES.push(...DEFAULT_WISHES);
+  CATS.length = 0;
+  CATS.push(...DEFAULT_CATS);
+  saveWishes();
+  afterWishesChange();
+  renderDev();
+  toast('Список сброшен к стандарту');
+}
+function afterWishesChange(){
+  if(state.player && state.player.wishes && state.player.wishes.length){
+    state.player.setupDone = false;
+  }
+  save();
+}
+
+// ============ ЭКСПОРТ / ИМПОРТ ВСЕГО ============
+function exportAll(){
+  const data = {
+    app: 'sexbingo',
+    version: 1,
+    exportedAt: Date.now(),
+    wishes: WISHES,
+    cats: CATS,
+    state: state,
+    settings: { sound: soundEnabled, lightTheme: lightTheme }
+  };
+  downloadFile(JSON.stringify(data, null, 2),
+    `sex_bingo_backup_${dateStamp()}.json`,
+    'application/json');
+}
+function importAll(file){
+  if(!file) return;
+  if(!confirm('Импорт заменит ВСЕ данные приложения. Продолжить?')) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      if(!data || data.app !== 'sexbingo' || !Array.isArray(data.wishes) || !Array.isArray(data.cats)){
+        throw new Error('Не тот формат файла');
+      }
+      if(data.wishes.length < 25) throw new Error('В списке меньше 25 пунктов');
+      WISHES.length = 0; WISHES.push(...data.wishes.map(String));
+      CATS.length = 0; CATS.push(...data.cats.map(c=>[0,1,2].includes(c)?c:1));
+      saveWishes();
+      state = Object.assign(state, data.state || {});
+      if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
+      if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
+      if(!LAYOUTS[state.player.layout]) state.player.layout = '3x5';
+      if(data.settings){
+        soundEnabled = !!data.settings.sound;
+        lightTheme = !!data.settings.lightTheme;
+        try{
+          localStorage.setItem(LS_SOUND, soundEnabled ? '1' : '0');
+          localStorage.setItem(LS_THEME, lightTheme ? '1' : '0');
+        }catch(e){}
+        applyTheme();
+      }
+      save();
+      toast('Импортировано. Перезагрузка…');
+      setTimeout(()=>location.reload(), 800);
+    }catch(err){
+      toast('Ошибка импорта: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ============ ИНИЦИАЛИЗАЦИЯ ============
+load();
+applyTheme();
+if(state.accepted18) document.getElementById('modal18').classList.remove('show');
+
+if(!state.player) state.player = {
+  wishes:[], taboos:[], marksW:[], marksT:[],
+  bingo:false, setupDone:false, _bingoSet:[], layout:'3x5', undoStack:[]
+};
+if(typeof state.player.setupDone !== 'boolean') state.player.setupDone = false;
+if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
+if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
+if(!LAYOUTS[state.player.layout]) state.player.layout = '3x5';
+pendingLayout = state.player.layout;
+
+document.getElementById('player-input').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); markFromInput(); }
+});
+document.getElementById('list-search').addEventListener('input', e=>renderList(e.target.value));
+document.getElementById('manual-search').addEventListener('input', ()=>renderManual());
+document.getElementById('dev-new-text').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); devAdd(); }
+});
+document.getElementById('round-name-input').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); confirmRoundName(); }
+});
+
+// PWA manifest
+try{
+  const icon = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="36" fill="#c00000"/><text x="96" y="118" font-size="110" font-family="Arial" font-weight="900" text-anchor="middle" fill="#fff">🎲</text></svg>'
+  );
+  const manifest = {
+    name: 'Секс Бинго 18+', short_name: 'Секс Бинго',
+    start_url: '.', display: 'standalone',
+    background_color: '#0f0f0f', theme_color: '#c00000',
+    icons: [{src: icon, sizes: '192x192', type: 'image/svg+xml'}]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = URL.createObjectURL(blob);
+  document.head.appendChild(link);
+}catch(e){}
+
+const initial = state.lastScreen && document.getElementById('screen-'+state.lastScreen)
+  ? state.lastScreen
+  : 'menu';
+navHistory = [initial];
+navIndex = 0;
+_renderScreen(initial);
+
+// BroadcastChannel
+try{
+  if(typeof BroadcastChannel === 'function'){
+    const myId = Math.random().toString(36).slice(2);
+    const bc = new BroadcastChannel('sexbingo');
+    bc.postMessage({type:'hello', id: myId});
+    bc.onmessage = e => {
+      if(e.data && e.data.type === 'hello' && e.data.id !== myId){
+        toast('Игра уже открыта в другой вкладке — данные могут конфликтовать', 5000);
+      }
+    };
+  }
+}catch(e){}
+
+window.addEventListener('pagehide', ()=>save());
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) save(); });
+
+if(state.accepted18){
+  if(!checkProtocolWarning()){
+    if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 1500);
+  }
+}
+</script>
+</body>
+</html>
