@@ -2729,6 +2729,53 @@ if(state.accepted18){
     if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 2500);
   }
 }
+
+// ============ СИСТЕМНАЯ КНОПКА/ЖЕСТ «НАЗАД» ============
+(function setupSystemBack(){
+  let bufferActive = false;
+
+  function pushBuffer(){
+    try{
+      history.pushState({sb: Date.now()}, '');
+      bufferActive = true;
+    }catch(e){}
+  }
+
+  function currentScreenId(){
+    const active = document.querySelector('.screen.active');
+    return active ? active.id.replace('screen-', '') : 'menu';
+  }
+
+  window.addEventListener('popstate', function(){
+    bufferActive = false;
+    const screenId = currentScreenId();
+
+    // Не в корне — идём назад по нашему стеку
+    if(screenId !== 'menu' && screenId !== 'mode' && navIndex > 0){
+      navBack();
+      pushBuffer();
+      return;
+    }
+
+    // В корне (menu или mode) — спрашиваем
+    if(screenId === 'menu' || screenId === 'mode'){
+      const ok = confirm('Закрыть приложение?');
+      if(ok){
+        // Разрешаем выход: не переставляем буфер, вызываем back ещё раз.
+        try{ history.back(); }catch(e){}
+      } else {
+        pushBuffer();
+      }
+      return;
+    }
+
+    // Фолбэк
+    pushBuffer();
+  });
+
+  // Ставим буфер на старте
+  pushBuffer();
+})();
 </script>
 </body>
 </html>
