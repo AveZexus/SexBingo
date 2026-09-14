@@ -38,6 +38,8 @@ h1 small{display:block;font-size:10px;font-weight:400;color:var(--muted);letter-
 #screen-menu{overflow-y:auto;position:relative}
 .dev-btn{position:fixed;top:12px;right:12px;width:36px;height:36px;border-radius:50%;background:var(--card2);border:1px solid var(--line);color:var(--muted);font-size:16px;cursor:pointer;z-index:60;display:flex;align-items:center;justify-content:center;opacity:.45;font-family:inherit;padding:0}
 .dev-btn:active{opacity:1;background:var(--red-d);color:#fff}
+.mode-btn{position:fixed;top:12px;left:12px;width:36px;height:36px;border-radius:50%;background:var(--card2);border:1px solid var(--line);color:var(--muted);font-size:16px;cursor:pointer;z-index:60;display:flex;align-items:center;justify-content:center;opacity:.45;font-family:inherit;padding:0}
+.mode-btn:active{opacity:1;background:var(--red-d);color:#fff}
 .logo{text-align:center;padding:26px 14px 20px;border-radius:20px;background:linear-gradient(135deg,var(--logo-a) 0%,var(--logo-b) 60%,var(--logo-c) 100%);margin-bottom:18px;box-shadow:0 8px 32px rgba(192,0,0,.35)}
 .logo h2{font-size:36px;font-weight:900;letter-spacing:4px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.3);line-height:1}
 .logo .dice{font-size:30px;margin-bottom:6px;display:block}
@@ -66,6 +68,35 @@ body.light .help-card .help-body b{color:var(--red-d)}
 .help-card .help-body span{font-size:11px;color:var(--muted);line-height:1.3}
 .help-card .help-arrow{color:var(--red-b);font-size:18px;font-weight:900;flex-shrink:0}
 
+.quick-toggles{margin-top:14px;margin-bottom:8px}
+.quick-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:6px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--text)}
+.quick-toggle-row:active{background:var(--card2)}
+.quick-toggle-row .toggle-switch{width:42px;height:24px}
+.quick-toggle-row .toggle-switch::after{width:18px;height:18px}
+.quick-toggle-row .toggle-switch.on::after{left:21px}
+.mode-switch-link{display:block;width:100%;padding:12px;background:transparent;border:none;color:var(--muted);font-size:12px;font-style:italic;cursor:pointer;text-align:center;margin-top:4px;margin-bottom:14px;font-family:inherit}
+.mode-switch-link:active{color:var(--red-b)}
+
+.mode-h{font-size:22px;font-weight:800;text-align:center;margin:20px 0 24px;letter-spacing:.3px}
+.mode-card{display:flex;align-items:flex-start;gap:14px;padding:20px 18px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:18px;margin-bottom:14px;cursor:pointer;text-align:left;color:var(--text);width:100%;font-family:inherit;transition:.15s}
+.mode-card:active{background:var(--card2);transform:scale(.985)}
+.mode-card .mode-emoji{font-size:34px;flex-shrink:0;line-height:1}
+.mode-card .mode-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px}
+.mode-card .mode-body b{font-size:17px;font-weight:800;letter-spacing:.3px}
+.mode-card .mode-body span{font-size:12.5px;color:var(--muted);line-height:1.35}
+.mode-card .mode-body span.hl{color:var(--red-b);font-weight:800}
+.mode-card .mode-tag{font-size:11.5px;color:var(--red-b);font-style:italic;margin-top:4px}
+.mode-foot{text-align:center;font-size:11.5px;color:var(--muted);margin-top:22px;font-style:italic}
+.welcome-egg{font-size:44px;margin-bottom:8px;text-align:center}
+.rules-check{display:flex;align-items:center;justify-content:center;gap:10px;padding:10px;margin:14px 0 4px;background:rgba(127,127,127,.1);border-radius:10px;cursor:pointer;user-select:none;border:1px solid var(--line)}
+.rules-check input{width:20px;height:20px;accent-color:var(--red);flex-shrink:0;pointer-events:none;margin:0}
+.rules-check span{font-size:12.5px;color:var(--muted)}
+.monet-star{width:40px;height:40px;border-radius:12px;background:var(--card2);border:none;color:#8a6a00;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.55;font-family:inherit;padding:0}
+.monet-star:active{opacity:1}
+
+body.mode-quick .mode-full-only{display:none !important}
+body.mode-full .mode-quick-only{display:none !important}
+
 .help-section{background:var(--card);border-radius:14px;padding:16px;margin-bottom:12px;border-left:4px solid var(--red);flex-shrink:0}
 .help-section h2{font-size:15px;font-weight:800;color:var(--red-b);margin-bottom:10px;letter-spacing:.3px;display:flex;align-items:center;gap:8px}
 body.light .help-section h2{color:var(--red-d)}
@@ -80,7 +111,6 @@ body.light .help-section h2{color:var(--red-d)}
 .help-warn{background:linear-gradient(135deg,rgba(192,0,0,.18),rgba(139,0,0,.25));border:1px solid rgba(255,77,94,.4);border-radius:12px;padding:14px 16px;font-size:12.5px;line-height:1.5;color:var(--text);margin-bottom:12px;flex-shrink:0}
 .help-warn b{color:var(--red-b);font-weight:800;display:block;margin-bottom:6px;font-size:13px;letter-spacing:.3px}
 .help-tip{font-size:11.5px;color:var(--muted);font-style:italic;line-height:1.5;padding:10px 12px;background:rgba(127,127,127,.08);border-radius:10px;margin-top:8px}
-
 .qr-frame{display:inline-block;padding:10px;background:#fff;border-radius:14px;margin:10px 0}
 .qr-img{display:block;width:200px;height:200px;background:#fff}
 .qr-row{display:flex;gap:8px;align-items:stretch}
@@ -198,7 +228,6 @@ body:not(.light) .dev-cat-badge.c1{color:#ffe066}
 body:not(.light) .dev-cat-badge.c2{color:#ff9d9d}
 .dev-icon{width:32px;height:32px;border-radius:8px;background:var(--card2);border:none;color:var(--text);font-size:14px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
 .dev-icon:active{background:var(--red-d);color:#fff}
-
 .dev-section{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px;border-left:4px solid var(--red);flex-shrink:0}
 .dev-section-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:2px 0;gap:8px}
 .dev-section-header h3{font-size:12.5px;font-weight:800;letter-spacing:.5px;color:var(--red-b);text-transform:uppercase;margin:0}
@@ -213,15 +242,14 @@ body.light .dev-section-header h3{color:var(--red-d)}
 .dev-row .btn,.dev-row .btn-alt{flex:1;padding:11px 12px;border-radius:10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;border:none;letter-spacing:.3px;text-align:center;display:flex;align-items:center;justify-content:center;color:#fff}
 .dev-row .btn{background:var(--red)}
 .dev-row .btn-alt{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+#dev-list{flex:0 0 auto;overflow:visible;min-height:auto;height:auto;padding-bottom:40px}
+#screen-dev{overflow-y:auto}
 
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;font-size:13px;color:var(--text)}
 .toggle-switch{position:relative;width:48px;height:28px;background:var(--card2);border-radius:14px;cursor:pointer;transition:.2s;border:1px solid var(--line);flex-shrink:0}
 .toggle-switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--muted);border-radius:50%;transition:.2s}
 .toggle-switch.on{background:var(--red);border-color:var(--red)}
 .toggle-switch.on::after{left:23px;background:#fff}
-
-#dev-list{flex:0 0 auto;overflow:visible;min-height:auto;height:auto;padding-bottom:40px}
-#screen-dev{overflow-y:auto}
 
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .stat-cell{background:var(--card);border-radius:12px;padding:14px;border-left:3px solid var(--red)}
@@ -255,7 +283,6 @@ body:not(.light) .log-bingo-mark{color:#ffd700}
 .modal h3{font-size:22px;color:var(--red-b);margin-bottom:12px;letter-spacing:2px}
 body.light .modal h3{color:var(--red-d)}
 .modal p{font-size:14px;line-height:1.6;color:var(--muted);margin-bottom:22px}
-.modal button{width:100%;padding:15px;background:var(--red);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;margin-top:8px}
 .modal input[type=text]{width:100%;padding:12px 14px;border-radius:12px;background:var(--card2);border:2px solid var(--line);color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-bottom:10px}
 .modal input[type=text]:focus{border-color:var(--red)}
 .a2hs-check{display:flex;align-items:center;justify-content:center;gap:10px;padding:12px;margin:14px 0;background:rgba(127,127,127,.1);border-radius:10px;cursor:pointer;user-select:none;border:1px solid var(--line)}
@@ -282,7 +309,7 @@ body.light .modal h3{color:var(--red-d)}
 
 @media print {
   body{background:#fff;color:#000;overflow:visible;height:auto}
-  .screen,.toast,.modal,.actions,header,.icon-btn,.back,.player-input,.card-label,.bingo-banner,.bingo-overlay,.host-bingo-alert,.dev-btn{display:none !important}
+  .screen,.toast,.modal,.actions,header,.icon-btn,.back,.player-input,.card-label,.bingo-banner,.bingo-overlay,.host-bingo-alert,.dev-btn,.mode-btn{display:none !important}
   .print-area{display:block !important;padding:0}
   .print-area h1{display:block !important;color:#000;font-size:20px;margin-bottom:4px;text-align:center}
   .print-area .sub{text-align:center;color:#666;font-size:11px;margin-bottom:14px}
@@ -300,13 +327,40 @@ body.light .modal h3{color:var(--red-d)}
 .print-area{display:none}
 </style>
 </head>
-<body>
+<body class="mode-quick">
 
+<!-- ============ MODALS ============ -->
 <div class="modal show" id="modal18">
   <div class="modal-inner">
     <h3>🔞 18+</h3>
     <p>Эта игра содержит откровенный контент для взрослых. Продолжая, ты подтверждаешь, что тебе 18 или больше и ты играешь по обоюдному согласию всех участников.</p>
     <button onclick="accept18()">Мне 18+, продолжить</button>
+  </div>
+</div>
+
+<div class="modal" id="modal-welcome">
+  <div class="modal-inner">
+    <div class="welcome-egg">🎲</div>
+    <h3>С возвращением!</h3>
+    <p id="welcome-modal-text">Режим игры сохранён. Всё на своих местах — крути и побеждай.</p>
+    <div class="modal-btns">
+      <button class="btn-a2hs" onclick="closeWelcomeModal()">Погнали 🚀</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-rules-ask">
+  <div class="modal-inner">
+    <h3>📖 Хочешь прочитать правила?</h3>
+    <p>Пара минут — и понятно, как играть. Или пропусти и просто крути барабан.</p>
+    <label class="rules-check" id="rules-never-row">
+      <input type="checkbox" id="rules-never" onclick="event.stopPropagation();">
+      <span>Больше не напоминать</span>
+    </label>
+    <div class="modal-btns">
+      <button class="btn-a2hs" onclick="rulesAskRead()">Читать</button>
+      <button class="btn-a2hs-ghost" onclick="rulesAskSkip()">Позже</button>
+    </div>
   </div>
 </div>
 
@@ -384,8 +438,32 @@ body.light .modal h3{color:var(--red-d)}
   <button class="bingo-overlay-close" onclick="closeBingoOverlay()">Продолжить</button>
 </div>
 
-<div class="screen active" id="screen-menu">
-  <button class="dev-btn" onclick="showScreen('dev')" title="Разраб">⚙️</button>
+<!-- ============ SCREEN: MODE PICK ============ -->
+<div class="screen" id="screen-mode">
+  <h2 class="mode-h">Как ты хочешь играть?</h2>
+  <button class="mode-card" onclick="pickMode('quick')">
+    <span class="mode-emoji">🚀</span>
+    <span class="mode-body">
+      <b>Здесь и сейчас!</b>
+      <span>Открыл → играешь</span>
+      <span class="mode-tag">Крути, закрывай, доминируй!</span>
+    </span>
+  </button>
+  <button class="mode-card" onclick="pickMode('full')">
+    <span class="mode-emoji">🎛</span>
+    <span class="mode-body">
+      <b>Погрузиться на полную!</b>
+      <span>Открытый мир для тех, кто <b class="hl">в теме ;-)</b></span>
+      <span class="mode-tag">Раскладки, табу, архив, свой список, экспорт…</span>
+    </span>
+  </button>
+  <div class="mode-foot">Сменить можно в любой момент</div>
+</div>
+
+<!-- ============ SCREEN: MENU ============ -->
+<div class="screen" id="screen-menu">
+  <button class="mode-btn" id="mode-btn-menu" onclick="toggleModeFromMenu()" title="Режим">🚀</button>
+  <button class="dev-btn mode-full-only" onclick="showScreen('dev')" title="Разраб">⚙️</button>
   <div class="logo">
     <span class="dice">🎲</span>
     <h2>СЕКС<br>БИНГО</h2>
@@ -415,18 +493,30 @@ body.light .modal h3{color:var(--red-d)}
     <span class="small-ico">📜</span>
     <span class="small-body"><b>Список</b><span>Все пункты с категориями</span></span>
   </button>
-  <button class="help-card" onclick="showScreen('help')">
+  <button class="help-card" onclick="openHelp()">
     <span class="help-ico">❓</span>
-    <span class="help-body"><b>Как в это играть???</b><span>Правила и описание работы приложения</span></span>
+    <span class="help-body"><b id="help-card-title">Как в это играть???</b><span>Правила и описание работы приложения</span></span>
     <span class="help-arrow">›</span>
   </button>
+  <div class="quick-toggles">
+    <div class="quick-toggle-row" onclick="toggleSound()">
+      <span>🔊 Звук</span>
+      <div class="toggle-switch" id="qt-sound"></div>
+    </div>
+    <div class="quick-toggle-row" onclick="toggleTheme()">
+      <span>🌞 Светлая тема</span>
+      <div class="toggle-switch" id="qt-theme"></div>
+    </div>
+  </div>
+  <button class="mode-switch-link" id="mode-switch-link" onclick="toggleModeFromMenu()">⚙️ Погрузиться на полную!</button>
 </div>
 
+<!-- ============ SCREEN: HOST ============ -->
 <div class="screen" id="screen-host">
   <header>
     <button class="back" onclick="navBack()">←</button>
     <h1>Ведущий<small>РАУНД <span id="host-round">1</span> · ВЫПАЛО <span id="host-count">0</span>/<span id="host-total">150</span></small></h1>
-    <button class="icon-btn" onclick="openHostName()" title="Имя ведущего" id="host-name-btn">👤</button>
+    <button class="icon-btn mode-full-only" onclick="openHostName()" title="Имя ведущего" id="host-name-btn">👤</button>
     <button class="icon-btn" onclick="openPlayerFromHost()" title="Моя карточка игрока">🎴</button>
     <button class="icon-btn" onclick="showLog()" title="Журнал">📋</button>
   </header>
@@ -436,7 +526,7 @@ body.light .modal h3{color:var(--red-d)}
     <div class="wish-text" id="host-text">Нажми «Крутить», чтобы начать</div>
   </div>
   <div class="host-history" id="host-history" style="display:none"></div>
-  <div class="host-bingo-alert" id="host-bingo-alert">🎉 У ИГРОКА БИНГО!</div>
+  <div class="host-bingo-alert mode-full-only" id="host-bingo-alert">🎉 У ИГРОКА БИНГО!</div>
   <div class="actions">
     <button class="btn btn-secondary" onclick="resetHost()" title="Новый раунд">↻</button>
     <button class="btn btn-secondary" onclick="announceBingo()" title="Объявить БИНГО">📢</button>
@@ -444,39 +534,40 @@ body.light .modal h3{color:var(--red-d)}
   </div>
 </div>
 
+<!-- ============ SCREEN: SETUP ============ -->
 <div class="screen" id="screen-setup">
   <header>
     <button class="back" onclick="navBack()">←</button>
     <h1>Моя карточка<small id="setup-sub">ВЫБЕРИ РАСКЛАДКУ И РЕЖИМ</small></h1>
   </header>
-  <div class="setup-hero">
+  <div class="setup-hero mode-full-only">
     <h2>Ваше имя</h2>
     <p>Необязательно, но пригодится для архива и печати.</p>
     <input type="text" id="player-name-input" maxlength="40" placeholder="Например, Миша">
     <div class="name-chips" id="name-chips"></div>
   </div>
-  <div class="setup-hero">
+  <div class="setup-hero mode-full-only">
     <h2>Раскладка</h2>
     <p>Больше клеток — длиннее партия.</p>
   </div>
-  <div class="layout-pick">
+  <div class="layout-pick mode-full-only">
     <button class="layout-btn active" data-layout="3x5" onclick="pickLayout('3x5')">3×5<small>15 клеток</small></button>
     <button class="layout-btn" data-layout="4x4" onclick="pickLayout('4x4')">4×4<small>16 клеток</small></button>
     <button class="layout-btn" data-layout="5x5" onclick="pickLayout('5x5')">5×5<small>25 клеток</small></button>
   </div>
-  <div class="check-row checked" id="chk-taboos-toggle-row" onclick="toggleWithTaboos()">
+  <div class="check-row checked mode-full-only" id="chk-taboos-toggle-row" onclick="toggleWithTaboos()">
     <input type="checkbox" id="chk-with-taboos" checked onclick="event.stopPropagation();toggleWithTaboos()">
-    <span class="lbl">Играть <b>с табу</b><small>Две сетки: желания + табу. Выключи, если хочешь только желания — например, для сольной игры</small></span>
+    <span class="lbl">Играть <b>с табу</b><small>Две сетки: желания + табу. Выключи, если хочешь только желания</small></span>
   </div>
-  <div class="setup-hero">
+  <div class="setup-hero mode-full-only">
     <h2>Как собираем?</h2>
     <p>Отметь то, что хочешь выбрать вручную. Или жми «Продолжить» без галочек — компьютер подберёт всё сам.</p>
   </div>
-  <div class="check-row" id="chk-wishes-row" onclick="toggleSetupChk('wishes')">
+  <div class="check-row mode-full-only" id="chk-wishes-row" onclick="toggleSetupChk('wishes')">
     <input type="checkbox" id="chk-wishes" onclick="event.stopPropagation();toggleSetupChk('wishes')">
     <span class="lbl">Выбрать <b>желания</b> вручную<small id="setup-count-w">15 пунктов из общего списка</small></span>
   </div>
-  <div class="check-row" id="chk-taboos-row" onclick="toggleSetupChk('taboos')">
+  <div class="check-row mode-full-only" id="chk-taboos-row" onclick="toggleSetupChk('taboos')">
     <input type="checkbox" id="chk-taboos" onclick="event.stopPropagation();toggleSetupChk('taboos')">
     <span class="lbl">Выбрать <b>табу</b> вручную<small id="setup-count-t">15 пунктов, чего точно не будет</small></span>
   </div>
@@ -485,6 +576,7 @@ body.light .modal h3{color:var(--red-d)}
   </div>
 </div>
 
+<!-- ============ SCREEN: MANUAL ============ -->
 <div class="screen" id="screen-manual">
   <header>
     <button class="back" onclick="navBack()">←</button>
@@ -503,6 +595,7 @@ body.light .modal h3{color:var(--red-d)}
   </div>
 </div>
 
+<!-- ============ SCREEN: PLAYER ============ -->
 <div class="screen" id="screen-player">
   <header>
     <button class="back" onclick="navBack()">←</button>
@@ -521,35 +614,39 @@ body.light .modal h3{color:var(--red-d)}
   </div>
   <div class="bingo-banner" id="bingo-banner">🎉 БИНГО! 🎉</div>
   <div class="actions">
-    <button class="btn btn-secondary" onclick="undoLast()" title="Отменить последнее" style="flex:0 0 auto">↶</button>
+    <button class="btn btn-secondary mode-full-only" onclick="undoLast()" title="Отменить последнее" style="flex:0 0 auto">↶</button>
     <button class="btn btn-secondary" onclick="goToSetup()" title="Собрать новую карточку" style="flex:1">🔄</button>
     <button class="btn btn-secondary" onclick="resetMarks()" title="Очистить отметки" style="flex:1">↻ Сброс</button>
   </div>
 </div>
 
+<!-- ============ SCREEN: LOG ============ -->
 <div class="screen" id="screen-log">
   <header>
     <button class="back" onclick="navBack()">←</button>
     <h1>Журнал<small id="log-sub">РАУНД 1 · 0 ЧИСЕЛ</small></h1>
-    <button class="icon-btn" onclick="copyLogToClipboard()" title="Копировать в буфер">📋</button>
-    <button class="icon-btn" onclick="exportCSV()" title="Экспорт CSV">📤</button>
-    <button class="icon-btn" onclick="printLog()" title="Печать / PDF">🖨</button>
+    <button class="icon-btn mode-full-only" onclick="copyLogToClipboard()" title="Копировать в буфер">📋</button>
+    <button class="icon-btn mode-full-only" onclick="exportCSV()" title="Экспорт CSV">📤</button>
+    <button class="icon-btn mode-full-only" onclick="printLog()" title="Печать / PDF">🖨</button>
+    <button class="monet-star mode-quick-only" onclick="monetStarTap('log')" title="Экспорт и печать">⭐</button>
   </header>
-  <div id="log-banner-host" class="log-banner" style="display:none"></div>
+  <div id="log-banner-host" class="log-banner mode-full-only" style="display:none"></div>
   <div class="log-wrap" id="log-wrap"></div>
   <div class="actions">
-    <button class="btn btn-secondary" onclick="showArchive()" title="Архив">🗂 Архив</button>
+    <button class="btn btn-secondary mode-full-only" onclick="showArchive()" title="Архив">🗂 Архив</button>
     <button class="btn btn-secondary" onclick="clearLog()" title="Очистить">🗑</button>
   </div>
 </div>
 
+<!-- ============ SCREEN: LIST ============ -->
 <div class="screen" id="screen-list">
   <header>
     <button class="back" onclick="navBack()">←</button>
     <h1>Список<small id="list-total">· ЖЕЛАНИЯ И ТАБУ</small></h1>
-    <button class="icon-btn" onclick="copyListToClipboard()" title="Копировать в буфер">📋</button>
-    <button class="icon-btn" onclick="exportListCSV()" title="Экспорт CSV">📤</button>
-    <button class="icon-btn" onclick="printList()" title="Печать / PDF">🖨</button>
+    <button class="icon-btn mode-full-only" onclick="copyListToClipboard()" title="Копировать в буфер">📋</button>
+    <button class="icon-btn mode-full-only" onclick="exportListCSV()" title="Экспорт CSV">📤</button>
+    <button class="icon-btn mode-full-only" onclick="printList()" title="Печать / PDF">🖨</button>
+    <button class="monet-star mode-quick-only" onclick="monetStarTap('list')" title="Экспорт и печать">⭐</button>
   </header>
   <input class="list-search" type="search" id="list-search" placeholder="Поиск по тексту или номеру…">
   <div class="legend">
@@ -560,6 +657,7 @@ body.light .modal h3{color:var(--red-d)}
   <div class="list" id="list-content"></div>
 </div>
 
+<!-- ============ SCREEN: DEV ============ -->
 <div class="screen" id="screen-dev">
   <header>
     <button class="back" onclick="navBack()">←</button>
@@ -567,6 +665,20 @@ body.light .modal h3{color:var(--red-d)}
     <button class="icon-btn" onclick="devResetAll()" title="Сброс к стандарту">↺</button>
   </header>
   <div class="dev-warn">⚠️ Изменение списка сбросит карточку игрока — её нужно будет собрать заново. Лог ведущего останется.</div>
+
+  <div class="dev-section" data-section="mode">
+    <div class="dev-section-header" onclick="toggleDevSection('mode')">
+      <h3>🎛 Режим игры</h3>
+      <span class="dev-section-arrow">▼</span>
+    </div>
+    <div class="dev-section-body">
+      <div class="toggle-row">
+        <span>🎛 «Погрузиться на полную!»</span>
+        <div class="toggle-switch on" id="toggle-mode" onclick="event.stopPropagation();toggleModeFromDev()"></div>
+      </div>
+      <div class="dev-status" style="margin-top:8px">Выключи, чтобы вернуться в «Здесь и сейчас!» — карточки и лог не пострадают.</div>
+    </div>
+  </div>
 
   <div class="dev-section" data-section="settings">
     <div class="dev-section-header" onclick="toggleDevSection('settings')">
@@ -576,11 +688,11 @@ body.light .modal h3{color:var(--red-d)}
     <div class="dev-section-body">
       <div class="toggle-row">
         <span>🔊 Звук</span>
-        <div class="toggle-switch" id="toggle-sound" onclick="toggleSound()"></div>
+        <div class="toggle-switch" id="toggle-sound" onclick="event.stopPropagation();toggleSound()"></div>
       </div>
       <div class="toggle-row">
         <span>🌞 Светлая тема</span>
-        <div class="toggle-switch" id="toggle-theme" onclick="toggleTheme()"></div>
+        <div class="toggle-switch" id="toggle-theme" onclick="event.stopPropagation();toggleTheme()"></div>
       </div>
     </div>
   </div>
@@ -650,6 +762,7 @@ body.light .modal h3{color:var(--red-d)}
   <div class="list" id="dev-list"></div>
 </div>
 
+<!-- ============ SCREEN: STATS ============ -->
 <div class="screen" id="screen-stats">
   <header>
     <button class="back" onclick="navBack()">←</button>
@@ -667,17 +780,18 @@ body.light .modal h3{color:var(--red-d)}
   </div>
 </div>
 
+<!-- ============ SCREEN: HELP ============ -->
 <div class="screen" id="screen-help">
   <header>
     <button class="back" onclick="navBack()">←</button>
-    <h1>Как в это играть?<small>ПРАВИЛА И РАБОТА С ПРИЛОЖЕНИЕМ</small></h1>
+    <h1><span id="help-title">Как в это играть?</span><small>ПРАВИЛА И РАБОТА С ПРИЛОЖЕНИЕМ</small></h1>
   </header>
   <div class="help-warn">
     <b>🔞 18+ · ТОЛЬКО ДЛЯ ВЗРОСЛЫХ</b>
     Играйте только по обоюдному согласию. У каждого участника есть право сказать «стоп» в любой момент.
   </div>
 
-  <div class="help-section" id="qr-section">
+  <div class="help-section mode-full-only" id="qr-section">
     <h2><span class="h-ico">📱</span> Поделиться игрой</h2>
     <p>Друзья могут открыть ту же игру у себя — отсканируй QR или отправь ссылку.</p>
     <div style="text-align:center" id="qr-holder"></div>
@@ -705,22 +819,26 @@ body.light .modal h3{color:var(--red-d)}
   <div class="help-section">
     <h2><span class="h-ico">🎡</span> Режим «Ведущий»</h2>
     <p>Телефон — лототрон. Жми «КРУТИТЬ», объявляй вслух. Иконка 👤 в шапке — имя ведущего.</p>
-    <p>Кнопки: 📋 журнал, 📤 CSV, 🖨 PDF, 📋 копировать в чат, 📢 объявить БИНГО, ↻ новый раунд. В модалке завершения — можно <b>сохранить и сразу начать новый</b> с теми же карточками (отметки игрока сбросятся).</p>
+    <p>Кнопки: 📋 журнал, 📤 CSV, 🖨 PDF, 📋 копировать в чат, 📢 объявить БИНГО, ↻ новый раунд. В модалке завершения — можно <b>сохранить и сразу начать новый</b> с теми же карточками.</p>
     <p>Когда игрок закрывает линию, в журнале на числе появляется отметка 🎉 с именем игрока.</p>
   </div>
   <div class="help-section">
     <h2><span class="h-ico">🎴</span> Режим «Игрок»</h2>
     <ul>
-      <li>Имя игрока — в наспройках карточки. Последние 5 имён сохраняются и подставляются чипсами.</li>
+      <li>Имя игрока — при setup. Последние 5 имён сохраняются и подставляются чипсами.</li>
       <li>Можно играть <b>с табу или без</b>.</li>
       <li><b>↶</b> — отменить последнюю отметку.</li>
       <li><b>🔄</b> — собрать новую карточку.</li>
       <li><b>↻ Сброс</b> — очистить все отметки.</li>
     </ul>
   </div>
-  <div class="help-section">
+  <div class="help-section mode-full-only">
     <h2><span class="h-ico">⚙️</span> Разраб</h2>
     <p>Настройки, статистика, установка, данные, редактор списка. Блоки сворачиваются — тапни на заголовок.</p>
+  </div>
+  <div class="help-section">
+    <h2><span class="h-ico">🚀</span> Два режима</h2>
+    <p>«Здесь и сейчас!» — минимум кнопок, для быстрой игры. «Погрузиться на полную!» — все функции, для тех, кто хочет настроить под себя. Переключение — иконка режима в углу главного экрана или ссылка внизу меню.</p>
   </div>
   <div class="help-section" style="text-align:center;border-left-color:#666">
     <p style="font-size:12px;color:var(--muted);font-style:italic">Спасибо ❤️ что играете. Веселитесь, но не забывайте про уважение и здравый смысл.</p>
@@ -731,6 +849,10 @@ body.light .modal h3{color:var(--red-d)}
 <div class="toast" id="toast"></div>
 
 <script>
+/* =========================================================
+   СЕКС БИНГО — полный JS
+   ========================================================= */
+
 const DEFAULT_WISHES = [
 "Секс под дождем за окном","Проснуться и заняться любовью на рассвете","Медленный танец, переходящий в секс","Смотреть друг другу в глаза весь процесс","Секс у камина на мягком ковре","Ванна вдвоем с пеной и свечами","Секс под открытым звездным небом","Массаж всего тела с маслом","Шепотом говорить нежности во время секса","Заниматься этим под любимую медленную музыку",
 "Долгие прелюдии без спешки (час+)","Секс в гостиничном номере с панорамным видом","Заниматься этим, глядя на свое отражение в зеркале","Кормить друг друга фруктами во время прелюдии","Секс после душа, когда волосы мокрые","Целовать каждую родинку на теле партнера","Секс в гамаке","Утренний секс с кофе в постель после","Заниматься этим под одеялом, спрятавшись от мира","Уснуть сразу после, обнявшись",
@@ -769,6 +891,10 @@ const LS_SOUND = "sexbingo_sound";
 const LS_THEME = "sexbingo_theme";
 const LS_NAMES = "sexbingo_player_names";
 const LS_DEV_SECTIONS = "sexbingo_dev_sections";
+const LS_MODE = "sexbingo_mode";
+const LS_WELCOME_QUICK = "sexbingo_welcome_quick";
+const LS_WELCOME_FULL = "sexbingo_welcome_full";
+const LS_RULES_NEVER = "sexbingo_rules_never";
 const LS_OLD_KEYS = ["sexbingo_v2", "sexbingo_v1"];
 
 const LAYOUTS = {
@@ -782,6 +908,7 @@ let WISHES = DEFAULT_WISHES.slice();
 let CATS = DEFAULT_CATS.slice();
 let pendingLayout = '3x5';
 let pendingWithTaboos = true;
+let currentMode = 'quick'; // 'quick' | 'full'
 
 let devSectionsState = {};
 try{ devSectionsState = JSON.parse(localStorage.getItem(LS_DEV_SECTIONS)||'{}') || {}; }catch(e){ devSectionsState = {}; }
@@ -838,7 +965,7 @@ function renderNameChips(){
   const arr = getRecentNames();
   if(arr.length === 0){ holder.innerHTML = ''; return; }
   holder.innerHTML = arr.map(n=>
-    `<button class="name-chip" onclick="pickName(${JSON.stringify(n)})">${escapeHtml(n)}</button>`
+    '<button class="name-chip" onclick="pickName(' + JSON.stringify(n).replace(/"/g,'&quot;') + ')">' + escapeHtml(n) + '</button>'
   ).join('');
 }
 function pickName(name){
@@ -884,6 +1011,7 @@ let devEditCat = 0;
 let soundEnabled = localStorage.getItem(LS_SOUND) === '1';
 let lightTheme = localStorage.getItem(LS_THEME) === '1';
 
+// ============ THEME / SOUND ============
 function applyTheme(){
   document.body.classList.toggle('light', lightTheme);
   const meta = document.querySelector('meta[name=theme-color]');
@@ -892,6 +1020,10 @@ function applyTheme(){
   if(tgl) tgl.classList.toggle('on', lightTheme);
   const tglS = document.getElementById('toggle-sound');
   if(tglS) tglS.classList.toggle('on', soundEnabled);
+  const qt = document.getElementById('qt-theme');
+  if(qt) qt.classList.toggle('on', lightTheme);
+  const qs = document.getElementById('qt-sound');
+  if(qs) qs.classList.toggle('on', soundEnabled);
 }
 function toggleTheme(){
   lightTheme = !lightTheme;
@@ -905,60 +1037,126 @@ function toggleSound(){
   if(soundEnabled) playDing();
 }
 
-let audioCtx = null;
-function getAudioCtx(){
-  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  if(audioCtx.state === 'suspended') audioCtx.resume();
-  return audioCtx;
+// ============ MODE ============
+function applyMode(){
+  document.body.classList.toggle('mode-quick', currentMode === 'quick');
+  document.body.classList.toggle('mode-full', currentMode === 'full');
+  const modeBtn = document.getElementById('mode-btn-menu');
+  if(modeBtn) modeBtn.textContent = (currentMode === 'full') ? '🎛' : '🚀';
+  const modeLink = document.getElementById('mode-switch-link');
+  if(modeLink){
+    modeLink.textContent = (currentMode === 'full')
+      ? '🚀 Вернуться к «Здесь и сейчас!»'
+      : '⚙️ Погрузиться на полную!';
+  }
+  const helpTitle = document.getElementById('help-card-title');
+  const helpScreenTitle = document.getElementById('help-title');
+  if(helpTitle) helpTitle.textContent = (currentMode === 'quick') ? 'Правила' : 'Как в это играть???';
+  if(helpScreenTitle) helpScreenTitle.textContent = (currentMode === 'quick') ? 'Правила' : 'Как в это играть?';
+  const devToggle = document.getElementById('toggle-mode');
+  if(devToggle) devToggle.classList.toggle('on', currentMode === 'full');
 }
-function playDing(){
-  if(!soundEnabled) return;
-  try{
-    const ctx = getAudioCtx();
-    const t0 = ctx.currentTime;
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = 'sine';
-    o.frequency.setValueAtTime(880, t0);
-    o.frequency.exponentialRampToValueAtTime(1400, t0 + 0.09);
-    g.gain.setValueAtTime(0.001, t0);
-    g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.012);
-    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.42);
-    o.connect(g); g.connect(ctx.destination);
-    o.start(t0); o.stop(t0 + 0.45);
-  }catch(e){}
+function pickMode(mode){
+  currentMode = (mode === 'full') ? 'full' : 'quick';
+  try{ localStorage.setItem(LS_MODE, currentMode); }catch(e){}
+  applyMode();
+  showScreen('menu');
+  // Приветствие: тост первый раз, модалка на второй и далее
+  const wkey = (currentMode === 'full') ? LS_WELCOME_FULL : LS_WELCOME_QUICK;
+  const seen = localStorage.getItem(wkey);
+  if(!seen){
+    try{ localStorage.setItem(wkey, '1'); }catch(e){}
+    setTimeout(()=>{
+      toast('Крути барабан, Играй со всеми или Слушайся ведущего! 🎲', 5000);
+    }, 400);
+  } else {
+    setTimeout(()=>showWelcomeModal(), 500);
+  }
+  // Предложить правила (если не отключено)
+  setTimeout(maybeAskRules, 1600);
 }
-function playGong(){
-  if(!soundEnabled) return;
-  try{
-    const ctx = getAudioCtx();
-    const t0 = ctx.currentTime;
-    const freqs  = [196.00, 293.66, 392.00, 587.33];
-    const gains  = [0.22,   0.15,   0.10,   0.06];
-    freqs.forEach((f, i)=>{
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.type = 'sine';
-      o.frequency.value = f;
-      g.gain.setValueAtTime(0.001, t0);
-      g.gain.exponentialRampToValueAtTime(gains[i], t0 + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.001, t0 + 2.6);
-      o.connect(g); g.connect(ctx.destination);
-      o.start(t0); o.stop(t0 + 2.7);
-    });
-    const o2 = ctx.createOscillator();
-    const g2 = ctx.createGain();
-    o2.type = 'triangle';
-    o2.frequency.setValueAtTime(1200, t0);
-    o2.frequency.exponentialRampToValueAtTime(800, t0 + 0.15);
-    g2.gain.setValueAtTime(0.001, t0);
-    g2.gain.exponentialRampToValueAtTime(0.12, t0 + 0.01);
-    g2.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3);
-    o2.connect(g2); g2.connect(ctx.destination);
-    o2.start(t0); o2.stop(t0 + 0.35);
-  }catch(e){}
+function toggleModeFromMenu(){
+  currentMode = (currentMode === 'full') ? 'quick' : 'full';
+  try{ localStorage.setItem(LS_MODE, currentMode); }catch(e){}
+  applyMode();
+  // Если ушли в простой режим, находясь на служебном экране — вернуть в меню
+  const restricted = ['dev','stats'];
+  const active = document.querySelector('.screen.active');
+  if(active && restricted.includes(active.id.replace('screen-',''))){
+    navHistory = ['menu']; navIndex = 0;
+    _renderScreen('menu');
+  } else {
+    _renderScreen(state.lastScreen || 'menu');
+  }
+  toast(currentMode === 'full'
+    ? '🎛 Погрузились на полную!'
+    : '🚀 Здесь и сейчас!', 1800);
+}
+function toggleModeFromDev(){
+  const nextMode = (currentMode === 'full') ? 'quick' : 'full';
+  currentMode = nextMode;
+  try{ localStorage.setItem(LS_MODE, currentMode); }catch(e){}
+  applyMode();
+  if(currentMode === 'quick'){
+    navHistory = ['menu']; navIndex = 0;
+    _renderScreen('menu');
+  } else {
+    renderDev();
+  }
+  toast(currentMode === 'full'
+    ? '🎛 Погрузились на полную!'
+    : '🚀 Здесь и сейчас!', 1800);
 }
 
+// ============ WELCOME MODAL ============
+function showWelcomeModal(){
+  const el = document.getElementById('welcome-modal-text');
+  if(el){
+    if(currentMode === 'quick'){
+      el.textContent = 'Здесь и сейчас! Крути барабан, играй со всеми или слушайся ведущего. Меньше кнопок — больше веселья.';
+    } else {
+      el.textContent = 'Полное погружение. Все настройки, архив, статистика и редактор списка — на месте.';
+    }
+  }
+  document.getElementById('modal-welcome').classList.add('show');
+}
+function closeWelcomeModal(){
+  document.getElementById('modal-welcome').classList.remove('show');
+}
+
+// ============ RULES ASK ============
+function maybeAskRules(){
+  if(localStorage.getItem(LS_RULES_NEVER) === '1') return;
+  // Спрашиваем один раз за сессию
+  if(maybeAskRules._asked) return;
+  maybeAskRules._asked = true;
+  document.getElementById('rules-never').checked = false;
+  document.getElementById('modal-rules-ask').classList.add('show');
+}
+function rulesAskRead(){
+  const never = document.getElementById('rules-never').checked;
+  if(never){ try{ localStorage.setItem(LS_RULES_NEVER, '1'); }catch(e){} }
+  document.getElementById('modal-rules-ask').classList.remove('show');
+  showScreen('help');
+}
+function rulesAskSkip(){
+  const never = document.getElementById('rules-never').checked;
+  if(never){ try{ localStorage.setItem(LS_RULES_NEVER, '1'); }catch(e){} }
+  document.getElementById('modal-rules-ask').classList.remove('show');
+}
+function openHelp(){
+  showScreen('help');
+}
+
+// ============ MONET STAR ============
+function monetStarTap(where){
+  const target = (where === 'list') ? 'списка' : 'журнала';
+  if(confirm('Экспорт и печать ' + target + ' доступны в режиме «Погрузиться на полную!».\n\nПереключиться сейчас?')){
+    toggleModeFromMenu();
+  }
+}
+
+// ============ SAVE / LOAD ============
 function save(){
   try{
     localStorage.setItem(LS_KEY, JSON.stringify(state));
@@ -1017,6 +1215,7 @@ function defaultPlayerState(){
   };
 }
 
+// ============ FORMATTING ============
 function fmtTime(ts){
   const d = new Date(ts);
   return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')+':'+String(d.getSeconds()).padStart(2,'0');
@@ -1042,10 +1241,15 @@ function escapeHtml(s){
 function logText(row){ return row.text !== undefined ? row.text : wishText(row.n); }
 function logCat(row){ return row.cat !== undefined ? row.cat : wishCat(row.n); }
 
+// ============ NAV ============
 let navHistory = ['menu'];
 let navIndex = 0;
 
 function _renderScreen(id){
+  // Защита от захода в служебные экраны в простом режиме
+  if(currentMode === 'quick' && ['dev','stats'].includes(id)){
+    id = 'menu';
+  }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const el = document.getElementById('screen-'+id);
   if(el) el.classList.add('active');
@@ -1075,8 +1279,8 @@ function navBack(){
   if(navIndex > 0){ navIndex--; _renderScreen(navHistory[navIndex]); }
   else { _renderScreen('menu'); }
 }
-function navForward(){ if(navIndex < navHistory.length - 1){ navIndex++; _renderScreen(navHistory[navIndex]); } }
 
+// ============ SWIPE ============
 let touchStartX = 0, touchStartY = 0, touchStartT = 0;
 document.addEventListener('touchstart', e=>{
   if(e.touches.length !== 1) return;
@@ -1101,10 +1305,12 @@ document.addEventListener('touchend', e=>{
     if(t.closest('.modal')) return;
     if(t.closest('.bingo-overlay')) return;
     if(t.closest('.qr-row')) return;
+    if(t.closest('.quick-toggle-row')) return;
   }
-  if(dx > 0) navBack(); else navForward();
+  if(dx > 0) navBack();
 }, {passive:true});
 
+// ============ OPENERS ============
 function openHost(){ showScreen('host'); }
 function openHostPlayer(){ showScreen('host'); toast('Открой 🎴 в шапке — это твоя карточка', 2200); }
 function openPlayer(){
@@ -1128,8 +1334,18 @@ function accept18(){
   state.accepted18 = true;
   document.getElementById('modal18').classList.remove('show');
   save();
+  // Если режим ещё не выбран — показать выбор. Иначе — сразу в меню.
+  const savedMode = localStorage.getItem(LS_MODE);
+  if(savedMode === 'quick' || savedMode === 'full'){
+    currentMode = savedMode;
+    applyMode();
+    showScreen('menu');
+    setTimeout(maybeAskRules, 1200);
+  } else {
+    showScreen('mode');
+  }
   if(!checkProtocolWarning()){
-    if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 900);
+    if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 2500);
   }
 }
 
@@ -1166,7 +1382,7 @@ function initQRSection(){
   if(inp) inp.value = url;
   if(!holder) return;
   if(/^https?:/i.test(location.protocol)){
-    holder.innerHTML = `<span class="qr-frame"><img class="qr-img" alt="QR" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data=${encodeURIComponent(url)}"></span>`;
+    holder.innerHTML = '<span class="qr-frame"><img class="qr-img" alt="QR" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data=' + encodeURIComponent(url) + '"></span>';
     if(hint) hint.style.display = 'none';
   } else {
     holder.innerHTML = '';
@@ -1182,7 +1398,7 @@ function copyShareUrl(){
   }
 }
 
-// ============ COPY LOG ============
+// ============ COPY LOG / LIST ============
 function copyLogToClipboard(){
   if(logViewMode !== 'current'){ toast('Сначала закрой архив'); return; }
   if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
@@ -1194,7 +1410,7 @@ function copyLogToClipboard(){
   lines.push('');
   state.host.log.forEach((row, i)=>{
     const bingo = row.bingo ? '  🎉 ' + (row.bingoPlayer || 'Игрок') : '';
-    lines.push(`${i+1}. ${row.n} — ${logText(row)} [${CAT_NAME[logCat(row)]}]${bingo}`);
+    lines.push((i+1) + '. ' + row.n + ' — ' + logText(row) + ' [' + CAT_NAME[logCat(row)] + ']' + bingo);
   });
   const text = lines.join('\n');
   const doFallback = ()=>{
@@ -1216,6 +1432,40 @@ function copyLogToClipboard(){
   if(navigator.clipboard && window.isSecureContext){
     navigator.clipboard.writeText(text)
       .then(()=>toast('Скопировано (' + state.host.log.length + ' строк)'))
+      .catch(()=>doFallback());
+  } else {
+    doFallback();
+  }
+}
+function copyListToClipboard(){
+  if(WISHES.length === 0){ toast('Список пуст'); return; }
+  const lines = [];
+  lines.push('🎲 СЕКС БИНГО · Список пунктов');
+  lines.push('Всего: ' + WISHES.length);
+  lines.push('');
+  WISHES.forEach((text, i)=>{
+    lines.push((i+1) + '. ' + text + ' [' + CAT_NAME[wishCat(i+1)] + ']');
+  });
+  const text = lines.join('\n');
+  const doFallback = ()=>{
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.setAttribute('readonly','');
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if(ok) toast('Скопировано (' + WISHES.length + ' пунктов)');
+      else toast('Не удалось скопировать');
+    }catch(e){ toast('Не удалось скопировать'); }
+  };
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text)
+      .then(()=>toast('Скопировано (' + WISHES.length + ' пунктов)'))
       .catch(()=>doFallback());
   } else {
     doFallback();
@@ -1308,6 +1558,62 @@ function a2hsReset(){
   renderDev();
 }
 
+// ============ SOUND ============
+let audioCtx = null;
+function getAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+function playDing(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    const t0 = ctx.currentTime;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(880, t0);
+    o.frequency.exponentialRampToValueAtTime(1400, t0 + 0.09);
+    g.gain.setValueAtTime(0.001, t0);
+    g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.012);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.42);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(t0); o.stop(t0 + 0.45);
+  }catch(e){}
+}
+function playGong(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    const t0 = ctx.currentTime;
+    const freqs  = [196.00, 293.66, 392.00, 587.33];
+    const gains  = [0.22,   0.15,   0.10,   0.06];
+    freqs.forEach((f, i)=>{
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0.001, t0);
+      g.gain.exponentialRampToValueAtTime(gains[i], t0 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 2.6);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t0); o.stop(t0 + 2.7);
+    });
+    const o2 = ctx.createOscillator();
+    const g2 = ctx.createGain();
+    o2.type = 'triangle';
+    o2.frequency.setValueAtTime(1200, t0);
+    o2.frequency.exponentialRampToValueAtTime(800, t0 + 0.15);
+    g2.gain.setValueAtTime(0.001, t0);
+    g2.gain.exponentialRampToValueAtTime(0.12, t0 + 0.01);
+    g2.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3);
+    o2.connect(g2); g2.connect(ctx.destination);
+    o2.start(t0); o2.stop(t0 + 0.35);
+  }catch(e){}
+}
+
+// ============ BINGO OVERLAY ============
 function showBingoOverlay(subText){
   document.getElementById('bingo-overlay-sub').textContent = subText || 'Покажи ведущему!';
   document.getElementById('bingo-overlay').classList.add('show');
@@ -1327,62 +1633,72 @@ function pickLayout(key){
     b.classList.toggle('active', b.dataset.layout === key);
   });
   const L = layoutOf(key);
-  document.getElementById('setup-count-w').textContent = L.total + ' пунктов из общего списка';
-  document.getElementById('setup-count-t').textContent = L.total + ' пунктов, чего точно не будет';
-  document.getElementById('setup-sub').textContent = 'РАСКЛАДКА ' + L.name + ' · ' + L.total + ' КЛЕТОК';
+  const cw = document.getElementById('setup-count-w');
+  const ct = document.getElementById('setup-count-t');
+  if(cw) cw.textContent = L.total + ' пунктов из общего списка';
+  if(ct) ct.textContent = L.total + ' пунктов, чего точно не будет';
+  const sub = document.getElementById('setup-sub');
+  if(sub) sub.textContent = 'РАСКЛАДКА ' + L.name + ' · ' + L.total + ' КЛЕТОК';
 }
 function renderSetup(){
-  document.getElementById('chk-wishes').checked = false;
-  document.getElementById('chk-taboos').checked = false;
-  document.getElementById('chk-wishes-row').classList.remove('checked');
-  document.getElementById('chk-taboos-row').classList.remove('checked');
-  document.getElementById('player-name-input').value = state.player.playerName || '';
-  const withT = (typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true;
+  // В простом режиме — форсим 3×5 и без табу
+  if(currentMode === 'quick'){
+    pendingLayout = '3x5';
+    pendingWithTaboos = false;
+  }
+  const cw = document.getElementById('chk-wishes');
+  const ct = document.getElementById('chk-taboos');
+  if(cw) cw.checked = false;
+  if(ct) ct.checked = false;
+  document.getElementById('chk-wishes-row')?.classList.remove('checked');
+  document.getElementById('chk-taboos-row')?.classList.remove('checked');
+  const nameInp = document.getElementById('player-name-input');
+  if(nameInp) nameInp.value = state.player.playerName || '';
+  const withT = (currentMode === 'full')
+    ? ((typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true)
+    : false;
   pendingWithTaboos = withT;
-  document.getElementById('chk-with-taboos').checked = withT;
-  document.getElementById('chk-taboos-toggle-row').classList.toggle('checked', withT);
+  const chkWT = document.getElementById('chk-with-taboos');
+  if(chkWT) chkWT.checked = withT;
+  document.getElementById('chk-taboos-toggle-row')?.classList.toggle('checked', withT);
   updateTaboosRowVisibility();
   pickLayout(pendingLayout || state.player.layout || '3x5');
   renderNameChips();
 }
 function updateTaboosRowVisibility(){
   const taboosRow = document.getElementById('chk-taboos-row');
+  if(!taboosRow) return;
   if(pendingWithTaboos){
     taboosRow.style.display = '';
   } else {
     taboosRow.style.display = 'none';
-    document.getElementById('chk-taboos').checked = false;
+    const ct = document.getElementById('chk-taboos');
+    if(ct) ct.checked = false;
     taboosRow.classList.remove('checked');
   }
 }
 function toggleWithTaboos(){
   const c = document.getElementById('chk-with-taboos');
+  if(!c) return;
   c.checked = !c.checked;
   pendingWithTaboos = c.checked;
-  document.getElementById('chk-taboos-toggle-row').classList.toggle('checked', pendingWithTaboos);
+  document.getElementById('chk-taboos-toggle-row')?.classList.toggle('checked', pendingWithTaboos);
   updateTaboosRowVisibility();
 }
 function toggleSetupChk(which){
   const c = document.getElementById(which === 'wishes' ? 'chk-wishes' : 'chk-taboos');
+  if(!c) return;
   c.checked = !c.checked;
   document.getElementById(which === 'wishes' ? 'chk-wishes-row' : 'chk-taboos-row')
-    .classList.toggle('checked', c.checked);
-}
-function setupAutoOnly(){
-  const playerName = (document.getElementById('player-name-input').value || '').trim();
-  addRecentName(playerName);
-  const c = makeCard(pendingLayout, pendingWithTaboos, playerName);
-  state.player = c;
-  save();
-  toast('Карточка собрана случайно');
-  showScreen('player');
+    ?.classList.toggle('checked', c.checked);
 }
 function setupStart(){
-  const playerName = (document.getElementById('player-name-input').value || '').trim();
+  const nameInp = document.getElementById('player-name-input');
+  const playerName = nameInp ? (nameInp.value || '').trim() : '';
   const L = layoutOf(pendingLayout);
   const total = L.total;
-  const wantW = document.getElementById('chk-wishes').checked;
-  const wantT = pendingWithTaboos && document.getElementById('chk-taboos').checked;
+  const wantW = document.getElementById('chk-wishes')?.checked && currentMode === 'full';
+  const wantT = currentMode === 'full' && pendingWithTaboos && document.getElementById('chk-taboos')?.checked;
 
   if(!wantW && !wantT){
     addRecentName(playerName);
@@ -1417,8 +1733,8 @@ function setupStart(){
 function manualTab(t){
   if(!pendingWithTaboos && t === 'taboos') return;
   manual.tab = t;
-  document.getElementById('tab-w').classList.toggle('active', t==='wishes');
-  document.getElementById('tab-t').classList.toggle('active', t==='taboos');
+  document.getElementById('tab-w')?.classList.toggle('active', t==='wishes');
+  document.getElementById('tab-t')?.classList.toggle('active', t==='taboos');
   renderManual();
 }
 function renderManual(){
@@ -1429,7 +1745,7 @@ function renderManual(){
     (manual.tab==='wishes'?'ЖЕЛАНИЯ':'ТАБУ') + ' · ' + arr.length + '/' + L.total;
   document.getElementById('tab-w-prog').textContent = manual.wishes.length + '/' + L.total;
   const tabT = document.getElementById('tab-t');
-  tabT.style.display = pendingWithTaboos ? '' : 'none';
+  if(tabT) tabT.style.display = pendingWithTaboos ? '' : 'none';
   document.getElementById('tab-t-prog').textContent = manual.taboos.length + '/' + L.total;
   const q = (document.getElementById('manual-search').value||'').toLowerCase();
   const list = document.getElementById('manual-list');
@@ -1439,7 +1755,7 @@ function renderManual(){
     if(q && !((n+' '+WISHES[i]).toLowerCase().includes(q))) continue;
     const el = document.createElement('div');
     el.className = 'item c'+CATS[i]+' manual-item'+(set.has(n)?' selected':'');
-    el.innerHTML = `<span class="n">${n}</span><span class="t">${escapeHtml(WISHES[i])}</span>`;
+    el.innerHTML = '<span class="n">' + n + '</span><span class="t">' + escapeHtml(WISHES[i]) + '</span>';
     el.onclick = ()=>manualToggle(n);
     list.appendChild(el);
   }
@@ -1491,7 +1807,8 @@ function manualClear(){
 }
 function manualNext(){
   const L = layoutOf(pendingLayout);
-  const playerName = (document.getElementById('player-name-input').value || '').trim();
+  const nameInp = document.getElementById('player-name-input');
+  const playerName = nameInp ? (nameInp.value || '').trim() : '';
   addRecentName(playerName);
   if(manual.tab === 'wishes'){
     if(manual.wishes.length < L.total){
@@ -1533,7 +1850,7 @@ function manualNext(){
   showScreen('player');
 }
 
-// ============ ВЕДУЩИЙ ============
+// ============ HOST ============
 function renderHost(){
   const n = state.host.current;
   const total = state.host.log.length;
@@ -1561,7 +1878,7 @@ function renderHost(){
     h.innerHTML = state.host.log.slice().reverse().slice(0,15)
       .map(x=>{
         const b = x.bingo ? ' 🎉' : '';
-        return `<b>${x.n}</b> · ${escapeHtml(logText(x))}${b}`;
+        return '<b>' + x.n + '</b> · ' + escapeHtml(logText(x)) + b;
       }).join('<br>');
   }
   document.getElementById('btn-spin').disabled = total >= WISHES.length;
@@ -1590,6 +1907,19 @@ function spin(){
 }
 function resetHost(){
   if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
+  if(currentMode === 'quick'){
+    // В простом режиме — просто новый раунд, без модалки и без архива
+    if(!confirm('Начать новый раунд?')) return;
+    state.host.log = [];
+    state.host.current = null;
+    state.host.round += 1;
+    state.host.startedAt = Date.now();
+    if(state.player) state.player.bingo = false;
+    renderHost();
+    save();
+    toast('Новый раунд №' + state.host.round);
+    return;
+  }
   const def = 'Раунд ' + state.host.round;
   const inp = document.getElementById('round-name-input');
   inp.value = def;
@@ -1617,7 +1947,6 @@ function confirmRoundName(repeat){
   if(state.player){
     state.player.bingo = false;
     if(repeat){
-      // Повторить раунд: те же карточки, но все отметки сброшены
       const L = layoutOf(state.player.layout);
       state.player.marksW = Array(L.total).fill(false);
       state.player.marksT = Array(L.total).fill(false);
@@ -1633,7 +1962,7 @@ function cancelRoundName(){
   document.getElementById('modal-round-name').classList.remove('show');
 }
 
-// ============ ЖУРНАЛ ============
+// ============ LOG ============
 let logViewMode = 'current';
 function showLog(){
   logViewMode = 'current';
@@ -1646,41 +1975,50 @@ function renderLog(){
   const banner = document.getElementById('log-banner-host');
   let log;
   let title = '';
+  const showBingoCol = (currentMode === 'full');
   if(logViewMode === 'current'){
     log = state.host.log;
-    banner.style.display = 'none';
+    if(banner) banner.style.display = 'none';
     title = 'РАУНД ' + state.host.round;
     if(state.host.hostName) title += ' · ' + state.host.hostName;
     title += ' · ' + log.length + ' ЧИСЕЛ · ' + fmtDate(state.host.startedAt);
   } else {
     const r = state.archive[logViewMode.archiveIndex];
     log = r ? r.log : [];
-    banner.style.display = 'block';
-    banner.innerHTML = '📂 Архив · ' + (r ? escapeHtml(r.name || ('Раунд ' + r.round)) : '?')
-      + (r && r.hostName ? ' · ' + escapeHtml(r.hostName) : '')
-      + ' · ' + (r ? fmtDate(r.startedAt) : '')
-      + ' <button onclick="closeArchiveView()">← К текущему</button>';
+    if(banner){
+      banner.style.display = 'block';
+      banner.innerHTML = '📂 Архив · ' + (r ? escapeHtml(r.name || ('Раунд ' + r.round)) : '?')
+        + (r && r.hostName ? ' · ' + escapeHtml(r.hostName) : '')
+        + ' · ' + (r ? fmtDate(r.startedAt) : '')
+        + ' <button onclick="closeArchiveView()">← К текущему</button>';
+    }
     title = 'АРХИВ · ' + log.length + ' ЧИСЕЛ';
   }
   sub.textContent = title;
   if(log.length === 0){
-    wrap.innerHTML = '<div class="empty-log">Пока пусто.<br>Возвращайся на экран ведущего и крути числа — они появятся здесь.</div>';
+    const emptyMsg = (currentMode === 'quick')
+      ? 'Пока пусто. Крути барабан!'
+      : 'Пока пусто.<br>Возвращайся на экран ведущего и крути числа — они появятся здесь.';
+    wrap.innerHTML = '<div class="empty-log">' + emptyMsg + '</div>';
     return;
   }
   let html = '<table class="log-table"><thead><tr>'
     + '<th class="col-idx">#</th><th class="col-num">№</th><th class="col-time">Время</th>'
-    + '<th>Текст</th><th class="col-bingo">БИНГО</th></tr></thead><tbody>';
+    + '<th>Текст</th>'
+    + (showBingoCol ? '<th class="col-bingo">БИНГО</th>' : '')
+    + '</tr></thead><tbody>';
   log.forEach((row, i)=>{
     const cat = logCat(row);
-    const bingoCell = row.bingo
+    const bingoCell = (showBingoCol && row.bingo)
       ? '<span class="log-bingo-mark">🎉' + (row.bingoPlayer ? ' ' + escapeHtml(row.bingoPlayer) : '') + '</span>'
       : '';
-    html += '<tr class="c' + cat + (row.bingo ? ' bingo-row' : '') + '">'
+    html += '<tr class="c' + cat + (row.bingo && showBingoCol ? ' bingo-row' : '') + '">'
       + '<td class="col-idx"><b>' + (i+1) + '</b></td>'
       + '<td class="col-num"><b>' + row.n + '</b></td>'
       + '<td class="col-time">' + fmtTime(row.t) + '</td>'
       + '<td>' + escapeHtml(logText(row)) + '</td>'
-      + '<td class="col-bingo">' + bingoCell + '</td></tr>';
+      + (showBingoCol ? '<td class="col-bingo">' + bingoCell + '</td>' : '')
+      + '</tr>';
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
@@ -1688,7 +2026,7 @@ function renderLog(){
 function closeArchiveView(){ logViewMode = 'current'; renderLog(); }
 function clearLog(){
   if(state.host.log.length === 0){ toast('Уже пусто'); return; }
-  if(!confirm('Удалить журнал без сохранения в архив?')) return;
+  if(!confirm('Удалить журнал?')) return;
   state.host.log = [];
   state.host.current = null;
   state.host.startedAt = Date.now();
@@ -1711,7 +2049,7 @@ function showArchive(){
   renderLog();
 }
 
-// ============ ФЛАГ БИНГО ============
+// ============ BINGO FLAG ============
 function markBingoInLog(){
   if(state.host.log.length === 0) return;
   const last = state.host.log[state.host.log.length - 1];
@@ -1722,7 +2060,7 @@ function markBingoInLog(){
   save();
 }
 
-// ============ СТАТИСТИКА ============
+// ============ STATS ============
 function renderStats(){
   const wrap = document.getElementById('stats-content');
   const rounds = state.archive.slice();
@@ -1749,14 +2087,9 @@ function renderStats(){
     + '<div class="stat-lbl">' + escapeHtml(c.l) + '</div></div>'
   ).join('');
   document.getElementById('stats-sub').textContent = firstTs ? 'С ' + fmtDate(firstTs) : 'ПУСТО';
-  const mini = document.getElementById('dev-stats-mini');
-  if(mini){
-    mini.innerHTML = 'Раундов: <b>' + totalRounds + '</b> · Чисел: <b>' + totalNumbers + '</b>'
-      + (avgDuration ? ' · средняя <b>' + fmtDuration(avgDuration) + '</b>' : '');
-  }
 }
 
-// ============ ЭКСПОРТ / ПЕЧАТЬ ============
+// ============ EXPORT / PRINT ============
 function exportCSV(){
   if(logViewMode !== 'current'){ toast('Сначала закрой архив'); return; }
   if(state.host.log.length === 0){ toast('Нечего экспортировать'); return; }
@@ -1777,6 +2110,18 @@ function exportCSV(){
   }).join(';')).join('\n');
   downloadFile(csv, 'sex_bingo_round' + state.host.round + '_' + dateStamp() + '.csv', 'text/csv;charset=utf-8');
 }
+function exportListCSV(){
+  if(WISHES.length === 0){ toast('Список пуст'); return; }
+  const rows = [['#', 'Текст', 'Категория']];
+  WISHES.forEach((text, i)=>{
+    rows.push([i+1, text, CAT_NAME[wishCat(i+1)]]);
+  });
+  const csv = '\uFEFF' + rows.map(r=>r.map(c=>{
+    const s = String(c).replace(/"/g, '""');
+    return /[",\n;]/.test(s) ? '"' + s + '"' : s;
+  }).join(';')).join('\n');
+  downloadFile(csv, 'sex_bingo_list_' + dateStamp() + '.csv', 'text/csv;charset=utf-8');
+}
 function printLog(){
   if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
   const pa = document.getElementById('print-area');
@@ -1791,6 +2136,26 @@ function printLog(){
     const cat = logCat(row);
     const bingoCell = row.bingo ? '🎉' + (row.bingoPlayer ? ' ' + escapeHtml(row.bingoPlayer) : '') : '';
     html += '<tr class="c' + cat + (row.bingo ? ' bingo-row' : '') + '"><td>' + (i+1) + '</td><td><b>' + row.n + '</b></td><td>' + fmtTime(row.t) + '</td><td>' + CAT_NAME[cat] + '</td><td>' + escapeHtml(logText(row)) + '</td><td>' + bingoCell + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  pa.innerHTML = html;
+  window.print();
+}
+function printList(){
+  if(WISHES.length === 0){ toast('Список пуст'); return; }
+  const pa = document.getElementById('print-area');
+  let html = '<h1>СЕКС БИНГО · СПИСОК ПУНКТОВ</h1>';
+  html += '<div class="sub">Всего: ' + WISHES.length + ' · Дата печати: ' + fmtDate(Date.now()) + '</div>';
+  html += '<table><thead><tr>'
+    + '<th style="width:34px">#</th>'
+    + '<th>Текст</th>'
+    + '<th style="width:80px">Категория</th></tr></thead><tbody>';
+  WISHES.forEach((text, i)=>{
+    const cat = wishCat(i+1);
+    html += '<tr class="c' + cat + '">'
+      + '<td>' + (i+1) + '</td>'
+      + '<td>' + escapeHtml(text) + '</td>'
+      + '<td>' + CAT_NAME[cat] + '</td></tr>';
   });
   html += '</tbody></table>';
   pa.innerHTML = html;
@@ -1839,7 +2204,7 @@ function downloadFile(content, name, type){
   toast('Файл ' + name + ' сохранён');
 }
 
-// ============ ИГРОК ============
+// ============ PLAYER ============
 function shuffle(a){
   for(let i=a.length-1;i>0;i--){
     const j = Math.floor(Math.random()*(i+1));
@@ -1874,11 +2239,11 @@ function makeCard(layoutKey, withTaboos, playerName){
 }
 function goToSetup(){
   if(!confirm('Собрать новую карточку? Текущие отметки сбросятся.')) return;
-  pendingLayout = state.player.layout || '3x5';
-  pendingWithTaboos = (typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true;
+  pendingLayout = (currentMode === 'quick') ? '3x5' : (state.player.layout || '3x5');
+  pendingWithTaboos = (currentMode === 'quick') ? false : ((typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true);
   state.player = Object.assign(defaultPlayerState(), {
     layout: pendingLayout,
-    playerName: state.player.playerName || '',
+    playerName: (currentMode === 'full') ? (state.player.playerName || '') : '',
     withTaboos: pendingWithTaboos
   });
   save();
@@ -1904,7 +2269,7 @@ function renderPlayer(){
   const withT = state.player.withTaboos !== false && state.player.taboos.length === L.total;
   document.getElementById('player-sub').textContent =
     'РАСКЛАДКА ' + L.name + (withT ? '' : ' · БЕЗ ТАБУ') +
-    (state.player.playerName ? ' · ' + state.player.playerName : '');
+    ((currentMode === 'full' && state.player.playerName) ? ' · ' + state.player.playerName : '');
   renderGrid('wishes','marksW','grid-wishes','score-w', L);
   document.getElementById('taboos-block').style.display = withT ? '' : 'none';
   if(withT) renderGrid('taboos','marksT','grid-taboos','score-t', L);
@@ -2049,7 +2414,7 @@ function checkBingo(){
   }
 }
 
-// ============ СПИСОК ============
+// ============ LIST ============
 function renderList(q){
   const list = document.getElementById('list-content');
   const query = q.trim().toLowerCase();
@@ -2065,76 +2430,8 @@ function renderList(q){
     list.appendChild(el);
   }
 }
-function printList(){
-  if(WISHES.length === 0){ toast('Список пуст'); return; }
-  const pa = document.getElementById('print-area');
-  let html = '<h1>СЕКС БИНГО · СПИСОК ПУНКТОВ</h1>';
-  html += '<div class="sub">Всего: ' + WISHES.length + ' · Дата печати: ' + fmtDate(Date.now()) + '</div>';
-  html += '<table><thead><tr>'
-    + '<th style="width:34px">#</th>'
-    + '<th>Текст</th>'
-    + '<th style="width:80px">Категория</th></tr></thead><tbody>';
-  WISHES.forEach((text, i)=>{
-    const cat = wishCat(i+1);
-    html += '<tr class="c' + cat + '">'
-      + '<td>' + (i+1) + '</td>'
-      + '<td>' + escapeHtml(text) + '</td>'
-      + '<td>' + CAT_NAME[cat] + '</td></tr>';
-  });
-  html += '</tbody></table>';
-  pa.innerHTML = html;
-  window.print();
-}
 
-function exportListCSV(){
-  if(WISHES.length === 0){ toast('Список пуст'); return; }
-  const rows = [['#', 'Текст', 'Категория']];
-  WISHES.forEach((text, i)=>{
-    rows.push([i+1, text, CAT_NAME[wishCat(i+1)]]);
-  });
-  const csv = '\uFEFF' + rows.map(r=>r.map(c=>{
-    const s = String(c).replace(/"/g, '""');
-    return /[",\n;]/.test(s) ? '"' + s + '"' : s;
-  }).join(';')).join('\n');
-  downloadFile(csv, 'sex_bingo_list_' + dateStamp() + '.csv', 'text/csv;charset=utf-8');
-}
-
-function copyListToClipboard(){
-  if(WISHES.length === 0){ toast('Список пуст'); return; }
-  const lines = [];
-  lines.push('🎲 СЕКС БИНГО · Список пунктов');
-  lines.push('Всего: ' + WISHES.length);
-  lines.push('');
-  WISHES.forEach((text, i)=>{
-    lines.push((i+1) + '. ' + text + ' [' + CAT_NAME[wishCat(i+1)] + ']');
-  });
-  const text = lines.join('\n');
-  const doFallback = ()=>{
-    try{
-      const ta = document.createElement('textarea');
-      ta.value = text;
-      ta.style.position = 'fixed';
-      ta.style.left = '-9999px';
-      ta.setAttribute('readonly','');
-      document.body.appendChild(ta);
-      ta.select();
-      ta.setSelectionRange(0, ta.value.length);
-      const ok = document.execCommand('copy');
-      document.body.removeChild(ta);
-      if(ok) toast('Скопировано (' + WISHES.length + ' пунктов)');
-      else toast('Не удалось скопировать');
-    }catch(e){ toast('Не удалось скопировать'); }
-  };
-  if(navigator.clipboard && window.isSecureContext){
-    navigator.clipboard.writeText(text)
-      .then(()=>toast('Скопировано (' + WISHES.length + ' пунктов)'))
-      .catch(()=>doFallback());
-  } else {
-    doFallback();
-  }
-}
-
-// ============ РАЗРАБ ============
+// ============ DEV ============
 function renderDev(){
   document.getElementById('dev-count').textContent = WISHES.length;
   const status = document.getElementById('dev-a2hs-status');
@@ -2174,6 +2471,8 @@ function renderDev(){
   if(ts) ts.classList.toggle('on', soundEnabled);
   const th = document.getElementById('toggle-theme');
   if(th) th.classList.toggle('on', lightTheme);
+  const tm = document.getElementById('toggle-mode');
+  if(tm) tm.classList.toggle('on', currentMode === 'full');
   applyDevSections();
   document.querySelectorAll('.cat-btn[data-cat]').forEach(b=>{
     b.classList.toggle('active', parseInt(b.dataset.cat)===devCat);
@@ -2267,7 +2566,7 @@ function afterWishesChange(){
   save();
 }
 
-// ============ ЭКСПОРТ / ИМПОРТ ВСЕГО ============
+// ============ EXPORT / IMPORT ALL ============
 function exportAll(){
   const data = {
     app: 'sexbingo',
@@ -2276,7 +2575,7 @@ function exportAll(){
     wishes: WISHES,
     cats: CATS,
     state: state,
-    settings: { sound: soundEnabled, lightTheme: lightTheme }
+    settings: { sound: soundEnabled, lightTheme: lightTheme, mode: currentMode }
   };
   downloadFile(JSON.stringify(data, null, 2),
     'sex_bingo_backup_' + dateStamp() + '.json',
@@ -2323,9 +2622,21 @@ function importAll(file){
   reader.readAsText(file);
 }
 
-// ============ ИНИЦИАЛИЗАЦИЯ ============
+// ============ INIT ============
 load();
 applyTheme();
+
+// Режим: если сохранён — применяем. Иначе — покажем экран выбора после 18+.
+(function initMode(){
+  const saved = localStorage.getItem(LS_MODE);
+  if(saved === 'quick' || saved === 'full'){
+    currentMode = saved;
+  } else {
+    currentMode = 'quick'; // по умолчанию, но не сохраняем — ждём выбора
+  }
+  applyMode();
+})();
+
 if(state.accepted18) document.getElementById('modal18').classList.remove('show');
 
 if(!state.player) state.player = defaultPlayerState();
@@ -2339,6 +2650,7 @@ if(!state.host.hostName) state.host.hostName = '';
 pendingLayout = state.player.layout;
 pendingWithTaboos = state.player.withTaboos;
 
+// Event listeners
 document.getElementById('player-input').addEventListener('keydown', e=>{
   if(e.key === 'Enter'){ e.preventDefault(); markFromInput(); }
 });
@@ -2372,13 +2684,30 @@ try{
   document.head.appendChild(link);
 }catch(e){}
 
-const RESTORABLE = ['host', 'player', 'setup', 'list', 'log', 'manual'];
-const initial = RESTORABLE.includes(state.lastScreen) ? state.lastScreen : 'menu';
-navHistory = ['menu'];
-navIndex = 0;
-if(initial !== 'menu'){ navHistory.push(initial); navIndex = 1; }
-_renderScreen(initial);
+// Начальный экран
+(function initInitialScreen(){
+  if(!state.accepted18){
+    // 18+ модалка уже открыта через class="show" — просто ставим menu позади
+    navHistory = ['menu']; navIndex = 0;
+    _renderScreen('menu');
+    return;
+  }
+  const savedMode = localStorage.getItem(LS_MODE);
+  if(savedMode !== 'quick' && savedMode !== 'full'){
+    // Режим не выбран — показываем экран выбора
+    navHistory = ['mode']; navIndex = 0;
+    _renderScreen('mode');
+    return;
+  }
+  const RESTORABLE = ['host', 'player', 'setup', 'list', 'log', 'manual'];
+  const initial = RESTORABLE.includes(state.lastScreen) ? state.lastScreen : 'menu';
+  navHistory = ['menu'];
+  navIndex = 0;
+  if(initial !== 'menu'){ navHistory.push(initial); navIndex = 1; }
+  _renderScreen(initial);
+})();
 
+// BroadcastChannel: предупреждение о второй вкладке
 try{
   if(typeof BroadcastChannel === 'function'){
     const myId = Math.random().toString(36).slice(2);
@@ -2397,7 +2726,7 @@ document.addEventListener('visibilitychange', ()=>{ if(document.hidden) save(); 
 
 if(state.accepted18){
   if(!checkProtocolWarning()){
-    if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 1500);
+    if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 2500);
   }
 }
 </script>
