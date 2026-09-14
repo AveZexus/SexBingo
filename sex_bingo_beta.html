@@ -142,6 +142,8 @@ body.light .cell.hit{background:rgba(192,0,0,.08)}
 .setup-hero h2{font-size:16px;margin-bottom:6px;color:var(--red-b)}
 body.light .setup-hero h2{color:var(--red-d)}
 .setup-hero p{font-size:12px;color:var(--muted);line-height:1.5}
+.setup-hero input{width:100%;padding:12px 14px;border-radius:10px;background:var(--card2);border:2px solid var(--line);color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-top:8px}
+.setup-hero input:focus{border-color:var(--red)}
 .check-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);border-radius:14px;margin-bottom:10px;cursor:pointer;user-select:none;border:2px solid transparent;transition:.15s}
 .check-row:active{background:var(--card2)}
 .check-row input{width:22px;height:22px;accent-color:var(--red);flex-shrink:0;pointer-events:none}
@@ -214,10 +216,15 @@ body.light .dev-section h3{color:var(--red-d)}
 .log-table tr.c0 td:first-child{box-shadow:inset 4px 0 0 #4a7d2c}
 .log-table tr.c1 td:first-child{box-shadow:inset 4px 0 0 #a68a1c}
 .log-table tr.c2 td:first-child{box-shadow:inset 4px 0 0 #a03b3b}
+.log-table tr.bingo-row{background:rgba(255,215,0,.1)}
+.log-table tr.bingo-row td:first-child{box-shadow:inset 4px 0 0 #ffd700}
 .log-table .col-num{width:34px;color:var(--muted);font-weight:700}
 .log-table .col-time{width:52px;color:var(--muted);font-size:11px;font-variant-numeric:tabular-nums}
 .log-table .col-idx{width:30px;color:var(--muted);font-weight:700;text-align:center}
 .log-table .col-idx b{color:var(--red-b)}
+.log-table .col-bingo{width:60px;text-align:center}
+.log-bingo-mark{display:inline-block;font-size:14px;font-weight:900;color:#b8860b;background:rgba(255,215,0,.25);padding:2px 6px;border-radius:6px;white-space:nowrap}
+body:not(.light) .log-bingo-mark{color:#ffd700}
 .log-wrap{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;border-radius:12px;background:var(--card);border:1px solid var(--line);min-height:0}
 .empty-log{text-align:center;padding:40px 20px;color:var(--muted);font-size:13px}
 .log-banner{padding:8px 12px;background:rgba(192,0,0,.2);border-radius:10px;text-align:center;font-size:12px;color:var(--red-b);margin-bottom:8px;flex-shrink:0}
@@ -265,6 +272,7 @@ body.light .modal h3{color:var(--red-d)}
   .print-area tr.c0 td:first-child{background:#d9ead3 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .print-area tr.c1 td:first-child{background:#fff2cc !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .print-area tr.c2 td:first-child{background:#f4cccc !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .print-area tr.bingo-row td:first-child{background:#ffe066 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   .print-area .print-card{width:100%;border-collapse:collapse;margin-bottom:12px}
   .print-area .print-card td{border:2px solid #000;height:58px;padding:3px;font-size:9px;vertical-align:top}
   .print-area .print-card td .num{font-weight:700;color:#c00}
@@ -301,8 +309,8 @@ body.light .modal h3{color:var(--red-d)}
 <div class="modal" id="modal-protocol">
   <div class="modal-inner">
     <h3>⚠️ Файл открыт нестандартно</h3>
-    <p>Приложение запущено через <code id="proto-code">content://</code>. Android может очистить сохранённые данные при закрытии вкладки — потеряется карточка, лог и настройки.</p>
-    <p><b>Решение:</b> установи игру на главный экран — тогда все данные будут в безопасности.</p>
+    <p>Приложение запущено через <code id="proto-code">content://</code>. Android может очистить данные при закрытии вкладки.</p>
+    <p><b>Решение:</b> установи игру на главный экран.</p>
     <button onclick="protocolInstall()">Установить на главный экран</button>
     <button style="background:var(--card2);color:var(--text)" onclick="protocolDismiss()">Продолжить без установки</button>
   </div>
@@ -326,12 +334,24 @@ body.light .modal h3{color:var(--red-d)}
 
 <div class="modal" id="modal-round-name">
   <div class="modal-inner">
-    <h3>📝 Назови раунд</h3>
+    <h3>📝 Завершить раунд</h3>
     <p>Пригодится в архиве, чтобы потом понять, что это был за вечер.</p>
     <input type="text" id="round-name-input" maxlength="60" placeholder="Раунд N">
     <div class="modal-btns">
       <button class="btn-a2hs" onclick="confirmRoundName()">Сохранить в архив</button>
       <button class="btn-a2hs-ghost" onclick="cancelRoundName()">Отмена</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal-host-name">
+  <div class="modal-inner">
+    <h3>👤 Имя ведущего</h3>
+    <p>Попадёт в журнал, CSV и PDF.</p>
+    <input type="text" id="host-name-input" maxlength="40" placeholder="Например, Аня">
+    <div class="modal-btns">
+      <button class="btn-a2hs" onclick="saveHostName()">Сохранить</button>
+      <button class="btn-a2hs-ghost" onclick="cancelHostName()">Отмена</button>
     </div>
   </div>
 </div>
@@ -385,6 +405,7 @@ body.light .modal h3{color:var(--red-d)}
   <header>
     <button class="back" onclick="navBack()">←</button>
     <h1>Ведущий<small>РАУНД <span id="host-round">1</span> · ВЫПАЛО <span id="host-count">0</span>/<span id="host-total">150</span></small></h1>
+    <button class="icon-btn" onclick="openHostName()" title="Имя ведущего" id="host-name-btn">👤</button>
     <button class="icon-btn" onclick="openPlayerFromHost()" title="Моя карточка игрока">🎴</button>
     <button class="icon-btn" onclick="showLog()" title="Журнал">📋</button>
   </header>
@@ -408,6 +429,11 @@ body.light .modal h3{color:var(--red-d)}
     <h1>Моя карточка<small id="setup-sub">ВЫБЕРИ РАСКЛАДКУ И РЕЖИМ</small></h1>
   </header>
   <div class="setup-hero">
+    <h2>Ваше имя</h2>
+    <p>Необязательно, но пригодится для архива и печати.</p>
+    <input type="text" id="player-name-input" maxlength="40" placeholder="Например, Миша">
+  </div>
+  <div class="setup-hero">
     <h2>Раскладка</h2>
     <p>Больше клеток — длиннее партия.</p>
   </div>
@@ -415,6 +441,10 @@ body.light .modal h3{color:var(--red-d)}
     <button class="layout-btn active" data-layout="3x5" onclick="pickLayout('3x5')">3×5<small>15 клеток</small></button>
     <button class="layout-btn" data-layout="4x4" onclick="pickLayout('4x4')">4×4<small>16 клеток</small></button>
     <button class="layout-btn" data-layout="5x5" onclick="pickLayout('5x5')">5×5<small>25 клеток</small></button>
+  </div>
+  <div class="check-row checked" id="chk-taboos-toggle-row" onclick="toggleWithTaboos()">
+    <input type="checkbox" id="chk-with-taboos" checked onclick="event.stopPropagation();toggleWithTaboos()">
+    <span class="lbl">Играть <b>с табу</b><small>Две сетки: желания + табу. Выключи, если хочешь только желания — например, для сольной игры</small></span>
   </div>
   <div class="setup-hero">
     <h2>Как собираем?</h2>
@@ -463,8 +493,10 @@ body.light .modal h3{color:var(--red-d)}
   </div>
   <div class="card-label">♥ ЖЕЛАНИЯ <span class="score" id="score-w"></span></div>
   <div class="grid" id="grid-wishes"></div>
-  <div class="card-label">✗ ТАБУ <span class="score" id="score-t"></span></div>
-  <div class="grid" id="grid-taboos"></div>
+  <div id="taboos-block">
+    <div class="card-label">✗ ТАБУ <span class="score" id="score-t"></span></div>
+    <div class="grid" id="grid-taboos"></div>
+  </div>
   <div class="bingo-banner" id="bingo-banner">🎉 БИНГО! 🎉</div>
   <div class="actions">
     <button class="btn btn-secondary" onclick="undoLast()" title="Отменить последнее" style="flex:0 0 auto">↶</button>
@@ -513,7 +545,7 @@ body.light .modal h3{color:var(--red-d)}
   <div class="dev-section">
     <h3>🎛 Настройки</h3>
     <div class="toggle-row">
-      <span>🔊 Звук при выпадении</span>
+      <span>🔊 Звук</span>
       <div class="toggle-switch" id="toggle-sound" onclick="toggleSound()"></div>
     </div>
     <div class="toggle-row">
@@ -574,7 +606,7 @@ body.light .modal h3{color:var(--red-d)}
     <ul>
       <li><b>Раунды</b> — архивные + текущий (если в нём есть числа).</li>
       <li><b>Числа</b> — сколько всего раз выпадал лототрон.</li>
-      <li><b>Средняя длительность</b> — по раундам, у которых есть начало и конец.</li>
+      <li><b>Средняя длительность</b> — по раундам с началом и концом.</li>
       <li><b>Первый запуск</b> — самая старая дата среди архивных раундов.</li>
     </ul>
   </div>
@@ -597,7 +629,7 @@ body.light .modal h3{color:var(--red-d)}
     <h2><span class="h-ico">📜</span> Базовые правила</h2>
     <ul>
       <li>Участников — от 2 до ∞. Оптимально 2–8.</li>
-      <li>Каждый собирает карточку: <b>3×5 (15 клеток), 4×4 (16) или 5×5 (25)</b>.</li>
+      <li>Каждый собирает карточку: <b>3×5 (15), 4×4 (16) или 5×5 (25)</b>.</li>
       <li>Желания и табу не пересекаются.</li>
       <li>Ведущий объявляет и номер, и текст пункта.</li>
       <li>Линия или вся карточка — «БИНГО!».</li>
@@ -605,25 +637,22 @@ body.light .modal h3{color:var(--red-d)}
   </div>
   <div class="help-section">
     <h2><span class="h-ico">🎡</span> Режим «Ведущий»</h2>
-    <p>Телефон — лототрон. Жми «КРУТИТЬ», объявляй вслух. Полезные кнопки: 📋 журнал, 📤 CSV, 🖨 PDF, 📢 объявить БИНГО, ↻ новый раунд.</p>
-    <div class="help-tip">При новом раунде можно ввести название — оно сохранится в архиве.</div>
+    <p>Телефон — лототрон. Жми «КРУТИТЬ», объявляй вслух. Иконка 👤 в шапке — имя ведущего. Полезные кнопки: 📋 журнал, 📤 CSV, 🖨 PDF, 📢 объявить БИНГО, ↻ новый раунд.</p>
+    <p>Когда игрок закрывает линию, в журнале на числе появляется отметка 🎉 с именем игрока.</p>
   </div>
   <div class="help-section">
     <h2><span class="h-ico">🎴</span> Режим «Игрок»</h2>
     <ul>
-      <li><b>↶</b> — отменить последнюю отметку (до 20 шагов).</li>
+      <li>Имя игрока — в начале setup, попадает в печать.</li>
+      <li>Можно играть <b>с табу или без</b> — без табу собирается одна сетка желаний.</li>
+      <li><b>↶</b> — отменить последнюю отметку.</li>
       <li><b>🔄</b> — собрать новую карточку.</li>
       <li><b>↻ Сброс</b> — очистить все отметки.</li>
-      <li><b>🖨</b> — распечатать карточку.</li>
     </ul>
   </div>
   <div class="help-section">
     <h2><span class="h-ico">⚙️</span> Разраб</h2>
-    <p>Настройки звука и темы, статистика, установка на главный экран, экспорт/импорт JSON, редактор списка.</p>
-  </div>
-  <div class="help-section">
-    <h2><span class="h-ico">📲</span> Установка на главный экран</h2>
-    <p>При первом запуске приложение предложит добавить себя. Если файл открыт через <code>content://</code> — Android может стирать данные, установка решает проблему.</p>
+    <p>Настройки звука/темы, статистика, установка на главный экран, экспорт/импорт JSON, редактор списка.</p>
   </div>
   <div class="help-section" style="text-align:center;border-left-color:#666">
     <p style="font-size:12px;color:var(--muted);font-style:italic">Спасибо ❤️ что играете. Веселитесь, но не забывайте про уважение и здравый смысл.</p>
@@ -677,12 +706,12 @@ const LAYOUTS = {
   '4x4': { cols:4, rows:4, total:16, name:'4×4' },
   '5x5': { cols:5, rows:5, total:25, name:'5×5' }
 };
-
 function layoutOf(key){ return LAYOUTS[key] || LAYOUTS['3x5']; }
 
 let WISHES = DEFAULT_WISHES.slice();
 let CATS = DEFAULT_CATS.slice();
 let pendingLayout = '3x5';
+let pendingWithTaboos = true;
 
 function loadWishes(){
   try{
@@ -718,12 +747,16 @@ loadWishes();
 
 let state = {
   accepted18: false,
-  host: { log: [], current: null, round: 1, startedAt: Date.now() },
+  host: {
+    log: [], current: null, round: 1, startedAt: Date.now(),
+    hostName: ''
+  },
   archive: [],
   player: {
     wishes: [], taboos: [], marksW: [], marksT: [],
     bingo: false, setupDone: false, _bingoSet: [],
-    layout: '3x5', undoStack: []
+    layout: '3x5', undoStack: [],
+    playerName: '', withTaboos: true
   },
   lastScreen: 'menu'
 };
@@ -733,7 +766,6 @@ let devCat = 0;
 let devEditIndex = -1;
 let devEditCat = 0;
 
-// настройки
 let soundEnabled = localStorage.getItem(LS_SOUND) === '1';
 let lightTheme = localStorage.getItem(LS_THEME) === '1';
 
@@ -746,7 +778,6 @@ function applyTheme(){
   const tglS = document.getElementById('toggle-sound');
   if(tglS) tglS.classList.toggle('on', soundEnabled);
 }
-
 function toggleTheme(){
   lightTheme = !lightTheme;
   try{ localStorage.setItem(LS_THEME, lightTheme ? '1' : '0'); }catch(e){}
@@ -759,24 +790,59 @@ function toggleSound(){
   if(soundEnabled) playDing();
 }
 
-// звук через Web Audio
 let audioCtx = null;
+function getAudioCtx(){
+  if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
 function playDing(){
   if(!soundEnabled) return;
   try{
-    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    if(audioCtx.state === 'suspended') audioCtx.resume();
-    const t0 = audioCtx.currentTime;
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
+    const ctx = getAudioCtx();
+    const t0 = ctx.currentTime;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
     o.type = 'sine';
     o.frequency.setValueAtTime(880, t0);
     o.frequency.exponentialRampToValueAtTime(1400, t0 + 0.09);
     g.gain.setValueAtTime(0.001, t0);
     g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.012);
     g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.42);
-    o.connect(g); g.connect(audioCtx.destination);
+    o.connect(g); g.connect(ctx.destination);
     o.start(t0); o.stop(t0 + 0.45);
+  }catch(e){}
+}
+function playGong(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    const t0 = ctx.currentTime;
+    // Гонг — обертоновый аккорд с длинным затуханием
+    const freqs  = [196.00, 293.66, 392.00, 587.33];
+    const gains  = [0.22,   0.15,   0.10,   0.06];
+    freqs.forEach((f, i)=>{
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = f;
+      g.gain.setValueAtTime(0.001, t0);
+      g.gain.exponentialRampToValueAtTime(gains[i], t0 + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 2.6);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(t0); o.stop(t0 + 2.7);
+    });
+    // И небольшой "дзинь" в начале
+    const o2 = ctx.createOscillator();
+    const g2 = ctx.createGain();
+    o2.type = 'triangle';
+    o2.frequency.setValueAtTime(1200, t0);
+    o2.frequency.exponentialRampToValueAtTime(800, t0 + 0.15);
+    g2.gain.setValueAtTime(0.001, t0);
+    g2.gain.exponentialRampToValueAtTime(0.12, t0 + 0.01);
+    g2.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3);
+    o2.connect(g2); g2.connect(ctx.destination);
+    o2.start(t0); o2.stop(t0 + 0.35);
   }catch(e){}
 }
 
@@ -789,7 +855,6 @@ function save(){
     return false;
   }
 }
-
 function load(){
   try{
     const s = localStorage.getItem(LS_KEY);
@@ -798,13 +863,13 @@ function load(){
       state = Object.assign(state, p);
       if(!Array.isArray(state.host.log)) state.host.log = [];
       if(!Array.isArray(state.archive)) state.archive = [];
-      if(!state.player) state.player = {
-        wishes:[], taboos:[], marksW:[], marksT:[],
-        bingo:false, setupDone:false, _bingoSet:[], layout:'3x5', undoStack:[]
-      };
+      if(!state.host.hostName) state.host.hostName = '';
+      if(!state.player) state.player = defaultPlayerState();
       if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
       if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
-      if(typeof state.player.layout !== 'string' || !LAYOUTS[state.player.layout]) state.player.layout = '3x5';
+      if(!LAYOUTS[state.player.layout]) state.player.layout = '3x5';
+      if(typeof state.player.playerName !== 'string') state.player.playerName = '';
+      if(typeof state.player.withTaboos !== 'boolean') state.player.withTaboos = true;
       if(typeof state.lastScreen !== 'string') state.lastScreen = 'menu';
       return;
     }
@@ -821,11 +886,22 @@ function load(){
         state.host.round = p.host.round || 1;
       }
       if(p.player && p.player.wishes && p.player.wishes.length===15){
-        state.player = Object.assign(p.player, { setupDone: true, _bingoSet: [], layout:'3x5', undoStack: [] });
+        state.player = Object.assign(defaultPlayerState(), p.player, {
+          setupDone: true, _bingoSet: [], layout:'3x5', undoStack: [],
+          playerName:'', withTaboos: true
+        });
       }
       break;
     }catch(e){}
   }
+}
+function defaultPlayerState(){
+  return {
+    wishes: [], taboos: [], marksW: [], marksT: [],
+    bingo: false, setupDone: false, _bingoSet: [],
+    layout: '3x5', undoStack: [],
+    playerName: '', withTaboos: true
+  };
 }
 
 function fmtTime(ts){
@@ -852,6 +928,8 @@ function escapeHtml(s){
 }
 function logText(row){ return row.text !== undefined ? row.text : wishText(row.n); }
 function logCat(row){ return row.cat !== undefined ? row.cat : wishCat(row.n); }
+function hostDisplayName(){ return state.host.hostName ? state.host.hostName : ''; }
+function playerDisplayName(){ return state.player.playerName ? state.player.playerName : 'Игрок'; }
 
 let navHistory = ['menu'];
 let navIndex = 0;
@@ -914,14 +992,16 @@ document.addEventListener('touchend', e=>{
 function openHost(){ showScreen('host'); }
 function openHostPlayer(){ showScreen('host'); toast('Открой 🎴 в шапке — это твоя карточка', 2200); }
 function openPlayer(){
-  if(state.player.setupDone && state.player.wishes.length >= 15){
+  const L = layoutOf(state.player.layout);
+  if(state.player.setupDone && state.player.wishes.length === L.total){
     showScreen('player');
   } else {
     showScreen('setup');
   }
 }
 function openPlayerFromHost(){
-  if(state.player.setupDone && state.player.wishes.length >= 15){
+  const L = layoutOf(state.player.layout);
+  if(state.player.setupDone && state.player.wishes.length === L.total){
     showScreen('player');
   } else {
     showScreen('setup');
@@ -945,6 +1025,23 @@ function toast(msg, ms=1800){
   t._t = setTimeout(()=>t.classList.remove('show'), ms);
 }
 
+// ============ HOST NAME MODAL ============
+function openHostName(){
+  document.getElementById('host-name-input').value = state.host.hostName || '';
+  document.getElementById('modal-host-name').classList.add('show');
+}
+function saveHostName(){
+  const name = (document.getElementById('host-name-input').value || '').trim();
+  state.host.hostName = name;
+  document.getElementById('modal-host-name').classList.remove('show');
+  save();
+  toast(name ? 'Ведущий: ' + name : 'Имя ведущего сброшено');
+}
+function cancelHostName(){
+  document.getElementById('modal-host-name').classList.remove('show');
+}
+
+// ============ PROTOCOL ============
 function checkProtocolWarning(){
   const proto = location.protocol;
   if(proto === 'file:' || proto === 'http:' || proto === 'https:') return false;
@@ -963,6 +1060,7 @@ function protocolInstall(){
   setTimeout(()=>a2hsShow(true), 300);
 }
 
+// ============ A2HS ============
 let deferredInstallPrompt = null;
 window.addEventListener('beforeinstallprompt', e=>{
   e.preventDefault();
@@ -1015,10 +1113,11 @@ function a2hsHowTo(){
   alert(
     'Как добавить на главный экран:\n\n' +
     '1. Chrome → ⋮ (три точки справа сверху)\n' +
-    '2. «Добавить на главный экран» / «Установить приложение»\n' +
+    '2. «Установить приложение» (или «Добавить на главный экран»)\n' +
     '3. Подтверди название\n\n' +
-    'Если пункта нет — Chrome открыл файл через content://.\n' +
-    'Тогда загрузи файл на Google Drive, открой ссылку в Chrome и добавь оттуда.\n\n' +
+    'Разница:\n' +
+    '• «Установить приложение» — на весь экран, без адресной строки.\n' +
+    '• «Создать ярлык» — откроется как обычная вкладка Chrome.\n\n' +
     'На iPhone: Safari → «Поделиться» → «На экран "Домой"».'
   );
 }
@@ -1034,7 +1133,10 @@ function showBingoOverlay(subText){
   if(navigator.vibrate) navigator.vibrate([100,60,100,60,100,60,220]);
 }
 function closeBingoOverlay(){ document.getElementById('bingo-overlay').classList.remove('show'); }
-function announceBingo(){ showBingoOverlay('Игрок собрал линию! 🎉'); }
+function announceBingo(){
+  playGong();
+  showBingoOverlay('Игрок собрал линию! 🎉');
+}
 
 // ============ SETUP ============
 function pickLayout(key){
@@ -1053,7 +1155,33 @@ function renderSetup(){
   document.getElementById('chk-taboos').checked = false;
   document.getElementById('chk-wishes-row').classList.remove('checked');
   document.getElementById('chk-taboos-row').classList.remove('checked');
+  // имя игрока
+  document.getElementById('player-name-input').value = state.player.playerName || '';
+  // галочка "с табу"
+  const withT = (typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true;
+  pendingWithTaboos = withT;
+  document.getElementById('chk-with-taboos').checked = withT;
+  document.getElementById('chk-taboos-toggle-row').classList.toggle('checked', withT);
+  // видимость ручного выбора табу
+  updateTaboosRowVisibility();
   pickLayout(pendingLayout || state.player.layout || '3x5');
+}
+function updateTaboosRowVisibility(){
+  const taboosRow = document.getElementById('chk-taboos-row');
+  if(pendingWithTaboos){
+    taboosRow.style.display = '';
+  } else {
+    taboosRow.style.display = 'none';
+    document.getElementById('chk-taboos').checked = false;
+    taboosRow.classList.remove('checked');
+  }
+}
+function toggleWithTaboos(){
+  const c = document.getElementById('chk-with-taboos');
+  c.checked = !c.checked;
+  pendingWithTaboos = c.checked;
+  document.getElementById('chk-taboos-toggle-row').classList.toggle('checked', pendingWithTaboos);
+  updateTaboosRowVisibility();
 }
 function toggleSetupChk(which){
   const c = document.getElementById(which === 'wishes' ? 'chk-wishes' : 'chk-taboos');
@@ -1062,35 +1190,52 @@ function toggleSetupChk(which){
     .classList.toggle('checked', c.checked);
 }
 function setupAutoOnly(){
-  const c = makeCard(pendingLayout);
+  const playerName = (document.getElementById('player-name-input').value || '').trim();
+  const c = makeCard(pendingLayout, pendingWithTaboos, playerName);
   state.player = c;
   save();
   toast('Карточка собрана случайно');
   showScreen('player');
 }
 function setupStart(){
+  const playerName = (document.getElementById('player-name-input').value || '').trim();
   const L = layoutOf(pendingLayout);
   const total = L.total;
   const wantW = document.getElementById('chk-wishes').checked;
-  const wantT = document.getElementById('chk-taboos').checked;
-  if(!wantW && !wantT){ setupAutoOnly(); return; }
+  const wantT = pendingWithTaboos && document.getElementById('chk-taboos').checked;
 
-  if(WISHES.length < total * 2){
-    toast('Для раскладки ' + L.name + ' нужно минимум ' + (total*2) + ' пунктов');
+  if(!wantW && !wantT){
+    // полный авто
+    const c = makeCard(pendingLayout, pendingWithTaboos, playerName);
+    state.player = c;
+    save();
+    showScreen('player');
+    return;
+  }
+
+  const needTotal = pendingWithTaboos ? total * 2 : total;
+  if(WISHES.length < needTotal){
+    toast('Для раскладки ' + L.name + ' нужно минимум ' + needTotal + ' пунктов');
     return;
   }
   const all = Array.from({length: WISHES.length},(_,i)=>i+1);
   shuffle(all);
   manual.wishes = all.slice(0,total).sort((a,b)=>a-b);
-  const rest = all.slice(total);
-  shuffle(rest);
-  manual.taboos = rest.slice(0,total).sort((a,b)=>a-b);
-  manual.tab = wantW ? 'wishes' : 'taboos';
+  if(pendingWithTaboos){
+    const rest = all.slice(total);
+    shuffle(rest);
+    manual.taboos = rest.slice(0,total).sort((a,b)=>a-b);
+    manual.tab = wantW ? 'wishes' : 'taboos';
+  } else {
+    manual.taboos = [];
+    manual.tab = 'wishes';
+  }
   showScreen('manual');
 }
 
 // ============ MANUAL ============
 function manualTab(t){
+  if(!pendingWithTaboos && t === 'taboos') return;
   manual.tab = t;
   document.getElementById('tab-w').classList.toggle('active', t==='wishes');
   document.getElementById('tab-t').classList.toggle('active', t==='taboos');
@@ -1103,6 +1248,8 @@ function renderManual(){
   document.getElementById('manual-sub').textContent =
     (manual.tab==='wishes'?'ЖЕЛАНИЯ':'ТАБУ') + ' · ' + arr.length + '/' + L.total;
   document.getElementById('tab-w-prog').textContent = manual.wishes.length + '/' + L.total;
+  const tabT = document.getElementById('tab-t');
+  tabT.style.display = pendingWithTaboos ? '' : 'none';
   document.getElementById('tab-t-prog').textContent = manual.taboos.length + '/' + L.total;
   const q = (document.getElementById('manual-search').value||'').toLowerCase();
   const list = document.getElementById('manual-list');
@@ -1117,7 +1264,11 @@ function renderManual(){
     list.appendChild(el);
   }
   const btn = document.getElementById('manual-next-btn');
-  btn.textContent = (manual.tab === 'wishes') ? 'К табу →' : 'Готово ✓';
+  if(manual.tab === 'wishes' && pendingWithTaboos){
+    btn.textContent = 'К табу →';
+  } else {
+    btn.textContent = 'Готово ✓';
+  }
 }
 function manualToggle(n){
   const L = layoutOf(pendingLayout);
@@ -1160,20 +1311,24 @@ function manualClear(){
 }
 function manualNext(){
   const L = layoutOf(pendingLayout);
+  const playerName = (document.getElementById('player-name-input').value || '').trim();
   if(manual.tab === 'wishes'){
     if(manual.wishes.length < L.total){
       const have = new Set(manual.wishes);
-      const otherSet = new Set(manual.taboos);
+      const otherSet = pendingWithTaboos ? new Set(manual.taboos) : new Set();
       const pool = [];
       for(let i=1;i<=WISHES.length;i++) if(!have.has(i) && !otherSet.has(i)) pool.push(i);
       shuffle(pool);
       manual.wishes.push(...pool.slice(0, L.total-manual.wishes.length));
       manual.wishes.sort((a,b)=>a-b);
     }
-    manualTab('taboos');
-    return;
+    if(pendingWithTaboos){
+      manualTab('taboos');
+      return;
+    }
+    // без табу — сразу финализируем
   }
-  if(manual.taboos.length < L.total){
+  if(pendingWithTaboos && manual.taboos.length < L.total){
     const have = new Set(manual.taboos);
     const otherSet = new Set(manual.wishes);
     const pool = [];
@@ -1182,16 +1337,19 @@ function manualNext(){
     manual.taboos.push(...pool.slice(0, L.total-manual.taboos.length));
     manual.taboos.sort((a,b)=>a-b);
   }
+  const total = L.total;
   state.player = {
     wishes: manual.wishes.slice(),
-    taboos: manual.taboos.slice(),
-    marksW: Array(L.total).fill(false),
-    marksT: Array(L.total).fill(false),
+    taboos: pendingWithTaboos ? manual.taboos.slice() : [],
+    marksW: Array(total).fill(false),
+    marksT: Array(total).fill(false),
     bingo: false,
     setupDone: true,
     _bingoSet: [],
     layout: pendingLayout,
-    undoStack: []
+    undoStack: [],
+    playerName: playerName,
+    withTaboos: pendingWithTaboos
   };
   save();
   toast('Карточка готова');
@@ -1205,6 +1363,8 @@ function renderHost(){
   document.getElementById('host-count').textContent = total;
   document.getElementById('host-total').textContent = WISHES.length;
   document.getElementById('host-round').textContent = state.host.round;
+  const nameBtn = document.getElementById('host-name-btn');
+  if(nameBtn) nameBtn.textContent = state.host.hostName ? '👤' : '👤';
   if(n === null || n === undefined){
     document.getElementById('host-number').textContent = '—';
     document.getElementById('host-cat').style.display='none';
@@ -1224,12 +1384,19 @@ function renderHost(){
   else{
     h.style.display='block';
     h.innerHTML = state.host.log.slice().reverse().slice(0,15)
-      .map(x=>`<b>${x.n}</b> · ${escapeHtml(logText(x))}`).join('<br>');
+      .map(x=>{
+        const b = x.bingo ? ' 🎉' : '';
+        return `<b>${x.n}</b> · ${escapeHtml(logText(x))}${b}`;
+      }).join('<br>');
   }
   document.getElementById('btn-spin').disabled = total >= WISHES.length;
   const alert = document.getElementById('host-bingo-alert');
-  if(state.player && state.player.bingo) alert.classList.add('show');
-  else alert.classList.remove('show');
+  if(state.player && state.player.bingo){
+    alert.classList.add('show');
+    alert.textContent = '🎉 У ИГРОКА' + (state.player.playerName ? ' ' + state.player.playerName.toUpperCase() : '') + ' БИНГО!';
+  } else {
+    alert.classList.remove('show');
+  }
 }
 function spin(){
   if(state.host.log.length >= WISHES.length){ toast('Все числа уже выпали'); return; }
@@ -1264,7 +1431,8 @@ function confirmRoundName(){
     name: name,
     startedAt: state.host.startedAt,
     finishedAt: Date.now(),
-    log: state.host.log.slice()
+    log: state.host.log.slice(),
+    hostName: state.host.hostName || ''
   });
   if(state.archive.length > 20) state.archive.length = 20;
   state.host.log = [];
@@ -1292,31 +1460,39 @@ function renderLog(){
   const wrap = document.getElementById('log-wrap');
   const banner = document.getElementById('log-banner-host');
   let log;
+  let title = '';
   if(logViewMode === 'current'){
     log = state.host.log;
     banner.style.display = 'none';
+    title = `РАУНД ${state.host.round}`;
+    if(state.host.hostName) title += ' · ' + state.host.hostName;
+    title += ` · ${log.length} ЧИСЕЛ · ${fmtDate(state.host.startedAt)}`;
   } else {
     const r = state.archive[logViewMode.archiveIndex];
     log = r ? r.log : [];
     banner.style.display = 'block';
-    banner.innerHTML = `📂 Архив · ${r ? escapeHtml(r.name || ('Раунд ' + r.round)) : '?'} · ${r ? fmtDate(r.startedAt) : ''} <button onclick="closeArchiveView()">← К текущему</button>`;
+    banner.innerHTML = `📂 Архив · ${r ? escapeHtml(r.name || ('Раунд ' + r.round)) : '?'}${r && r.hostName ? ' · ' + escapeHtml(r.hostName) : ''} · ${r ? fmtDate(r.startedAt) : ''} <button onclick="closeArchiveView()">← К текущему</button>`;
+    title = `АРХИВ · ${log.length} ЧИСЕЛ`;
   }
-  sub.textContent = logViewMode === 'current'
-    ? `РАУНД ${state.host.round} · ${log.length} ЧИСЕЛ · ${fmtDate(state.host.startedAt)}`
-    : `АРХИВ · ${log.length} ЧИСЕЛ`;
+  sub.textContent = title;
   if(log.length === 0){
     wrap.innerHTML = '<div class="empty-log">Пока пусто.<br>Возвращайся на экран ведущего и крути числа — они появятся здесь.</div>';
     return;
   }
   let html = '<table class="log-table"><thead><tr>' +
     '<th class="col-idx">#</th><th class="col-num">№</th><th class="col-time">Время</th>' +
-    '<th>Текст</th></tr></thead><tbody>';
+    '<th>Текст</th><th class="col-bingo">БИНГО</th></tr></thead><tbody>';
   log.forEach((row, i)=>{
     const cat = logCat(row);
-    html += `<tr class="c${cat}"><td class="col-idx"><b>${i+1}</b></td>` +
+    const bingoCell = row.bingo
+      ? `<span class="log-bingo-mark">🎉${row.bingoPlayer ? ' ' + escapeHtml(row.bingoPlayer) : ''}</span>`
+      : '';
+    html += `<tr class="c${cat}${row.bingo ? ' bingo-row' : ''}">` +
+      `<td class="col-idx"><b>${i+1}</b></td>` +
       `<td class="col-num"><b>${row.n}</b></td>` +
       `<td class="col-time">${fmtTime(row.t)}</td>` +
-      `<td>${escapeHtml(logText(row))}</td></tr>`;
+      `<td>${escapeHtml(logText(row))}</td>` +
+      `<td class="col-bingo">${bingoCell}</td></tr>`;
   });
   html += '</tbody></table>';
   wrap.innerHTML = html;
@@ -1336,7 +1512,8 @@ function showArchive(){
   if(state.archive.length === 0){ toast('Архив пуст'); return; }
   const list = state.archive.map((r,i)=>{
     const nm = r.name || ('Раунд ' + r.round);
-    return `${i+1}. ${nm} (${r.log.length} чисел, ${fmtDate(r.startedAt)})`;
+    const hn = r.hostName ? ' (ведущий: ' + r.hostName + ')' : '';
+    return `${i+1}. ${nm}${hn} — ${r.log.length} чисел, ${fmtDate(r.startedAt)}`;
   }).join('\n');
   const ans = prompt('Архив раундов:\n\n' + list + '\n\nВведи номер для просмотра (или отмена):');
   if(!ans) return;
@@ -1346,6 +1523,17 @@ function showArchive(){
   renderLog();
 }
 
+// ============ ФЛАГ БИНГО ============
+function markBingoInLog(){
+  if(state.host.log.length === 0) return;
+  const last = state.host.log[state.host.log.length - 1];
+  if(last.bingo) return;
+  last.bingo = true;
+  last.bingoPlayer = state.player.playerName || 'Игрок';
+  last.bingoAt = Date.now();
+  save();
+}
+
 // ============ СТАТИСТИКА ============
 function renderStats(){
   const wrap = document.getElementById('stats-content');
@@ -1353,42 +1541,31 @@ function renderStats(){
   const hasCurrent = state.host.log.length > 0;
   const totalRounds = rounds.length + (hasCurrent ? 1 : 0);
   const totalNumbers = rounds.reduce((s,r)=>s + r.log.length, 0) + state.host.log.length;
-
   const durations = rounds
     .filter(r => r.startedAt && r.finishedAt && r.finishedAt > r.startedAt)
     .map(r => r.finishedAt - r.startedAt);
   const avgDuration = durations.length
     ? durations.reduce((s,v)=>s+v,0) / durations.length
     : 0;
-
   const firstTs = rounds.length
     ? Math.min(...rounds.map(r=>r.startedAt).filter(Boolean))
     : (hasCurrent ? state.host.startedAt : 0);
-
-  const lastTs = hasCurrent
-    ? state.host.startedAt
-    : (rounds.length ? rounds[0].startedAt : 0);
-
   const cells = [
     {v: totalRounds, l: 'Раундов'},
     {v: totalNumbers, l: 'Чисел выпало'},
-    {v: fmtDuration(avgDuration), l: 'Средняя длительность', wide:false},
+    {v: fmtDuration(avgDuration), l: 'Средняя длительность'},
     {v: rounds.length, l: 'В архиве'},
     {v: firstTs ? fmtDateFull(firstTs) : '—', l: 'Первый запуск', wide:true},
   ];
-
   wrap.innerHTML = cells.map(c=>`
     <div class="stat-cell ${c.wide?'stat-wide':''}">
       <div class="stat-val">${escapeHtml(String(c.v))}</div>
       <div class="stat-lbl">${escapeHtml(c.l)}</div>
     </div>
   `).join('');
-
   document.getElementById('stats-sub').textContent = firstTs
     ? 'С ' + fmtDate(firstTs)
     : 'ПУСТО';
-
-  // мини-сводка в Разрабе
   const mini = document.getElementById('dev-stats-mini');
   if(mini){
     mini.innerHTML = `Раундов: <b>${totalRounds}</b> · Чисел: <b>${totalNumbers}</b>` +
@@ -1400,11 +1577,20 @@ function renderStats(){
 function exportCSV(){
   if(logViewMode !== 'current'){ toast('Сначала закрой архив'); return; }
   if(state.host.log.length === 0){ toast('Нечего экспортировать'); return; }
-  const rows = [['#','Число','Категория','Текст','Время']];
+  const meta = [];
+  meta.push(['Раунд', state.host.round]);
+  if(state.host.hostName) meta.push(['Ведущий', state.host.hostName]);
+  meta.push(['Дата', fmtDate(state.host.startedAt)]);
+  meta.push(['Всего чисел', state.host.log.length]);
+  const rows = [['#','Число','Категория','Текст','Время','БИНГО','Игрок']];
   state.host.log.forEach((row,i)=>{
-    rows.push([i+1, row.n, CAT_NAME[logCat(row)], logText(row), fmtTime(row.t)]);
+    rows.push([
+      i+1, row.n, CAT_NAME[logCat(row)], logText(row), fmtTime(row.t),
+      row.bingo ? 'да' : '', row.bingoPlayer || ''
+    ]);
   });
-  const csv = '\uFEFF' + rows.map(r=>r.map(c=>{
+  const all = meta.concat([[]], rows);
+  const csv = '\uFEFF' + all.map(r=>r.map(c=>{
     const s = String(c).replace(/"/g,'""');
     return /[",\n;]/.test(s) ? `"${s}"` : s;
   }).join(';')).join('\n');
@@ -1414,11 +1600,18 @@ function printLog(){
   if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
   const pa = document.getElementById('print-area');
   let html = `<h1>СЕКС БИНГО · РАУНД ${state.host.round}</h1>`;
-  html += `<div class="sub">Дата: ${fmtDate(state.host.startedAt)} · Выпало чисел: ${state.host.log.length} из ${WISHES.length}</div>`;
-  html += '<table><thead><tr><th style="width:34px">#</th><th style="width:46px">№</th><th style="width:60px">Время</th><th style="width:80px">Категория</th><th>Текст</th></tr></thead><tbody>';
+  const metaParts = [];
+  if(state.host.hostName) metaParts.push('Ведущий: ' + state.host.hostName);
+  metaParts.push('Дата: ' + fmtDate(state.host.startedAt));
+  metaParts.push('Выпало чисел: ' + state.host.log.length + ' из ' + WISHES.length);
+  html += `<div class="sub">${escapeHtml(metaParts.join(' · '))}</div>`;
+  html += '<table><thead><tr><th style="width:34px">#</th><th style="width:46px">№</th><th style="width:60px">Время</th><th style="width:80px">Категория</th><th>Текст</th><th style="width:90px">БИНГО</th></tr></thead><tbody>';
   state.host.log.forEach((row,i)=>{
     const cat = logCat(row);
-    html += `<tr class="c${cat}"><td>${i+1}</td><td><b>${row.n}</b></td><td>${fmtTime(row.t)}</td><td>${CAT_NAME[cat]}</td><td>${escapeHtml(logText(row))}</td></tr>`;
+    const bingoCell = row.bingo
+      ? `🎉${row.bingoPlayer ? ' ' + escapeHtml(row.bingoPlayer) : ''}`
+      : '';
+    html += `<tr class="c${cat}${row.bingo ? ' bingo-row' : ''}"><td>${i+1}</td><td><b>${row.n}</b></td><td>${fmtTime(row.t)}</td><td>${CAT_NAME[cat]}</td><td>${escapeHtml(logText(row))}</td><td>${bingoCell}</td></tr>`;
   });
   html += '</tbody></table>';
   pa.innerHTML = html;
@@ -1428,9 +1621,12 @@ function printCard(){
   const L = layoutOf(state.player.layout);
   if(!state.player.wishes || state.player.wishes.length < L.total){ toast('Нет карточки'); return; }
   const pa = document.getElementById('print-area');
+  const playerLine = state.player.playerName
+    ? 'Игрок: ' + escapeHtml(state.player.playerName) + '   ·   Дата: ____________'
+    : 'Имя: _______________________   Дата: ____________';
   const buildGrid = (nums, title) => {
     let h = `<h1>СЕКС БИНГО · ${title} (${L.name})</h1>`;
-    h += `<div class="sub">Имя: _______________________   Дата: ____________</div>`;
+    h += `<div class="sub">${playerLine}</div>`;
     h += '<table class="print-card"><tbody>';
     for(let r=0;r<L.rows;r++){
       h += '<tr>';
@@ -1443,9 +1639,11 @@ function printCard(){
     h += '</tbody></table>';
     return h;
   };
-  pa.innerHTML = buildGrid(state.player.wishes, 'ЖЕЛАНИЯ') +
-                 '<div style="page-break-before:always"></div>' +
-                 buildGrid(state.player.taboos, 'ТАБУ');
+  let out = buildGrid(state.player.wishes, 'ЖЕЛАНИЯ');
+  if(state.player.withTaboos && state.player.taboos.length >= L.total){
+    out += '<div style="page-break-before:always"></div>' + buildGrid(state.player.taboos, 'ТАБУ');
+  }
+  pa.innerHTML = out;
   window.print();
 }
 function dateStamp(){
@@ -1470,15 +1668,18 @@ function shuffle(a){
   }
   return a;
 }
-function makeCard(layoutKey){
+function makeCard(layoutKey, withTaboos, playerName){
   const L = layoutOf(layoutKey || '3x5');
   const total = L.total;
   const all = Array.from({length: WISHES.length},(_,i)=>i+1);
   shuffle(all);
   const wishes = all.slice(0,total).sort((a,b)=>a-b);
-  const rest = all.slice(total);
-  shuffle(rest);
-  const taboos = rest.slice(0,total).sort((a,b)=>a-b);
+  let taboos = [];
+  if(withTaboos !== false){
+    const rest = all.slice(total);
+    shuffle(rest);
+    taboos = rest.slice(0,total).sort((a,b)=>a-b);
+  }
   return {
     wishes, taboos,
     marksW: Array(total).fill(false),
@@ -1487,17 +1688,20 @@ function makeCard(layoutKey){
     setupDone: true,
     _bingoSet: [],
     layout: layoutKey || '3x5',
-    undoStack: []
+    undoStack: [],
+    playerName: playerName || '',
+    withTaboos: withTaboos !== false
   };
 }
 function goToSetup(){
   if(!confirm('Собрать новую карточку? Текущие отметки сбросятся.')) return;
   pendingLayout = state.player.layout || '3x5';
-  state.player = {
-    wishes: [], taboos: [], marksW: [], marksT: [],
-    bingo: false, setupDone: false, _bingoSet: [],
-    layout: state.player.layout || '3x5', undoStack: []
-  };
+  pendingWithTaboos = (typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true;
+  state.player = Object.assign(defaultPlayerState(), {
+    layout: pendingLayout,
+    playerName: state.player.playerName || '',
+    withTaboos: pendingWithTaboos
+  });
   save();
   showScreen('setup');
 }
@@ -1518,9 +1722,15 @@ function renderPlayer(){
     showScreen('setup');
     return;
   }
-  document.getElementById('player-sub').textContent = 'РАСКЛАДКА ' + L.name + ' · ВВОДИ НОМЕРА';
+  const withT = state.player.withTaboos !== false && state.player.taboos.length === L.total;
+  document.getElementById('player-sub').textContent =
+    'РАСКЛАДКА ' + L.name + (withT ? '' : ' · БЕЗ ТАБУ') +
+    (state.player.playerName ? ' · ' + state.player.playerName : '');
   renderGrid('wishes','marksW','grid-wishes','score-w', L);
-  renderGrid('taboos','marksT','grid-taboos','score-t', L);
+  document.getElementById('taboos-block').style.display = withT ? '' : 'none';
+  if(withT){
+    renderGrid('taboos','marksT','grid-taboos','score-t', L);
+  }
   checkBingo();
 }
 function renderGrid(dataKey, marksKey, gridId, scoreId, L){
@@ -1557,7 +1767,6 @@ function refreshGridCell(grid, i, marksKey, dataKey, scoreId, L){
   cell.classList.toggle('hit', !!marks[i]);
   const sc = marks.filter(Boolean).length;
   document.getElementById(scoreId).textContent = sc + '/' + L.total;
-  // обновляем бинго-подсветку
   const prevBingo = new Set(state.player._bingoSet || []);
   checkBingo();
   const newBingo = new Set(state.player._bingoSet || []);
@@ -1585,7 +1794,6 @@ function undoLast(){
   const stack = state.player.undoStack;
   if(!stack || !stack.length){ toast('Нечего отменять'); return; }
   const op = stack.pop();
-  const L = layoutOf(state.player.layout);
   if(op.grid === 'wishes'){
     state.player.marksW[op.index] = op.prev;
   } else {
@@ -1631,7 +1839,6 @@ function checkBingo(){
   const bingoSet = new Set();
   function check(marks, dataKey){
     let bingoCount = 0;
-    // строки
     for(let r=0;r<rows;r++){
       let all = true;
       for(let c=0;c<cols;c++) if(!marks[r*cols+c]) all=false;
@@ -1640,7 +1847,6 @@ function checkBingo(){
         bingoCount++;
       }
     }
-    // столбцы
     for(let c=0;c<cols;c++){
       let all = true;
       for(let r=0;r<rows;r++) if(!marks[r*cols+c]) all=false;
@@ -1649,7 +1855,6 @@ function checkBingo(){
         bingoCount++;
       }
     }
-    // полная карточка
     if(marks.every(Boolean)){
       for(let i=0;i<total;i++) bingoSet.add(dataKey+i);
       bingoCount++;
@@ -1657,7 +1862,7 @@ function checkBingo(){
     return bingoCount;
   }
   const bw = check(state.player.marksW, 'wishes');
-  const bt = check(state.player.marksT, 'taboos');
+  const bt = state.player.withTaboos !== false ? check(state.player.marksT, 'taboos') : 0;
   state.player._bingoSet = Array.from(bingoSet);
   const hasBingo = (bw + bt) > 0;
   const banner = document.getElementById('bingo-banner');
@@ -1665,7 +1870,12 @@ function checkBingo(){
     banner.classList.add('show');
     if(!state.player.bingo){
       state.player.bingo = true;
-      showBingoOverlay('Ты собрал линию! Скажи ведущему.');
+      playGong();
+      showBingoOverlay(
+        (state.player.playerName ? state.player.playerName + ', т' : 'Т') +
+        'ы собрал линию! Скажи ведущему.'
+      );
+      markBingoInLog();
     }
   }else{
     banner.classList.remove('show');
@@ -1692,7 +1902,6 @@ function renderList(q){
 // ============ РАЗРАБ ============
 function renderDev(){
   document.getElementById('dev-count').textContent = WISHES.length;
-
   const status = document.getElementById('dev-a2hs-status');
   if(status){
     const standalone = a2hsIsStandalone();
@@ -1701,7 +1910,6 @@ function renderDev(){
     else if(hidden) status.innerHTML = 'Статус: <b>не показывать</b>';
     else status.innerHTML = 'Статус: <b>напоминание активно</b>';
   }
-
   const stStatus = document.getElementById('dev-storage-status');
   if(stStatus){
     const proto = location.protocol;
@@ -1716,8 +1924,6 @@ function renderDev(){
     }catch(e){}
     stStatus.innerHTML = 'Хранилище: ' + info;
   }
-
-  // мини-статистика
   const rounds = state.archive.length;
   const totalNumbers = state.archive.reduce((s,r)=>s + r.log.length, 0) + state.host.log.length;
   const mini = document.getElementById('dev-stats-mini');
@@ -1730,13 +1936,10 @@ function renderDev(){
       `Чисел: <b>${totalNumbers}</b>` +
       (avg ? ` · средняя <b>${fmtDuration(avg)}</b>` : '');
   }
-
-  // тумблеры
   const ts = document.getElementById('toggle-sound');
   if(ts) ts.classList.toggle('on', soundEnabled);
   const th = document.getElementById('toggle-theme');
   if(th) th.classList.toggle('on', lightTheme);
-
   document.querySelectorAll('.cat-btn[data-cat]').forEach(b=>{
     b.classList.toggle('active', parseInt(b.dataset.cat)===devCat);
   });
@@ -1863,9 +2066,13 @@ function importAll(file){
       CATS.length = 0; CATS.push(...data.cats.map(c=>[0,1,2].includes(c)?c:1));
       saveWishes();
       state = Object.assign(state, data.state || {});
+      if(!state.host.hostName) state.host.hostName = '';
+      if(!state.player) state.player = defaultPlayerState();
       if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
       if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
       if(!LAYOUTS[state.player.layout]) state.player.layout = '3x5';
+      if(typeof state.player.playerName !== 'string') state.player.playerName = '';
+      if(typeof state.player.withTaboos !== 'boolean') state.player.withTaboos = true;
       if(data.settings){
         soundEnabled = !!data.settings.sound;
         lightTheme = !!data.settings.lightTheme;
@@ -1890,15 +2097,16 @@ load();
 applyTheme();
 if(state.accepted18) document.getElementById('modal18').classList.remove('show');
 
-if(!state.player) state.player = {
-  wishes:[], taboos:[], marksW:[], marksT:[],
-  bingo:false, setupDone:false, _bingoSet:[], layout:'3x5', undoStack:[]
-};
+if(!state.player) state.player = defaultPlayerState();
 if(typeof state.player.setupDone !== 'boolean') state.player.setupDone = false;
 if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
 if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
 if(!LAYOUTS[state.player.layout]) state.player.layout = '3x5';
+if(typeof state.player.playerName !== 'string') state.player.playerName = '';
+if(typeof state.player.withTaboos !== 'boolean') state.player.withTaboos = true;
+if(!state.host.hostName) state.host.hostName = '';
 pendingLayout = state.player.layout;
+pendingWithTaboos = state.player.withTaboos;
 
 document.getElementById('player-input').addEventListener('keydown', e=>{
   if(e.key === 'Enter'){ e.preventDefault(); markFromInput(); }
@@ -1910,6 +2118,9 @@ document.getElementById('dev-new-text').addEventListener('keydown', e=>{
 });
 document.getElementById('round-name-input').addEventListener('keydown', e=>{
   if(e.key === 'Enter'){ e.preventDefault(); confirmRoundName(); }
+});
+document.getElementById('host-name-input').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); saveHostName(); }
 });
 
 // PWA manifest
@@ -1937,7 +2148,6 @@ navHistory = [initial];
 navIndex = 0;
 _renderScreen(initial);
 
-// BroadcastChannel
 try{
   if(typeof BroadcastChannel === 'function'){
     const myId = Math.random().toString(36).slice(2);
