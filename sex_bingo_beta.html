@@ -547,6 +547,9 @@ body.light .modal h3{color:var(--red-d)}
   <header>
     <button class="back" onclick="navBack()">←</button>
     <h1>Список<small id="list-total">· ЖЕЛАНИЯ И ТАБУ</small></h1>
+    <button class="icon-btn" onclick="copyListToClipboard()" title="Копировать в буфер">📋</button>
+    <button class="icon-btn" onclick="exportListCSV()" title="Экспорт CSV">📤</button>
+    <button class="icon-btn" onclick="printList()" title="Печать / PDF">🖨</button>
   </header>
   <input class="list-search" type="search" id="list-search" placeholder="Поиск по тексту или номеру…">
   <div class="legend">
@@ -2060,6 +2063,74 @@ function renderList(q){
     el.className = 'item c' + CATS[i];
     el.innerHTML = '<span class="n">' + n + '</span><span class="t">' + escapeHtml(text) + '</span>';
     list.appendChild(el);
+  }
+}
+function printList(){
+  if(WISHES.length === 0){ toast('Список пуст'); return; }
+  const pa = document.getElementById('print-area');
+  let html = '<h1>СЕКС БИНГО · СПИСОК ПУНКТОВ</h1>';
+  html += '<div class="sub">Всего: ' + WISHES.length + ' · Дата печати: ' + fmtDate(Date.now()) + '</div>';
+  html += '<table><thead><tr>'
+    + '<th style="width:34px">#</th>'
+    + '<th>Текст</th>'
+    + '<th style="width:80px">Категория</th></tr></thead><tbody>';
+  WISHES.forEach((text, i)=>{
+    const cat = wishCat(i+1);
+    html += '<tr class="c' + cat + '">'
+      + '<td>' + (i+1) + '</td>'
+      + '<td>' + escapeHtml(text) + '</td>'
+      + '<td>' + CAT_NAME[cat] + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  pa.innerHTML = html;
+  window.print();
+}
+
+function exportListCSV(){
+  if(WISHES.length === 0){ toast('Список пуст'); return; }
+  const rows = [['#', 'Текст', 'Категория']];
+  WISHES.forEach((text, i)=>{
+    rows.push([i+1, text, CAT_NAME[wishCat(i+1)]]);
+  });
+  const csv = '\uFEFF' + rows.map(r=>r.map(c=>{
+    const s = String(c).replace(/"/g, '""');
+    return /[",\n;]/.test(s) ? '"' + s + '"' : s;
+  }).join(';')).join('\n');
+  downloadFile(csv, 'sex_bingo_list_' + dateStamp() + '.csv', 'text/csv;charset=utf-8');
+}
+
+function copyListToClipboard(){
+  if(WISHES.length === 0){ toast('Список пуст'); return; }
+  const lines = [];
+  lines.push('🎲 СЕКС БИНГО · Список пунктов');
+  lines.push('Всего: ' + WISHES.length);
+  lines.push('');
+  WISHES.forEach((text, i)=>{
+    lines.push((i+1) + '. ' + text + ' [' + CAT_NAME[wishCat(i+1)] + ']');
+  });
+  const text = lines.join('\n');
+  const doFallback = ()=>{
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.setAttribute('readonly','');
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if(ok) toast('Скопировано (' + WISHES.length + ' пунктов)');
+      else toast('Не удалось скопировать');
+    }catch(e){ toast('Не удалось скопировать'); }
+  };
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text)
+      .then(()=>toast('Скопировано (' + WISHES.length + ' пунктов)'))
+      .catch(()=>doFallback());
+  } else {
+    doFallback();
   }
 }
 
