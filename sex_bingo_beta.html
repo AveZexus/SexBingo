@@ -1500,10 +1500,7 @@ function manualNext(){
       manual.wishes.push(...pool.slice(0, L.total-manual.wishes.length));
       manual.wishes.sort((a,b)=>a-b);
     }
-    if(pendingWithTaboos){
-      manualTab('taboos');
-      return;
-    }
+    if(pendingWithTaboos){ manualTab('taboos'); return; }
   }
   if(pendingWithTaboos && manual.taboos.length < L.total){
     const have = new Set(manual.taboos);
@@ -1525,4 +1522,813 @@ function manualNext(){
     _bingoSet: [],
     layout: pendingLayout,
     undoStack: [],
-    player
+    playerName: playerName,
+    withTaboos: pendingWithTaboos
+  };
+  save();
+  toast('Карточка готова');
+  showScreen('player');
+}
+
+// ============ ВЕДУЩИЙ ============
+function renderHost(){
+  const n = state.host.current;
+  const total = state.host.log.length;
+  document.getElementById('host-count').textContent = total;
+  document.getElementById('host-total').textContent = WISHES.length;
+  document.getElementById('host-round').textContent = state.host.round;
+  if(n === null || n === undefined){
+    document.getElementById('host-number').textContent = '—';
+    document.getElementById('host-cat').style.display='none';
+    document.getElementById('host-text').textContent = 'Нажми «Крутить», чтобы начать';
+  } else {
+    document.getElementById('host-number').textContent = n;
+    const cat = document.getElementById('host-cat');
+    if(WISHES[n-1] !== undefined){
+      cat.textContent = CAT_NAME[wishCat(n)];
+      cat.className = 'cat-tag c'+wishCat(n);
+      cat.style.display = 'inline-block';
+    } else cat.style.display='none';
+    document.getElementById('host-text').textContent = wishText(n);
+  }
+  const h = document.getElementById('host-history');
+  if(total === 0){ h.style.display='none'; h.innerHTML=''; }
+  else {
+    h.style.display='block';
+    h.innerHTML = state.host.log.slice().reverse().slice(0,15)
+      .map(x=>{
+        const b = x.bingo ? ' 🎉' : '';
+        return `<b>${x.n}</b> · ${escapeHtml(logText(x))}${b}`;
+      }).join('<br>');
+  }
+  document.getElementById('btn-spin').disabled = total >= WISHES.length;
+  const alert = document.getElementById('host-bingo-alert');
+  if(state.player && state.player.bingo){
+    alert.classList.add('show');
+    alert.textContent = '🎉 У ИГРОКА' + (state.player.playerName ? ' ' + state.player.playerName.toUpperCase() : '') + ' БИНГО!';
+  } else {
+    alert.classList.remove('show');
+  }
+}
+function spin(){
+  if(state.host.log.length >= WISHES.length){ toast('Все числа уже выпали'); return; }
+  const used = new Set(state.host.log.map(x=>x.n));
+  const pool = [];
+  for(let i=1;i<=WISHES.length;i++) if(!used.has(i)) pool.push(i);
+  const n = pool[Math.floor(Math.random()*pool.length)];
+  state.host.log.push({ n, t: Date.now(), text: wishText(n), cat: wishCat(n) });
+  state.host.current = n;
+  playDing();
+  const el = document.getElementById('host-number');
+  el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
+  if(navigator.vibrate) navigator.vibrate(40);
+  renderHost();
+  save();
+}
+function resetHost(){
+  if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
+  const def = 'Раунд ' + state.host.round;
+  const inp = document.getElementById('round-name-input');
+  inp.value = def;
+  inp.placeholder = def;
+  document.getElementById('modal-round-name').classList.add('show');
+  setTimeout(()=>inp.focus(), 100);
+}
+function confirmRoundName(repeat){
+  const inp = document.getElementById('round-name-input');
+  const name = (inp.value || '').trim() || ('Раунд ' + state.host.round);
+  document.getElementById('modal-round-name').classList.remove('show');
+  state.archive.unshift({
+    round: state.host.round,
+    name: name,
+    startedAt: state.host.startedAt,
+    finishedAt: Date.now(),
+    log: state.host.log.slice(),
+    hostName: state.host.hostName || ''
+  });
+  if(state.archive.length > 20) state.archive.length = 20;
+  state.host.log = [];
+  state.host.current = null;
+  state.host.round += 1;
+  state.host.startedAt = Date.now();
+  if(state.player){
+    state.player.bingo = false;
+    if(repeat){
+      // Повторить раунд: те же карточки, но все отметки сброшены
+      const L = layoutOf(state.player.layout);
+      state.player.marksW = Array(L.total).fill(false);
+      state.player.marksT = Array(L.total).fill(false);
+      state.player._bingoSet = [];
+      state.player.undoStack = [];
+    }
+  }
+  renderHost();
+  save();
+  toast(repeat ? 'Раунд ' + name + ' сохранён. Играем заново!' : 'Раунд сохранён: ' + name);
+}
+function cancelRoundName(){
+  document.getElementById('modal-round-name').classList.remove('show');
+}
+
+// ============ ЖУРНАЛ ============
+let logViewMode = 'current';
+function showLog(){
+  logViewMode = 'current';
+  showScreen('log');
+  renderLog();
+}
+function renderLog(){
+  const sub = document.getElementById('log-sub');
+  const wrap = document.getElementById('log-wrap');
+  const banner = document.getElementById('log-banner-host');
+  let log;
+  let title = '';
+  if(logViewMode === 'current'){
+    log = state.host.log;
+    banner.style.display = 'none';
+    title = 'РАУНД ' + state.host.round;
+    if(state.host.hostName) title += ' · ' + state.host.hostName;
+    title += ' · ' + log.length + ' ЧИСЕЛ · ' + fmtDate(state.host.startedAt);
+  } else {
+    const r = state.archive[logViewMode.archiveIndex];
+    log = r ? r.log : [];
+    banner.style.display = 'block';
+    banner.innerHTML = '📂 Архив · ' + (r ? escapeHtml(r.name || ('Раунд ' + r.round)) : '?')
+      + (r && r.hostName ? ' · ' + escapeHtml(r.hostName) : '')
+      + ' · ' + (r ? fmtDate(r.startedAt) : '')
+      + ' <button onclick="closeArchiveView()">← К текущему</button>';
+    title = 'АРХИВ · ' + log.length + ' ЧИСЕЛ';
+  }
+  sub.textContent = title;
+  if(log.length === 0){
+    wrap.innerHTML = '<div class="empty-log">Пока пусто.<br>Возвращайся на экран ведущего и крути числа — они появятся здесь.</div>';
+    return;
+  }
+  let html = '<table class="log-table"><thead><tr>'
+    + '<th class="col-idx">#</th><th class="col-num">№</th><th class="col-time">Время</th>'
+    + '<th>Текст</th><th class="col-bingo">БИНГО</th></tr></thead><tbody>';
+  log.forEach((row, i)=>{
+    const cat = logCat(row);
+    const bingoCell = row.bingo
+      ? '<span class="log-bingo-mark">🎉' + (row.bingoPlayer ? ' ' + escapeHtml(row.bingoPlayer) : '') + '</span>'
+      : '';
+    html += '<tr class="c' + cat + (row.bingo ? ' bingo-row' : '') + '">'
+      + '<td class="col-idx"><b>' + (i+1) + '</b></td>'
+      + '<td class="col-num"><b>' + row.n + '</b></td>'
+      + '<td class="col-time">' + fmtTime(row.t) + '</td>'
+      + '<td>' + escapeHtml(logText(row)) + '</td>'
+      + '<td class="col-bingo">' + bingoCell + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+}
+function closeArchiveView(){ logViewMode = 'current'; renderLog(); }
+function clearLog(){
+  if(state.host.log.length === 0){ toast('Уже пусто'); return; }
+  if(!confirm('Удалить журнал без сохранения в архив?')) return;
+  state.host.log = [];
+  state.host.current = null;
+  state.host.startedAt = Date.now();
+  renderLog();
+  save();
+  toast('Журнал очищен');
+}
+function showArchive(){
+  if(state.archive.length === 0){ toast('Архив пуст'); return; }
+  const list = state.archive.map((r,i)=>{
+    const nm = r.name || ('Раунд ' + r.round);
+    const hn = r.hostName ? ' (ведущий: ' + r.hostName + ')' : '';
+    return (i+1) + '. ' + nm + hn + ' — ' + r.log.length + ' чисел, ' + fmtDate(r.startedAt);
+  }).join('\n');
+  const ans = prompt('Архив раундов:\n\n' + list + '\n\nВведи номер для просмотра (или отмена):');
+  if(!ans) return;
+  const idx = parseInt(ans,10) - 1;
+  if(idx < 0 || idx >= state.archive.length){ toast('Неверный номер'); return; }
+  logViewMode = { archiveIndex: idx };
+  renderLog();
+}
+
+// ============ ФЛАГ БИНГО ============
+function markBingoInLog(){
+  if(state.host.log.length === 0) return;
+  const last = state.host.log[state.host.log.length - 1];
+  if(last.bingo) return;
+  last.bingo = true;
+  last.bingoPlayer = state.player.playerName || 'Игрок';
+  last.bingoAt = Date.now();
+  save();
+}
+
+// ============ СТАТИСТИКА ============
+function renderStats(){
+  const wrap = document.getElementById('stats-content');
+  const rounds = state.archive.slice();
+  const hasCurrent = state.host.log.length > 0;
+  const totalRounds = rounds.length + (hasCurrent ? 1 : 0);
+  const totalNumbers = rounds.reduce((s,r)=>s + r.log.length, 0) + state.host.log.length;
+  const durations = rounds
+    .filter(r => r.startedAt && r.finishedAt && r.finishedAt > r.startedAt)
+    .map(r => r.finishedAt - r.startedAt);
+  const avgDuration = durations.length ? durations.reduce((s,v)=>s+v,0) / durations.length : 0;
+  const firstTs = rounds.length
+    ? Math.min(...rounds.map(r=>r.startedAt).filter(Boolean))
+    : (hasCurrent ? state.host.startedAt : 0);
+  const cells = [
+    {v: totalRounds, l: 'Раундов'},
+    {v: totalNumbers, l: 'Чисел выпало'},
+    {v: fmtDuration(avgDuration), l: 'Средняя длительность'},
+    {v: rounds.length, l: 'В архиве'},
+    {v: firstTs ? fmtDateFull(firstTs) : '—', l: 'Первый запуск', wide:true}
+  ];
+  wrap.innerHTML = cells.map(c=>
+    '<div class="stat-cell ' + (c.wide?'stat-wide':'') + '">'
+    + '<div class="stat-val">' + escapeHtml(String(c.v)) + '</div>'
+    + '<div class="stat-lbl">' + escapeHtml(c.l) + '</div></div>'
+  ).join('');
+  document.getElementById('stats-sub').textContent = firstTs ? 'С ' + fmtDate(firstTs) : 'ПУСТО';
+  const mini = document.getElementById('dev-stats-mini');
+  if(mini){
+    mini.innerHTML = 'Раундов: <b>' + totalRounds + '</b> · Чисел: <b>' + totalNumbers + '</b>'
+      + (avgDuration ? ' · средняя <b>' + fmtDuration(avgDuration) + '</b>' : '');
+  }
+}
+
+// ============ ЭКСПОРТ / ПЕЧАТЬ ============
+function exportCSV(){
+  if(logViewMode !== 'current'){ toast('Сначала закрой архив'); return; }
+  if(state.host.log.length === 0){ toast('Нечего экспортировать'); return; }
+  const meta = [];
+  meta.push(['Раунд', state.host.round]);
+  if(state.host.hostName) meta.push(['Ведущий', state.host.hostName]);
+  meta.push(['Дата', fmtDate(state.host.startedAt)]);
+  meta.push(['Всего чисел', state.host.log.length]);
+  const rows = [['#','Число','Категория','Текст','Время','БИНГО','Игрок']];
+  state.host.log.forEach((row,i)=>{
+    rows.push([i+1, row.n, CAT_NAME[logCat(row)], logText(row), fmtTime(row.t),
+      row.bingo ? 'да' : '', row.bingoPlayer || '']);
+  });
+  const all = meta.concat([[]], rows);
+  const csv = '\uFEFF' + all.map(r=>r.map(c=>{
+    const s = String(c).replace(/"/g,'""');
+    return /[",\n;]/.test(s) ? '"' + s + '"' : s;
+  }).join(';')).join('\n');
+  downloadFile(csv, 'sex_bingo_round' + state.host.round + '_' + dateStamp() + '.csv', 'text/csv;charset=utf-8');
+}
+function printLog(){
+  if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
+  const pa = document.getElementById('print-area');
+  let html = '<h1>СЕКС БИНГО · РАУНД ' + state.host.round + '</h1>';
+  const metaParts = [];
+  if(state.host.hostName) metaParts.push('Ведущий: ' + state.host.hostName);
+  metaParts.push('Дата: ' + fmtDate(state.host.startedAt));
+  metaParts.push('Выпало чисел: ' + state.host.log.length + ' из ' + WISHES.length);
+  html += '<div class="sub">' + escapeHtml(metaParts.join(' · ')) + '</div>';
+  html += '<table><thead><tr><th style="width:34px">#</th><th style="width:46px">№</th><th style="width:60px">Время</th><th style="width:80px">Категория</th><th>Текст</th><th style="width:90px">БИНГО</th></tr></thead><tbody>';
+  state.host.log.forEach((row,i)=>{
+    const cat = logCat(row);
+    const bingoCell = row.bingo ? '🎉' + (row.bingoPlayer ? ' ' + escapeHtml(row.bingoPlayer) : '') : '';
+    html += '<tr class="c' + cat + (row.bingo ? ' bingo-row' : '') + '"><td>' + (i+1) + '</td><td><b>' + row.n + '</b></td><td>' + fmtTime(row.t) + '</td><td>' + CAT_NAME[cat] + '</td><td>' + escapeHtml(logText(row)) + '</td><td>' + bingoCell + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  pa.innerHTML = html;
+  window.print();
+}
+function printCard(){
+  const L = layoutOf(state.player.layout);
+  if(!state.player.wishes || state.player.wishes.length < L.total){ toast('Нет карточки'); return; }
+  const pa = document.getElementById('print-area');
+  const playerLine = state.player.playerName
+    ? 'Игрок: ' + escapeHtml(state.player.playerName) + '   ·   Дата: ____________'
+    : 'Имя: _______________________   Дата: ____________';
+  const buildGrid = (nums, title) => {
+    let h = '<h1>СЕКС БИНГО · ' + title + ' (' + L.name + ')</h1>';
+    h += '<div class="sub">' + playerLine + '</div>';
+    h += '<table class="print-card"><tbody>';
+    for(let r=0;r<L.rows;r++){
+      h += '<tr>';
+      for(let c=0;c<L.cols;c++){
+        const num = nums[r*L.cols+c];
+        h += '<td><span class="num">' + num + '.</span><br>' + escapeHtml(wishText(num)) + '</td>';
+      }
+      h += '</tr>';
+    }
+    h += '</tbody></table>';
+    return h;
+  };
+  let out = buildGrid(state.player.wishes, 'ЖЕЛАНИЯ');
+  if(state.player.withTaboos && state.player.taboos.length >= L.total){
+    out += '<div style="page-break-before:always"></div>' + buildGrid(state.player.taboos, 'ТАБУ');
+  }
+  pa.innerHTML = out;
+  window.print();
+}
+function dateStamp(){
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+function downloadFile(content, name, type){
+  const blob = new Blob([content], {type});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click();
+  setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
+  toast('Файл ' + name + ' сохранён');
+}
+
+// ============ ИГРОК ============
+function shuffle(a){
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function makeCard(layoutKey, withTaboos, playerName){
+  const L = layoutOf(layoutKey || '3x5');
+  const total = L.total;
+  const all = Array.from({length: WISHES.length},(_,i)=>i+1);
+  shuffle(all);
+  const wishes = all.slice(0,total).sort((a,b)=>a-b);
+  let taboos = [];
+  if(withTaboos !== false){
+    const rest = all.slice(total);
+    shuffle(rest);
+    taboos = rest.slice(0,total).sort((a,b)=>a-b);
+  }
+  return {
+    wishes, taboos,
+    marksW: Array(total).fill(false),
+    marksT: Array(total).fill(false),
+    bingo: false,
+    setupDone: true,
+    _bingoSet: [],
+    layout: layoutKey || '3x5',
+    undoStack: [],
+    playerName: playerName || '',
+    withTaboos: withTaboos !== false
+  };
+}
+function goToSetup(){
+  if(!confirm('Собрать новую карточку? Текущие отметки сбросятся.')) return;
+  pendingLayout = state.player.layout || '3x5';
+  pendingWithTaboos = (typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true;
+  state.player = Object.assign(defaultPlayerState(), {
+    layout: pendingLayout,
+    playerName: state.player.playerName || '',
+    withTaboos: pendingWithTaboos
+  });
+  save();
+  showScreen('setup');
+}
+function resetMarks(){
+  if(!confirm('Очистить все отметки?')) return;
+  const L = layoutOf(state.player.layout);
+  state.player.marksW = Array(L.total).fill(false);
+  state.player.marksT = Array(L.total).fill(false);
+  state.player.bingo = false;
+  state.player._bingoSet = [];
+  state.player.undoStack = [];
+  renderPlayer();
+  save();
+}
+function renderPlayer(){
+  const L = layoutOf(state.player.layout);
+  if(!state.player.setupDone || !state.player.wishes || state.player.wishes.length !== L.total){
+    showScreen('setup');
+    return;
+  }
+  const withT = state.player.withTaboos !== false && state.player.taboos.length === L.total;
+  document.getElementById('player-sub').textContent =
+    'РАСКЛАДКА ' + L.name + (withT ? '' : ' · БЕЗ ТАБУ') +
+    (state.player.playerName ? ' · ' + state.player.playerName : '');
+  renderGrid('wishes','marksW','grid-wishes','score-w', L);
+  document.getElementById('taboos-block').style.display = withT ? '' : 'none';
+  if(withT) renderGrid('taboos','marksT','grid-taboos','score-t', L);
+  checkBingo();
+}
+function renderGrid(dataKey, marksKey, gridId, scoreId, L){
+  const data = state.player[dataKey];
+  const marks = state.player[marksKey];
+  const grid = document.getElementById(gridId);
+  grid.style.gridTemplateColumns = 'repeat(' + L.cols + ', 1fr)';
+  grid.innerHTML = '';
+  const score = marks.filter(Boolean).length;
+  document.getElementById(scoreId).textContent = score + '/' + L.total;
+  const bingoSet = new Set(state.player._bingoSet || []);
+  data.forEach((num, i)=>{
+    const d = document.createElement('div');
+    d.className = 'cell' + (marks[i]?' hit':'') + (bingoSet.has(dataKey+i)?' bingo':'');
+    const cat = wishCat(num);
+    if(cat===0) d.style.borderLeftColor = '#4a7d2c';
+    if(cat===1) d.style.borderLeftColor = '#a68a1c';
+    if(cat===2) d.style.borderLeftColor = '#a03b3b';
+    d.innerHTML = '<span class="num">' + num + '</span><span class="t">' + escapeHtml(wishText(num)) + '</span>';
+    d.onclick = () => {
+      const prev = state.player[marksKey][i];
+      state.player[marksKey][i] = !prev;
+      pushUndo({grid:dataKey, index:i, prev});
+      refreshGridCell(grid, i, marksKey, dataKey, scoreId, L);
+      save();
+    };
+    grid.appendChild(d);
+  });
+}
+function refreshGridCell(grid, i, marksKey, dataKey, scoreId, L){
+  const marks = state.player[marksKey];
+  const cell = grid.children[i];
+  if(!cell) return;
+  cell.classList.toggle('hit', !!marks[i]);
+  const sc = marks.filter(Boolean).length;
+  document.getElementById(scoreId).textContent = sc + '/' + L.total;
+  const prevBingo = new Set(state.player._bingoSet || []);
+  checkBingo();
+  const newBingo = new Set(state.player._bingoSet || []);
+  prevBingo.forEach(key=>{
+    if(!newBingo.has(key) && key.startsWith(dataKey)){
+      const idx = parseInt(key.slice(dataKey.length), 10);
+      const c = grid.children[idx];
+      if(c) c.classList.remove('bingo');
+    }
+  });
+  newBingo.forEach(key=>{
+    if(!prevBingo.has(key) && key.startsWith(dataKey)){
+      const idx = parseInt(key.slice(dataKey.length), 10);
+      const c = grid.children[idx];
+      if(c) c.classList.add('bingo');
+    }
+  });
+}
+function pushUndo(op){
+  if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
+  state.player.undoStack.push(op);
+  if(state.player.undoStack.length > 20) state.player.undoStack.shift();
+}
+function undoLast(){
+  const stack = state.player.undoStack;
+  if(!stack || !stack.length){ toast('Нечего отменять'); return; }
+  const op = stack.pop();
+  if(op.grid === 'wishes') state.player.marksW[op.index] = op.prev;
+  else state.player.marksT[op.index] = op.prev;
+  renderPlayer();
+  save();
+  toast('Отменено');
+}
+function markFromInput(){
+  const inp = document.getElementById('player-input');
+  const raw = inp.value.trim();
+  if(!/^\d+$/.test(raw)){ toast('Введи число 1–' + WISHES.length); return; }
+  const v = parseInt(raw, 10);
+  if(v<1 || v>WISHES.length){ toast('Введи число 1–' + WISHES.length); return; }
+  let found = false;
+  const iw = state.player.wishes.indexOf(v);
+  if(iw >= 0){
+    const prev = state.player.marksW[iw];
+    if(!prev){ pushUndo({grid:'wishes', index:iw, prev:false}); }
+    state.player.marksW[iw] = true;
+    found = true;
+  }
+  const it = state.player.taboos.indexOf(v);
+  if(it >= 0){
+    const prev = state.player.marksT[it];
+    if(!prev){ pushUndo({grid:'taboos', index:it, prev:false}); }
+    state.player.marksT[it] = true;
+    found = true;
+  }
+  inp.value = '';
+  if(found){
+    if(navigator.vibrate) navigator.vibrate(30);
+    renderPlayer();
+    save();
+  } else {
+    toast('Числа ' + v + ' нет в твоей карточке');
+  }
+}
+function checkBingo(){
+  const L = layoutOf(state.player.layout);
+  const cols = L.cols, rows = L.rows, total = L.total;
+  const bingoSet = new Set();
+  function check(marks, dataKey){
+    let bingoCount = 0;
+    for(let r=0;r<rows;r++){
+      let all = true;
+      for(let c=0;c<cols;c++) if(!marks[r*cols+c]) all=false;
+      if(all){ for(let c=0;c<cols;c++) bingoSet.add(dataKey+(r*cols+c)); bingoCount++; }
+    }
+    for(let c=0;c<cols;c++){
+      let all = true;
+      for(let r=0;r<rows;r++) if(!marks[r*cols+c]) all=false;
+      if(all){ for(let r=0;r<rows;r++) bingoSet.add(dataKey+(r*cols+c)); bingoCount++; }
+    }
+    if(marks.every(Boolean)){
+      for(let i=0;i<total;i++) bingoSet.add(dataKey+i);
+      bingoCount++;
+    }
+    return bingoCount;
+  }
+  const bw = check(state.player.marksW, 'wishes');
+  const bt = state.player.withTaboos !== false ? check(state.player.marksT, 'taboos') : 0;
+  state.player._bingoSet = Array.from(bingoSet);
+  const hasBingo = (bw + bt) > 0;
+  const banner = document.getElementById('bingo-banner');
+  if(hasBingo){
+    banner.classList.add('show');
+    if(!state.player.bingo){
+      state.player.bingo = true;
+      playGong();
+      showBingoOverlay(
+        (state.player.playerName ? state.player.playerName + ', т' : 'Т') + 'ы собрал линию! Скажи ведущему.'
+      );
+      markBingoInLog();
+    }
+  } else {
+    banner.classList.remove('show');
+  }
+}
+
+// ============ СПИСОК ============
+function renderList(q){
+  const list = document.getElementById('list-content');
+  const query = q.trim().toLowerCase();
+  list.innerHTML = '';
+  document.getElementById('list-total').textContent = '· ' + WISHES.length + ' ПУНКТОВ';
+  for(let i=0;i<WISHES.length;i++){
+    const n = i+1;
+    const text = WISHES[i];
+    if(query && !((n + ' ' + text.toLowerCase()).includes(query))) continue;
+    const el = document.createElement('div');
+    el.className = 'item c' + CATS[i];
+    el.innerHTML = '<span class="n">' + n + '</span><span class="t">' + escapeHtml(text) + '</span>';
+    list.appendChild(el);
+  }
+}
+
+// ============ РАЗРАБ ============
+function renderDev(){
+  document.getElementById('dev-count').textContent = WISHES.length;
+  const status = document.getElementById('dev-a2hs-status');
+  if(status){
+    const standalone = a2hsIsStandalone();
+    const hidden = localStorage.getItem(LS_A2HS) === '1';
+    if(standalone) status.innerHTML = 'Статус: <b>уже установлено как приложение</b>';
+    else if(hidden) status.innerHTML = 'Статус: <b>не показывать</b>';
+    else status.innerHTML = 'Статус: <b>напоминание активно</b>';
+  }
+  const stStatus = document.getElementById('dev-storage-status');
+  if(stStatus){
+    const proto = location.protocol;
+    let info = 'протокол: ' + proto;
+    if(proto !== 'file:' && proto !== 'http:' && proto !== 'https:'){
+      info += ' · <b style="color:var(--red-b)">риск потери данных!</b>';
+    }
+    try{
+      const used = (localStorage.getItem(LS_KEY) || '').length + (localStorage.getItem(LS_WISHES) || '').length;
+      info += ' · ~' + Math.round(used/1024) + ' КБ';
+    }catch(e){}
+    stStatus.innerHTML = 'Хранилище: ' + info;
+  }
+  const rounds = state.archive.length;
+  const totalNumbers = state.archive.reduce((s,r)=>s + r.log.length, 0) + state.host.log.length;
+  const mini = document.getElementById('dev-stats-mini');
+  if(mini){
+    const durations = state.archive
+      .filter(r => r.startedAt && r.finishedAt && r.finishedAt > r.startedAt)
+      .map(r => r.finishedAt - r.startedAt);
+    const avg = durations.length ? durations.reduce((s,v)=>s+v,0)/durations.length : 0;
+    mini.innerHTML = 'Раундов: <b>' + (rounds + (state.host.log.length ? 1 : 0)) + '</b> · '
+      + 'Чисел: <b>' + totalNumbers + '</b>'
+      + (avg ? ' · средняя <b>' + fmtDuration(avg) + '</b>' : '');
+  }
+  const ts = document.getElementById('toggle-sound');
+  if(ts) ts.classList.toggle('on', soundEnabled);
+  const th = document.getElementById('toggle-theme');
+  if(th) th.classList.toggle('on', lightTheme);
+  applyDevSections();
+  document.querySelectorAll('.cat-btn[data-cat]').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.cat)===devCat);
+  });
+  const list = document.getElementById('dev-list');
+  list.innerHTML = '';
+  for(let i=0;i<WISHES.length;i++){
+    const el = document.createElement('div');
+    el.className = 'dev-item c' + CATS[i];
+    el.innerHTML = '<span class="dev-num">' + (i+1) + '</span>'
+      + '<span class="dev-text">' + escapeHtml(WISHES[i]) + '</span>'
+      + '<span class="dev-cat-badge c' + CATS[i] + '">' + CAT_NAME[CATS[i]] + '</span>'
+      + '<button class="dev-icon" onclick="devEdit(' + i + ')" title="Редактировать">✏️</button>'
+      + '<button class="dev-icon" onclick="devDel(' + i + ')" title="Удалить">🗑</button>';
+    list.appendChild(el);
+  }
+}
+function devPickCat(c){
+  devCat = c;
+  document.querySelectorAll('.cat-btn[data-cat]').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.cat)===c);
+  });
+}
+function devAdd(){
+  const inp = document.getElementById('dev-new-text');
+  const text = inp.value.trim();
+  if(!text){ toast('Введи текст'); return; }
+  if(text.length > 200){ toast('Слишком длинно (макс 200)'); return; }
+  WISHES.push(text);
+  CATS.push(devCat);
+  inp.value = '';
+  saveWishes();
+  afterWishesChange();
+  renderDev();
+  toast('Добавлено #' + WISHES.length);
+}
+function devEdit(i){
+  devEditIndex = i;
+  devEditCat = CATS[i];
+  document.getElementById('dev-edit-num').textContent = i+1;
+  document.getElementById('dev-edit-text').value = WISHES[i];
+  document.querySelectorAll('.cat-btn[data-edit-cat]').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.editCat)===devEditCat);
+  });
+  document.getElementById('modal-dev-edit').classList.add('show');
+}
+function devEditPickCat(c){
+  devEditCat = c;
+  document.querySelectorAll('.cat-btn[data-edit-cat]').forEach(b=>{
+    b.classList.toggle('active', parseInt(b.dataset.editCat)===c);
+  });
+}
+function devEditSave(){
+  const text = document.getElementById('dev-edit-text').value.trim();
+  if(!text){ toast('Пустой текст'); return; }
+  if(text.length > 200){ toast('Слишком длинно (макс 200)'); return; }
+  WISHES[devEditIndex] = text;
+  CATS[devEditIndex] = devEditCat;
+  saveWishes();
+  afterWishesChange();
+  document.getElementById('modal-dev-edit').classList.remove('show');
+  renderDev();
+  toast('Обновлено #' + (devEditIndex+1));
+}
+function devEditCancel(){
+  document.getElementById('modal-dev-edit').classList.remove('show');
+}
+function devDel(i){
+  if(WISHES.length <= 25){ toast('Минимум 25 пунктов (для раскладки 5×5)'); return; }
+  if(!confirm('Удалить пункт #' + (i+1) + '?\n\n"' + WISHES[i] + '"')) return;
+  WISHES.splice(i,1);
+  CATS.splice(i,1);
+  saveWishes();
+  afterWishesChange();
+  renderDev();
+  toast('Удалено. Осталось ' + WISHES.length);
+}
+function devResetAll(){
+  if(!confirm('Сбросить список к стандартному набору?\nВсе твои правки будут потеряны.')) return;
+  WISHES.length = 0; WISHES.push(...DEFAULT_WISHES);
+  CATS.length = 0; CATS.push(...DEFAULT_CATS);
+  saveWishes();
+  afterWishesChange();
+  renderDev();
+  toast('Список сброшен к стандарту');
+}
+function afterWishesChange(){
+  if(state.player && state.player.wishes && state.player.wishes.length){
+    state.player.setupDone = false;
+  }
+  save();
+}
+
+// ============ ЭКСПОРТ / ИМПОРТ ВСЕГО ============
+function exportAll(){
+  const data = {
+    app: 'sexbingo',
+    version: 1,
+    exportedAt: Date.now(),
+    wishes: WISHES,
+    cats: CATS,
+    state: state,
+    settings: { sound: soundEnabled, lightTheme: lightTheme }
+  };
+  downloadFile(JSON.stringify(data, null, 2),
+    'sex_bingo_backup_' + dateStamp() + '.json',
+    'application/json');
+}
+function importAll(file){
+  if(!file) return;
+  if(!confirm('Импорт заменит ВСЕ данные приложения. Продолжить?')) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try{
+      const data = JSON.parse(e.target.result);
+      if(!data || data.app !== 'sexbingo' || !Array.isArray(data.wishes) || !Array.isArray(data.cats)){
+        throw new Error('Не тот формат файла');
+      }
+      if(data.wishes.length < 25) throw new Error('В списке меньше 25 пунктов');
+      WISHES.length = 0; WISHES.push(...data.wishes.map(String));
+      CATS.length = 0; CATS.push(...data.cats.map(c=>[0,1,2].includes(c)?c:1));
+      saveWishes();
+      state = Object.assign(state, data.state || {});
+      if(!state.host.hostName) state.host.hostName = '';
+      if(!state.player) state.player = defaultPlayerState();
+      if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
+      if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
+      if(!LAYOUTS[state.player.layout]) state.player.layout = '3x5';
+      if(typeof state.player.playerName !== 'string') state.player.playerName = '';
+      if(typeof state.player.withTaboos !== 'boolean') state.player.withTaboos = true;
+      if(data.settings){
+        soundEnabled = !!data.settings.sound;
+        lightTheme = !!data.settings.lightTheme;
+        try{
+          localStorage.setItem(LS_SOUND, soundEnabled ? '1' : '0');
+          localStorage.setItem(LS_THEME, lightTheme ? '1' : '0');
+        }catch(e){}
+        applyTheme();
+      }
+      save();
+      toast('Импортировано. Перезагрузка…');
+      setTimeout(()=>location.reload(), 800);
+    }catch(err){
+      toast('Ошибка импорта: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ============ ИНИЦИАЛИЗАЦИЯ ============
+load();
+applyTheme();
+if(state.accepted18) document.getElementById('modal18').classList.remove('show');
+
+if(!state.player) state.player = defaultPlayerState();
+if(typeof state.player.setupDone !== 'boolean') state.player.setupDone = false;
+if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
+if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
+if(!LAYOUTS[state.player.layout]) state.player.layout = '3x5';
+if(typeof state.player.playerName !== 'string') state.player.playerName = '';
+if(typeof state.player.withTaboos !== 'boolean') state.player.withTaboos = true;
+if(!state.host.hostName) state.host.hostName = '';
+pendingLayout = state.player.layout;
+pendingWithTaboos = state.player.withTaboos;
+
+document.getElementById('player-input').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); markFromInput(); }
+});
+document.getElementById('list-search').addEventListener('input', e=>renderList(e.target.value));
+document.getElementById('manual-search').addEventListener('input', ()=>renderManual());
+document.getElementById('dev-new-text').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); devAdd(); }
+});
+document.getElementById('round-name-input').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); confirmRoundName(false); }
+});
+document.getElementById('host-name-input').addEventListener('keydown', e=>{
+  if(e.key === 'Enter'){ e.preventDefault(); saveHostName(); }
+});
+
+// PWA manifest
+try{
+  const icon = 'data:image/svg+xml;utf8,' + encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="36" fill="#c00000"/><text x="96" y="118" font-size="110" font-family="Arial" font-weight="900" text-anchor="middle" fill="#fff">🎲</text></svg>'
+  );
+  const manifest = {
+    name: 'Секс Бинго 18+', short_name: 'Секс Бинго',
+    start_url: '.', display: 'standalone',
+    background_color: '#0f0f0f', theme_color: '#c00000',
+    icons: [{src: icon, sizes: '192x192', type: 'image/svg+xml'}]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
+  const link = document.createElement('link');
+  link.rel = 'manifest';
+  link.href = URL.createObjectURL(blob);
+  document.head.appendChild(link);
+}catch(e){}
+
+const RESTORABLE = ['host', 'player', 'setup', 'list', 'log', 'manual'];
+const initial = RESTORABLE.includes(state.lastScreen) ? state.lastScreen : 'menu';
+navHistory = ['menu'];
+navIndex = 0;
+if(initial !== 'menu'){ navHistory.push(initial); navIndex = 1; }
+_renderScreen(initial);
+
+try{
+  if(typeof BroadcastChannel === 'function'){
+    const myId = Math.random().toString(36).slice(2);
+    const bc = new BroadcastChannel('sexbingo');
+    bc.postMessage({type:'hello', id: myId});
+    bc.onmessage = e => {
+      if(e.data && e.data.type === 'hello' && e.data.id !== myId){
+        toast('Игра уже открыта в другой вкладке — данные могут конфликтовать', 5000);
+      }
+    };
+  }
+}catch(e){}
+
+window.addEventListener('pagehide', ()=>save());
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) save(); });
+
+if(state.accepted18){
+  if(!checkProtocolWarning()){
+    if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 1500);
+  }
+}
+</script>
+</body>
+</html>
