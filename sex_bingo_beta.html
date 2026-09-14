@@ -198,6 +198,9 @@ body.light .dev-section h3{color:var(--red-d)}
 .dev-row .btn,.dev-row .btn-alt{flex:1;padding:11px 12px;border-radius:10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;border:none;letter-spacing:.3px;text-align:center;display:flex;align-items:center;justify-content:center;color:#fff}
 .dev-row .btn{background:var(--red)}
 .dev-row .btn-alt{background:var(--card2);color:var(--text);border:1px solid var(--line)}
+/* Фикс: список в "Разрабе" не должен flex-fill — пусть экран сам прокручивается */
+#dev-list{flex:0 0 auto;overflow:visible;min-height:auto;height:auto;padding-bottom:40px}
+#screen-dev{overflow-y:auto}  
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;font-size:13px;color:var(--text)}
 .toggle-switch{position:relative;width:48px;height:28px;background:var(--card2);border-radius:14px;cursor:pointer;transition:.2s;border:1px solid var(--line);flex-shrink:0}
 .toggle-switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--muted);border-radius:50%;transition:.2s}
