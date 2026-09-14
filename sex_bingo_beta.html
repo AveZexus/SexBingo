@@ -81,6 +81,12 @@ body.light .help-section h2{color:var(--red-d)}
 .help-warn b{color:var(--red-b);font-weight:800;display:block;margin-bottom:6px;font-size:13px;letter-spacing:.3px}
 .help-tip{font-size:11.5px;color:var(--muted);font-style:italic;line-height:1.5;padding:10px 12px;background:rgba(127,127,127,.08);border-radius:10px;margin-top:8px}
 
+.qr-frame{display:inline-block;padding:10px;background:#fff;border-radius:14px;margin:10px 0}
+.qr-img{display:block;width:200px;height:200px;background:#fff}
+.qr-row{display:flex;gap:8px;align-items:stretch}
+.qr-url{flex:1;padding:10px 12px;border-radius:10px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;outline:none;min-width:0}
+.qr-copy{flex:0 0 auto;padding:10px 14px;border-radius:10px;background:var(--red);border:none;color:#fff;font-family:inherit;font-size:14px;font-weight:700;cursor:pointer}
+
 .host-display{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;min-height:0;overflow:hidden}
 .big-number{font-size:clamp(60px,20vw,110px);font-weight:900;color:var(--red-b);line-height:1;margin-bottom:14px;text-shadow:0 0 40px rgba(255,77,94,.4);transition:transform .2s}
 .big-number.pop{transform:scale(1.15)}
@@ -144,6 +150,9 @@ body.light .setup-hero h2{color:var(--red-d)}
 .setup-hero p{font-size:12px;color:var(--muted);line-height:1.5}
 .setup-hero input{width:100%;padding:12px 14px;border-radius:10px;background:var(--card2);border:2px solid var(--line);color:var(--text);font-size:14px;font-family:inherit;outline:none;margin-top:8px}
 .setup-hero input:focus{border-color:var(--red)}
+.name-chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.name-chip{padding:6px 12px;border-radius:14px;background:var(--card2);border:1px solid var(--line);color:var(--text);font-family:inherit;font-size:12px;cursor:pointer;font-weight:600}
+.name-chip:active{background:var(--red);color:#fff;border-color:var(--red)}
 .check-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--card);border-radius:14px;margin-bottom:10px;cursor:pointer;user-select:none;border:2px solid transparent;transition:.15s}
 .check-row:active{background:var(--card2)}
 .check-row input{width:22px;height:22px;accent-color:var(--red);flex-shrink:0;pointer-events:none}
@@ -189,23 +198,30 @@ body:not(.light) .dev-cat-badge.c1{color:#ffe066}
 body:not(.light) .dev-cat-badge.c2{color:#ff9d9d}
 .dev-icon{width:32px;height:32px;border-radius:8px;background:var(--card2);border:none;color:var(--text);font-size:14px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:0}
 .dev-icon:active{background:var(--red-d);color:#fff}
+
 .dev-section{background:var(--card);border-radius:12px;padding:14px;margin-bottom:12px;border-left:4px solid var(--red);flex-shrink:0}
-.dev-section h3{font-size:12.5px;font-weight:800;letter-spacing:.5px;color:var(--red-b);margin-bottom:8px;text-transform:uppercase}
-body.light .dev-section h3{color:var(--red-d)}
+.dev-section-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;padding:2px 0;gap:8px}
+.dev-section-header h3{font-size:12.5px;font-weight:800;letter-spacing:.5px;color:var(--red-b);text-transform:uppercase;margin:0}
+body.light .dev-section-header h3{color:var(--red-d)}
+.dev-section-arrow{font-size:11px;color:var(--muted);transition:transform .2s;flex-shrink:0}
+.dev-section.collapsed .dev-section-arrow{transform:rotate(-90deg)}
+.dev-section-body{margin-top:10px}
+.dev-section.collapsed .dev-section-body{display:none}
 .dev-section .dev-status{font-size:12px;color:var(--muted);margin-bottom:10px;line-height:1.5}
 .dev-section .dev-status b{color:var(--text);font-weight:700}
 .dev-row{display:flex;gap:8px;margin-bottom:8px}
 .dev-row .btn,.dev-row .btn-alt{flex:1;padding:11px 12px;border-radius:10px;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;border:none;letter-spacing:.3px;text-align:center;display:flex;align-items:center;justify-content:center;color:#fff}
 .dev-row .btn{background:var(--red)}
 .dev-row .btn-alt{background:var(--card2);color:var(--text);border:1px solid var(--line)}
-/* Фикс: список в "Разрабе" не должен flex-fill — пусть экран сам прокручивается */
-#dev-list{flex:0 0 auto;overflow:visible;min-height:auto;height:auto;padding-bottom:40px}
-#screen-dev{overflow-y:auto}  
+
 .toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;font-size:13px;color:var(--text)}
 .toggle-switch{position:relative;width:48px;height:28px;background:var(--card2);border-radius:14px;cursor:pointer;transition:.2s;border:1px solid var(--line);flex-shrink:0}
 .toggle-switch::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;background:var(--muted);border-radius:50%;transition:.2s}
 .toggle-switch.on{background:var(--red);border-color:var(--red)}
 .toggle-switch.on::after{left:23px;background:#fff}
+
+#dev-list{flex:0 0 auto;overflow:visible;min-height:auto;height:auto;padding-bottom:40px}
+#screen-dev{overflow-y:auto}
 
 .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .stat-cell{background:var(--card);border-radius:12px;padding:14px;border-left:3px solid var(--red)}
@@ -249,6 +265,7 @@ body.light .modal h3{color:var(--red-d)}
 .btn-a2hs{background:linear-gradient(135deg,#c00000,#e63946);color:#fff;border:none;padding:15px;border-radius:14px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
 .btn-a2hs-alt{background:var(--card2);color:var(--text);border:none;padding:14px;border-radius:14px;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer}
 .btn-a2hs-ghost{background:transparent;color:var(--muted);border:1px solid var(--line);padding:12px;border-radius:14px;font-size:13px;font-weight:600;font-family:inherit;cursor:pointer}
+.btn-a2hs-green{background:linear-gradient(135deg,#2d4a1e,#4a7d2c);color:#fff;border:none;padding:15px;border-radius:14px;font-size:15px;font-weight:700;font-family:inherit;cursor:pointer}
 
 .bingo-overlay{position:fixed;inset:0;background:linear-gradient(135deg,#8b0000 0%,#c00000 45%,#e63946 100%);display:none;flex-direction:column;align-items:center;justify-content:center;z-index:500;padding:24px;text-align:center;animation:bingoIn .35s ease-out}
 .bingo-overlay.show{display:flex}
@@ -338,10 +355,11 @@ body.light .modal h3{color:var(--red-d)}
 <div class="modal" id="modal-round-name">
   <div class="modal-inner">
     <h3>📝 Завершить раунд</h3>
-    <p>Пригодится в архиве, чтобы потом понять, что это был за вечер.</p>
+    <p>Сохрани в архив — потом вспомнишь, что это был за вечер. Или сразу начни новый с теми же карточками.</p>
     <input type="text" id="round-name-input" maxlength="60" placeholder="Раунд N">
     <div class="modal-btns">
-      <button class="btn-a2hs" onclick="confirmRoundName()">Сохранить в архив</button>
+      <button class="btn-a2hs" onclick="confirmRoundName(false)">💾 Просто сохранить</button>
+      <button class="btn-a2hs-green" onclick="confirmRoundName(true)">🔁 Сохранить и повторить</button>
       <button class="btn-a2hs-ghost" onclick="cancelRoundName()">Отмена</button>
     </div>
   </div>
@@ -435,6 +453,7 @@ body.light .modal h3{color:var(--red-d)}
     <h2>Ваше имя</h2>
     <p>Необязательно, но пригодится для архива и печати.</p>
     <input type="text" id="player-name-input" maxlength="40" placeholder="Например, Миша">
+    <div class="name-chips" id="name-chips"></div>
   </div>
   <div class="setup-hero">
     <h2>Раскладка</h2>
@@ -512,6 +531,7 @@ body.light .modal h3{color:var(--red-d)}
   <header>
     <button class="back" onclick="navBack()">←</button>
     <h1>Журнал<small id="log-sub">РАУНД 1 · 0 ЧИСЕЛ</small></h1>
+    <button class="icon-btn" onclick="copyLogToClipboard()" title="Копировать в буфер">📋</button>
     <button class="icon-btn" onclick="exportCSV()" title="Экспорт CSV">📤</button>
     <button class="icon-btn" onclick="printLog()" title="Печать / PDF">🖨</button>
   </header>
@@ -545,56 +565,85 @@ body.light .modal h3{color:var(--red-d)}
   </header>
   <div class="dev-warn">⚠️ Изменение списка сбросит карточку игрока — её нужно будет собрать заново. Лог ведущего останется.</div>
 
-  <div class="dev-section">
-    <h3>🎛 Настройки</h3>
-    <div class="toggle-row">
-      <span>🔊 Звук</span>
-      <div class="toggle-switch" id="toggle-sound" onclick="toggleSound()"></div>
+  <div class="dev-section" data-section="settings">
+    <div class="dev-section-header" onclick="toggleDevSection('settings')">
+      <h3>🎛 Настройки</h3>
+      <span class="dev-section-arrow">▼</span>
     </div>
-    <div class="toggle-row">
-      <span>🌞 Светлая тема</span>
-      <div class="toggle-switch" id="toggle-theme" onclick="toggleTheme()"></div>
-    </div>
-  </div>
-
-  <div class="dev-section">
-    <h3>📊 Статистика сессии</h3>
-    <div class="dev-status" id="dev-stats-mini">—</div>
-    <div class="dev-row">
-      <button class="btn" onclick="showScreen('stats')">Открыть статистику</button>
+    <div class="dev-section-body">
+      <div class="toggle-row">
+        <span>🔊 Звук</span>
+        <div class="toggle-switch" id="toggle-sound" onclick="toggleSound()"></div>
+      </div>
+      <div class="toggle-row">
+        <span>🌞 Светлая тема</span>
+        <div class="toggle-switch" id="toggle-theme" onclick="toggleTheme()"></div>
+      </div>
     </div>
   </div>
 
-  <div class="dev-section">
-    <h3>📲 Установка на главный экран</h3>
-    <div class="dev-status" id="dev-a2hs-status">Статус: —</div>
-    <div class="dev-row">
-      <button class="btn" onclick="a2hsShow(true)">Показать окно</button>
-      <button class="btn-alt" onclick="a2hsReset()">↺ Сбросить</button>
+  <div class="dev-section" data-section="stats">
+    <div class="dev-section-header" onclick="toggleDevSection('stats')">
+      <h3>📊 Статистика сессии</h3>
+      <span class="dev-section-arrow">▼</span>
+    </div>
+    <div class="dev-section-body">
+      <div class="dev-status" id="dev-stats-mini">—</div>
+      <div class="dev-row" style="margin-top:8px">
+        <button class="btn" onclick="showScreen('stats')">Открыть статистику</button>
+      </div>
     </div>
   </div>
 
-  <div class="dev-section">
-    <h3>💾 Данные</h3>
-    <div class="dev-status" id="dev-storage-status">Хранилище: —</div>
-    <div class="dev-row">
-      <button class="btn" onclick="exportAll()">Экспорт JSON</button>
-      <label class="btn-alt" style="cursor:pointer">
-        Импорт JSON
-        <input type="file" accept=".json,application/json" style="display:none" onchange="importAll(this.files[0]);this.value=''">
-      </label>
+  <div class="dev-section" data-section="a2hs">
+    <div class="dev-section-header" onclick="toggleDevSection('a2hs')">
+      <h3>📲 Установка на главный экран</h3>
+      <span class="dev-section-arrow">▼</span>
+    </div>
+    <div class="dev-section-body">
+      <div class="dev-status" id="dev-a2hs-status">Статус: —</div>
+      <div class="dev-row" style="margin-top:8px">
+        <button class="btn" onclick="a2hsShow(true)">Показать окно</button>
+        <button class="btn-alt" onclick="a2hsReset()">↺ Сбросить</button>
+      </div>
     </div>
   </div>
 
-  <div class="dev-add">
-    <input type="text" id="dev-new-text" placeholder="Текст нового пункта…" maxlength="200">
-    <div class="dev-cat-pick">
-      <button class="cat-btn c0 active" data-cat="0" onclick="devPickCat(0)">ЛАЙТ</button>
-      <button class="cat-btn c1" data-cat="1" onclick="devPickCat(1)">МЕДИУМ</button>
-      <button class="cat-btn c2" data-cat="2" onclick="devPickCat(2)">ХАРД</button>
+  <div class="dev-section" data-section="data">
+    <div class="dev-section-header" onclick="toggleDevSection('data')">
+      <h3>💾 Данные</h3>
+      <span class="dev-section-arrow">▼</span>
     </div>
-    <button class="btn btn-primary" onclick="devAdd()">+ Добавить пункт</button>
+    <div class="dev-section-body">
+      <div class="dev-status" id="dev-storage-status">Хранилище: —</div>
+      <div class="dev-row" style="margin-top:8px">
+        <button class="btn" onclick="exportAll()">Экспорт JSON</button>
+        <label class="btn-alt" style="cursor:pointer">
+          Импорт JSON
+          <input type="file" accept=".json,application/json" style="display:none" onchange="importAll(this.files[0]);this.value=''">
+        </label>
+      </div>
+    </div>
   </div>
+
+  <div class="dev-section" data-section="list">
+    <div class="dev-section-header" onclick="toggleDevSection('list')">
+      <h3>✏️ Редактор списка</h3>
+      <span class="dev-section-arrow">▼</span>
+    </div>
+    <div class="dev-section-body">
+      <div class="dev-add">
+        <input type="text" id="dev-new-text" placeholder="Текст нового пункта…" maxlength="200">
+        <div class="dev-cat-pick">
+          <button class="cat-btn c0 active" data-cat="0" onclick="devPickCat(0)">ЛАЙТ</button>
+          <button class="cat-btn c1" data-cat="1" onclick="devPickCat(1)">МЕДИУМ</button>
+          <button class="cat-btn c2" data-cat="2" onclick="devPickCat(2)">ХАРД</button>
+        </div>
+        <button class="btn btn-primary" onclick="devAdd()">+ Добавить пункт</button>
+      </div>
+    </div>
+  </div>
+
   <div class="list" id="dev-list"></div>
 </div>
 
@@ -624,6 +673,18 @@ body.light .modal h3{color:var(--red-d)}
     <b>🔞 18+ · ТОЛЬКО ДЛЯ ВЗРОСЛЫХ</b>
     Играйте только по обоюдному согласию. У каждого участника есть право сказать «стоп» в любой момент.
   </div>
+
+  <div class="help-section" id="qr-section">
+    <h2><span class="h-ico">📱</span> Поделиться игрой</h2>
+    <p>Друзья могут открыть ту же игру у себя — отсканируй QR или отправь ссылку.</p>
+    <div style="text-align:center" id="qr-holder"></div>
+    <div class="qr-row">
+      <input class="qr-url" type="text" id="qr-url-input" readonly>
+      <button class="qr-copy" onclick="copyShareUrl()" title="Копировать ссылку">📋</button>
+    </div>
+    <div class="help-tip" id="qr-hint" style="display:none">QR-код не сгенерирован — файл открыт не по ссылке. Скопируй адрес вручную.</div>
+  </div>
+
   <div class="help-section">
     <h2><span class="h-ico">🎲</span> Что это вообще такое</h2>
     <p>«Секс Бинго» — игра для пары или тематической компании. Ведущий тянет числа, игроки зачёркивают совпавшие пункты. Кто первый закрыл линию — «БИНГО!».</p>
@@ -640,14 +701,15 @@ body.light .modal h3{color:var(--red-d)}
   </div>
   <div class="help-section">
     <h2><span class="h-ico">🎡</span> Режим «Ведущий»</h2>
-    <p>Телефон — лототрон. Жми «КРУТИТЬ», объявляй вслух. Иконка 👤 в шапке — имя ведущего. Полезные кнопки: 📋 журнал, 📤 CSV, 🖨 PDF, 📢 объявить БИНГО, ↻ новый раунд.</p>
+    <p>Телефон — лототрон. Жми «КРУТИТЬ», объявляй вслух. Иконка 👤 в шапке — имя ведущего.</p>
+    <p>Кнопки: 📋 журнал, 📤 CSV, 🖨 PDF, 📋 копировать в чат, 📢 объявить БИНГО, ↻ новый раунд. В модалке завершения — можно <b>сохранить и сразу начать новый</b> с теми же карточками (отметки игрока сбросятся).</p>
     <p>Когда игрок закрывает линию, в журнале на числе появляется отметка 🎉 с именем игрока.</p>
   </div>
   <div class="help-section">
     <h2><span class="h-ico">🎴</span> Режим «Игрок»</h2>
     <ul>
-      <li>Имя игрока — в настройках карточки, попадает в печать.</li>
-      <li>Можно играть <b>с табу или без</b> — без табу собирается одна сетка желаний.</li>
+      <li>Имя игрока — при setup. Последние 5 имён сохраняются и подставляются чипсами.</li>
+      <li>Можно играть <b>с табу или без</b>.</li>
       <li><b>↶</b> — отменить последнюю отметку.</li>
       <li><b>🔄</b> — собрать новую карточку.</li>
       <li><b>↻ Сброс</b> — очистить все отметки.</li>
@@ -655,7 +717,7 @@ body.light .modal h3{color:var(--red-d)}
   </div>
   <div class="help-section">
     <h2><span class="h-ico">⚙️</span> Разраб</h2>
-    <p>Настройки звука/темы, статистика, установка на главный экран, экспорт/импорт JSON, редактор списка.</p>
+    <p>Настройки, статистика, установка, данные, редактор списка. Блоки сворачиваются — тапни на заголовок.</p>
   </div>
   <div class="help-section" style="text-align:center;border-left-color:#666">
     <p style="font-size:12px;color:var(--muted);font-style:italic">Спасибо ❤️ что играете. Веселитесь, но не забывайте про уважение и здравый смысл.</p>
@@ -702,6 +764,8 @@ const LS_A2HS = "sexbingo_a2hs_hidden";
 const LS_PROTO = "sexbingo_proto_warned";
 const LS_SOUND = "sexbingo_sound";
 const LS_THEME = "sexbingo_theme";
+const LS_NAMES = "sexbingo_player_names";
+const LS_DEV_SECTIONS = "sexbingo_dev_sections";
 const LS_OLD_KEYS = ["sexbingo_v2", "sexbingo_v1"];
 
 const LAYOUTS = {
@@ -715,6 +779,9 @@ let WISHES = DEFAULT_WISHES.slice();
 let CATS = DEFAULT_CATS.slice();
 let pendingLayout = '3x5';
 let pendingWithTaboos = true;
+
+let devSectionsState = {};
+try{ devSectionsState = JSON.parse(localStorage.getItem(LS_DEV_SECTIONS)||'{}') || {}; }catch(e){ devSectionsState = {}; }
 
 function loadWishes(){
   try{
@@ -747,6 +814,48 @@ function saveWishes(){
 function wishText(n){ return WISHES[n-1] || '(пункт удалён)'; }
 function wishCat(n){ const c = CATS[n-1]; return [0,1,2].includes(c) ? c : 1; }
 loadWishes();
+
+// ============ RECENT NAMES ============
+function getRecentNames(){
+  try{
+    const arr = JSON.parse(localStorage.getItem(LS_NAMES) || '[]');
+    return Array.isArray(arr) ? arr.filter(x=>typeof x === 'string' && x.trim()).slice(0,5) : [];
+  }catch(e){ return []; }
+}
+function addRecentName(name){
+  name = (name||'').trim();
+  if(!name) return;
+  const arr = getRecentNames().filter(x=>x !== name);
+  arr.unshift(name);
+  try{ localStorage.setItem(LS_NAMES, JSON.stringify(arr.slice(0,5))); }catch(e){}
+}
+function renderNameChips(){
+  const holder = document.getElementById('name-chips');
+  if(!holder) return;
+  const arr = getRecentNames();
+  if(arr.length === 0){ holder.innerHTML = ''; return; }
+  holder.innerHTML = arr.map(n=>
+    `<button class="name-chip" onclick="pickName(${JSON.stringify(n)})">${escapeHtml(n)}</button>`
+  ).join('');
+}
+function pickName(name){
+  const inp = document.getElementById('player-name-input');
+  if(inp) inp.value = name;
+  if(navigator.vibrate) navigator.vibrate(15);
+}
+
+// ============ DEV SECTIONS COLLAPSE ============
+function applyDevSections(){
+  document.querySelectorAll('.dev-section[data-section]').forEach(el=>{
+    const key = el.dataset.section;
+    el.classList.toggle('collapsed', devSectionsState[key] === true);
+  });
+}
+function toggleDevSection(key){
+  devSectionsState[key] = !devSectionsState[key];
+  try{ localStorage.setItem(LS_DEV_SECTIONS, JSON.stringify(devSectionsState)); }catch(e){}
+  applyDevSections();
+}
 
 let state = {
   accepted18: false,
@@ -821,7 +930,6 @@ function playGong(){
   try{
     const ctx = getAudioCtx();
     const t0 = ctx.currentTime;
-    // Гонг — обертоновый аккорд с длинным затуханием
     const freqs  = [196.00, 293.66, 392.00, 587.33];
     const gains  = [0.22,   0.15,   0.10,   0.06];
     freqs.forEach((f, i)=>{
@@ -835,7 +943,6 @@ function playGong(){
       o.connect(g); g.connect(ctx.destination);
       o.start(t0); o.stop(t0 + 2.7);
     });
-    // И небольшой "дзинь" в начале
     const o2 = ctx.createOscillator();
     const g2 = ctx.createGain();
     o2.type = 'triangle';
@@ -931,8 +1038,6 @@ function escapeHtml(s){
 }
 function logText(row){ return row.text !== undefined ? row.text : wishText(row.n); }
 function logCat(row){ return row.cat !== undefined ? row.cat : wishCat(row.n); }
-function hostDisplayName(){ return state.host.hostName ? state.host.hostName : ''; }
-function playerDisplayName(){ return state.player.playerName ? state.player.playerName : 'Игрок'; }
 
 let navHistory = ['menu'];
 let navIndex = 0;
@@ -949,6 +1054,7 @@ function _renderScreen(id){
   if(id==='dev') renderDev();
   if(id==='log') renderLog();
   if(id==='stats') renderStats();
+  if(id==='help') initQRSection();
   window.scrollTo(0,0);
   state.lastScreen = id;
   save();
@@ -963,13 +1069,8 @@ function showScreen(id){
   _renderScreen(id);
 }
 function navBack(){
-  if(navIndex > 0){
-    navIndex--;
-    _renderScreen(navHistory[navIndex]);
-  } else {
-    // некуда идти назад — уходим в меню, чтобы не застрять
-    _renderScreen('menu');
-  }
+  if(navIndex > 0){ navIndex--; _renderScreen(navHistory[navIndex]); }
+  else { _renderScreen('menu'); }
 }
 function navForward(){ if(navIndex < navHistory.length - 1){ navIndex++; _renderScreen(navHistory[navIndex]); } }
 
@@ -996,6 +1097,7 @@ document.addEventListener('touchend', e=>{
     if(t.closest('.dev-item')) return;
     if(t.closest('.modal')) return;
     if(t.closest('.bingo-overlay')) return;
+    if(t.closest('.qr-row')) return;
   }
   if(dx > 0) navBack(); else navForward();
 }, {passive:true});
@@ -1036,7 +1138,7 @@ function toast(msg, ms=1800){
   t._t = setTimeout(()=>t.classList.remove('show'), ms);
 }
 
-// ============ HOST NAME MODAL ============
+// ============ HOST NAME ============
 function openHostName(){
   document.getElementById('host-name-input').value = state.host.hostName || '';
   document.getElementById('modal-host-name').classList.add('show');
@@ -1050,6 +1152,71 @@ function saveHostName(){
 }
 function cancelHostName(){
   document.getElementById('modal-host-name').classList.remove('show');
+}
+
+// ============ QR ============
+function initQRSection(){
+  const url = location.href.split('#')[0];
+  const inp = document.getElementById('qr-url-input');
+  const holder = document.getElementById('qr-holder');
+  const hint = document.getElementById('qr-hint');
+  if(inp) inp.value = url;
+  if(!holder) return;
+  if(/^https?:/i.test(location.protocol)){
+    holder.innerHTML = `<span class="qr-frame"><img class="qr-img" alt="QR" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data=${encodeURIComponent(url)}"></span>`;
+    if(hint) hint.style.display = 'none';
+  } else {
+    holder.innerHTML = '';
+    if(hint) hint.style.display = 'block';
+  }
+}
+function copyShareUrl(){
+  const url = location.href.split('#')[0];
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(url).then(()=>toast('Ссылка скопирована')).catch(()=>toast('Не удалось скопировать'));
+  } else {
+    toast('Ссылка: ' + url, 5000);
+  }
+}
+
+// ============ COPY LOG ============
+function copyLogToClipboard(){
+  if(logViewMode !== 'current'){ toast('Сначала закрой архив'); return; }
+  if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
+  const lines = [];
+  lines.push('🎲 СЕКС БИНГО · Раунд ' + state.host.round);
+  if(state.host.hostName) lines.push('👤 Ведущий: ' + state.host.hostName);
+  lines.push('📅 ' + fmtDate(state.host.startedAt));
+  lines.push('🎯 Выпало: ' + state.host.log.length + ' из ' + WISHES.length);
+  lines.push('');
+  state.host.log.forEach((row, i)=>{
+    const bingo = row.bingo ? '  🎉 ' + (row.bingoPlayer || 'Игрок') : '';
+    lines.push(`${i+1}. ${row.n} — ${logText(row)} [${CAT_NAME[logCat(row)]}]${bingo}`);
+  });
+  const text = lines.join('\n');
+  const doFallback = ()=>{
+    try{
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.setAttribute('readonly','');
+      document.body.appendChild(ta);
+      ta.select();
+      ta.setSelectionRange(0, ta.value.length);
+      const ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if(ok) toast('Скопировано (' + state.host.log.length + ' строк)');
+      else toast('Не удалось скопировать');
+    }catch(e){ toast('Не удалось скопировать'); }
+  };
+  if(navigator.clipboard && window.isSecureContext){
+    navigator.clipboard.writeText(text)
+      .then(()=>toast('Скопировано (' + state.host.log.length + ' строк)'))
+      .catch(()=>doFallback());
+  } else {
+    doFallback();
+  }
 }
 
 // ============ PROTOCOL ============
@@ -1166,16 +1333,14 @@ function renderSetup(){
   document.getElementById('chk-taboos').checked = false;
   document.getElementById('chk-wishes-row').classList.remove('checked');
   document.getElementById('chk-taboos-row').classList.remove('checked');
-  // имя игрока
   document.getElementById('player-name-input').value = state.player.playerName || '';
-  // галочка "с табу"
   const withT = (typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true;
   pendingWithTaboos = withT;
   document.getElementById('chk-with-taboos').checked = withT;
   document.getElementById('chk-taboos-toggle-row').classList.toggle('checked', withT);
-  // видимость ручного выбора табу
   updateTaboosRowVisibility();
   pickLayout(pendingLayout || state.player.layout || '3x5');
+  renderNameChips();
 }
 function updateTaboosRowVisibility(){
   const taboosRow = document.getElementById('chk-taboos-row');
@@ -1202,6 +1367,7 @@ function toggleSetupChk(which){
 }
 function setupAutoOnly(){
   const playerName = (document.getElementById('player-name-input').value || '').trim();
+  addRecentName(playerName);
   const c = makeCard(pendingLayout, pendingWithTaboos, playerName);
   state.player = c;
   save();
@@ -1216,7 +1382,7 @@ function setupStart(){
   const wantT = pendingWithTaboos && document.getElementById('chk-taboos').checked;
 
   if(!wantW && !wantT){
-    // полный авто
+    addRecentName(playerName);
     const c = makeCard(pendingLayout, pendingWithTaboos, playerName);
     state.player = c;
     save();
@@ -1323,6 +1489,7 @@ function manualClear(){
 function manualNext(){
   const L = layoutOf(pendingLayout);
   const playerName = (document.getElementById('player-name-input').value || '').trim();
+  addRecentName(playerName);
   if(manual.tab === 'wishes'){
     if(manual.wishes.length < L.total){
       const have = new Set(manual.wishes);
@@ -1337,7 +1504,6 @@ function manualNext(){
       manualTab('taboos');
       return;
     }
-    // без табу — сразу финализируем
   }
   if(pendingWithTaboos && manual.taboos.length < L.total){
     const have = new Set(manual.taboos);
@@ -1359,832 +1525,4 @@ function manualNext(){
     _bingoSet: [],
     layout: pendingLayout,
     undoStack: [],
-    playerName: playerName,
-    withTaboos: pendingWithTaboos
-  };
-  save();
-  toast('Карточка готова');
-  showScreen('player');
-}
-
-// ============ ВЕДУЩИЙ ============
-function renderHost(){
-  const n = state.host.current;
-  const total = state.host.log.length;
-  document.getElementById('host-count').textContent = total;
-  document.getElementById('host-total').textContent = WISHES.length;
-  document.getElementById('host-round').textContent = state.host.round;
-  const nameBtn = document.getElementById('host-name-btn');
-  if(nameBtn) nameBtn.textContent = state.host.hostName ? '👤' : '👤';
-  if(n === null || n === undefined){
-    document.getElementById('host-number').textContent = '—';
-    document.getElementById('host-cat').style.display='none';
-    document.getElementById('host-text').textContent = 'Нажми «Крутить», чтобы начать';
-  }else{
-    document.getElementById('host-number').textContent = n;
-    const cat = document.getElementById('host-cat');
-    if(WISHES[n-1] !== undefined){
-      cat.textContent = CAT_NAME[wishCat(n)];
-      cat.className = 'cat-tag c'+wishCat(n);
-      cat.style.display = 'inline-block';
-    } else cat.style.display='none';
-    document.getElementById('host-text').textContent = wishText(n);
-  }
-  const h = document.getElementById('host-history');
-  if(total === 0){ h.style.display='none'; h.innerHTML=''; }
-  else{
-    h.style.display='block';
-    h.innerHTML = state.host.log.slice().reverse().slice(0,15)
-      .map(x=>{
-        const b = x.bingo ? ' 🎉' : '';
-        return `<b>${x.n}</b> · ${escapeHtml(logText(x))}${b}`;
-      }).join('<br>');
-  }
-  document.getElementById('btn-spin').disabled = total >= WISHES.length;
-  const alert = document.getElementById('host-bingo-alert');
-  if(state.player && state.player.bingo){
-    alert.classList.add('show');
-    alert.textContent = '🎉 У ИГРОКА' + (state.player.playerName ? ' ' + state.player.playerName.toUpperCase() : '') + ' БИНГО!';
-  } else {
-    alert.classList.remove('show');
-  }
-}
-function spin(){
-  if(state.host.log.length >= WISHES.length){ toast('Все числа уже выпали'); return; }
-  const used = new Set(state.host.log.map(x=>x.n));
-  const pool = [];
-  for(let i=1;i<=WISHES.length;i++) if(!used.has(i)) pool.push(i);
-  const n = pool[Math.floor(Math.random()*pool.length)];
-  state.host.log.push({ n, t: Date.now(), text: wishText(n), cat: wishCat(n) });
-  state.host.current = n;
-  playDing();
-  const el = document.getElementById('host-number');
-  el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
-  if(navigator.vibrate) navigator.vibrate(40);
-  renderHost();
-  save();
-}
-function resetHost(){
-  if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
-  const def = 'Раунд ' + state.host.round;
-  const inp = document.getElementById('round-name-input');
-  inp.value = def;
-  inp.placeholder = def;
-  document.getElementById('modal-round-name').classList.add('show');
-  setTimeout(()=>inp.focus(), 100);
-}
-function confirmRoundName(){
-  const inp = document.getElementById('round-name-input');
-  const name = (inp.value || '').trim() || ('Раунд ' + state.host.round);
-  document.getElementById('modal-round-name').classList.remove('show');
-  state.archive.unshift({
-    round: state.host.round,
-    name: name,
-    startedAt: state.host.startedAt,
-    finishedAt: Date.now(),
-    log: state.host.log.slice(),
-    hostName: state.host.hostName || ''
-  });
-  if(state.archive.length > 20) state.archive.length = 20;
-  state.host.log = [];
-  state.host.current = null;
-  state.host.round += 1;
-  state.host.startedAt = Date.now();
-  if(state.player) state.player.bingo = false;
-  renderHost();
-  save();
-  toast('Раунд сохранён: ' + name);
-}
-function cancelRoundName(){
-  document.getElementById('modal-round-name').classList.remove('show');
-}
-
-// ============ ЖУРНАЛ ============
-let logViewMode = 'current';
-function showLog(){
-  logViewMode = 'current';
-  showScreen('log');
-  renderLog();
-}
-function renderLog(){
-  const sub = document.getElementById('log-sub');
-  const wrap = document.getElementById('log-wrap');
-  const banner = document.getElementById('log-banner-host');
-  let log;
-  let title = '';
-  if(logViewMode === 'current'){
-    log = state.host.log;
-    banner.style.display = 'none';
-    title = `РАУНД ${state.host.round}`;
-    if(state.host.hostName) title += ' · ' + state.host.hostName;
-    title += ` · ${log.length} ЧИСЕЛ · ${fmtDate(state.host.startedAt)}`;
-  } else {
-    const r = state.archive[logViewMode.archiveIndex];
-    log = r ? r.log : [];
-    banner.style.display = 'block';
-    banner.innerHTML = `📂 Архив · ${r ? escapeHtml(r.name || ('Раунд ' + r.round)) : '?'}${r && r.hostName ? ' · ' + escapeHtml(r.hostName) : ''} · ${r ? fmtDate(r.startedAt) : ''} <button onclick="closeArchiveView()">← К текущему</button>`;
-    title = `АРХИВ · ${log.length} ЧИСЕЛ`;
-  }
-  sub.textContent = title;
-  if(log.length === 0){
-    wrap.innerHTML = '<div class="empty-log">Пока пусто.<br>Возвращайся на экран ведущего и крути числа — они появятся здесь.</div>';
-    return;
-  }
-  let html = '<table class="log-table"><thead><tr>' +
-    '<th class="col-idx">#</th><th class="col-num">№</th><th class="col-time">Время</th>' +
-    '<th>Текст</th><th class="col-bingo">БИНГО</th></tr></thead><tbody>';
-  log.forEach((row, i)=>{
-    const cat = logCat(row);
-    const bingoCell = row.bingo
-      ? `<span class="log-bingo-mark">🎉${row.bingoPlayer ? ' ' + escapeHtml(row.bingoPlayer) : ''}</span>`
-      : '';
-    html += `<tr class="c${cat}${row.bingo ? ' bingo-row' : ''}">` +
-      `<td class="col-idx"><b>${i+1}</b></td>` +
-      `<td class="col-num"><b>${row.n}</b></td>` +
-      `<td class="col-time">${fmtTime(row.t)}</td>` +
-      `<td>${escapeHtml(logText(row))}</td>` +
-      `<td class="col-bingo">${bingoCell}</td></tr>`;
-  });
-  html += '</tbody></table>';
-  wrap.innerHTML = html;
-}
-function closeArchiveView(){ logViewMode = 'current'; renderLog(); }
-function clearLog(){
-  if(state.host.log.length === 0){ toast('Уже пусто'); return; }
-  if(!confirm('Удалить журнал без сохранения в архив?')) return;
-  state.host.log = [];
-  state.host.current = null;
-  state.host.startedAt = Date.now();
-  renderLog();
-  save();
-  toast('Журнал очищен');
-}
-function showArchive(){
-  if(state.archive.length === 0){ toast('Архив пуст'); return; }
-  const list = state.archive.map((r,i)=>{
-    const nm = r.name || ('Раунд ' + r.round);
-    const hn = r.hostName ? ' (ведущий: ' + r.hostName + ')' : '';
-    return `${i+1}. ${nm}${hn} — ${r.log.length} чисел, ${fmtDate(r.startedAt)}`;
-  }).join('\n');
-  const ans = prompt('Архив раундов:\n\n' + list + '\n\nВведи номер для просмотра (или отмена):');
-  if(!ans) return;
-  const idx = parseInt(ans,10) - 1;
-  if(idx < 0 || idx >= state.archive.length){ toast('Неверный номер'); return; }
-  logViewMode = { archiveIndex: idx };
-  renderLog();
-}
-
-// ============ ФЛАГ БИНГО ============
-function markBingoInLog(){
-  if(state.host.log.length === 0) return;
-  const last = state.host.log[state.host.log.length - 1];
-  if(last.bingo) return;
-  last.bingo = true;
-  last.bingoPlayer = state.player.playerName || 'Игрок';
-  last.bingoAt = Date.now();
-  save();
-}
-
-// ============ СТАТИСТИКА ============
-function renderStats(){
-  const wrap = document.getElementById('stats-content');
-  const rounds = state.archive.slice();
-  const hasCurrent = state.host.log.length > 0;
-  const totalRounds = rounds.length + (hasCurrent ? 1 : 0);
-  const totalNumbers = rounds.reduce((s,r)=>s + r.log.length, 0) + state.host.log.length;
-  const durations = rounds
-    .filter(r => r.startedAt && r.finishedAt && r.finishedAt > r.startedAt)
-    .map(r => r.finishedAt - r.startedAt);
-  const avgDuration = durations.length
-    ? durations.reduce((s,v)=>s+v,0) / durations.length
-    : 0;
-  const firstTs = rounds.length
-    ? Math.min(...rounds.map(r=>r.startedAt).filter(Boolean))
-    : (hasCurrent ? state.host.startedAt : 0);
-  const cells = [
-    {v: totalRounds, l: 'Раундов'},
-    {v: totalNumbers, l: 'Чисел выпало'},
-    {v: fmtDuration(avgDuration), l: 'Средняя длительность'},
-    {v: rounds.length, l: 'В архиве'},
-    {v: firstTs ? fmtDateFull(firstTs) : '—', l: 'Первый запуск', wide:true},
-  ];
-  wrap.innerHTML = cells.map(c=>`
-    <div class="stat-cell ${c.wide?'stat-wide':''}">
-      <div class="stat-val">${escapeHtml(String(c.v))}</div>
-      <div class="stat-lbl">${escapeHtml(c.l)}</div>
-    </div>
-  `).join('');
-  document.getElementById('stats-sub').textContent = firstTs
-    ? 'С ' + fmtDate(firstTs)
-    : 'ПУСТО';
-  const mini = document.getElementById('dev-stats-mini');
-  if(mini){
-    mini.innerHTML = `Раундов: <b>${totalRounds}</b> · Чисел: <b>${totalNumbers}</b>` +
-      (avgDuration ? ` · средняя <b>${fmtDuration(avgDuration)}</b>` : '');
-  }
-}
-
-// ============ ЭКСПОРТ / ПЕЧАТЬ ============
-function exportCSV(){
-  if(logViewMode !== 'current'){ toast('Сначала закрой архив'); return; }
-  if(state.host.log.length === 0){ toast('Нечего экспортировать'); return; }
-  const meta = [];
-  meta.push(['Раунд', state.host.round]);
-  if(state.host.hostName) meta.push(['Ведущий', state.host.hostName]);
-  meta.push(['Дата', fmtDate(state.host.startedAt)]);
-  meta.push(['Всего чисел', state.host.log.length]);
-  const rows = [['#','Число','Категория','Текст','Время','БИНГО','Игрок']];
-  state.host.log.forEach((row,i)=>{
-    rows.push([
-      i+1, row.n, CAT_NAME[logCat(row)], logText(row), fmtTime(row.t),
-      row.bingo ? 'да' : '', row.bingoPlayer || ''
-    ]);
-  });
-  const all = meta.concat([[]], rows);
-  const csv = '\uFEFF' + all.map(r=>r.map(c=>{
-    const s = String(c).replace(/"/g,'""');
-    return /[",\n;]/.test(s) ? `"${s}"` : s;
-  }).join(';')).join('\n');
-  downloadFile(csv, `sex_bingo_round${state.host.round}_${dateStamp()}.csv`, 'text/csv;charset=utf-8');
-}
-function printLog(){
-  if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
-  const pa = document.getElementById('print-area');
-  let html = `<h1>СЕКС БИНГО · РАУНД ${state.host.round}</h1>`;
-  const metaParts = [];
-  if(state.host.hostName) metaParts.push('Ведущий: ' + state.host.hostName);
-  metaParts.push('Дата: ' + fmtDate(state.host.startedAt));
-  metaParts.push('Выпало чисел: ' + state.host.log.length + ' из ' + WISHES.length);
-  html += `<div class="sub">${escapeHtml(metaParts.join(' · '))}</div>`;
-  html += '<table><thead><tr><th style="width:34px">#</th><th style="width:46px">№</th><th style="width:60px">Время</th><th style="width:80px">Категория</th><th>Текст</th><th style="width:90px">БИНГО</th></tr></thead><tbody>';
-  state.host.log.forEach((row,i)=>{
-    const cat = logCat(row);
-    const bingoCell = row.bingo
-      ? `🎉${row.bingoPlayer ? ' ' + escapeHtml(row.bingoPlayer) : ''}`
-      : '';
-    html += `<tr class="c${cat}${row.bingo ? ' bingo-row' : ''}"><td>${i+1}</td><td><b>${row.n}</b></td><td>${fmtTime(row.t)}</td><td>${CAT_NAME[cat]}</td><td>${escapeHtml(logText(row))}</td><td>${bingoCell}</td></tr>`;
-  });
-  html += '</tbody></table>';
-  pa.innerHTML = html;
-  window.print();
-}
-function printCard(){
-  const L = layoutOf(state.player.layout);
-  if(!state.player.wishes || state.player.wishes.length < L.total){ toast('Нет карточки'); return; }
-  const pa = document.getElementById('print-area');
-  const playerLine = state.player.playerName
-    ? 'Игрок: ' + escapeHtml(state.player.playerName) + '   ·   Дата: ____________'
-    : 'Имя: _______________________   Дата: ____________';
-  const buildGrid = (nums, title) => {
-    let h = `<h1>СЕКС БИНГО · ${title} (${L.name})</h1>`;
-    h += `<div class="sub">${playerLine}</div>`;
-    h += '<table class="print-card"><tbody>';
-    for(let r=0;r<L.rows;r++){
-      h += '<tr>';
-      for(let c=0;c<L.cols;c++){
-        const num = nums[r*L.cols+c];
-        h += `<td><span class="num">${num}.</span><br>${escapeHtml(wishText(num))}</td>`;
-      }
-      h += '</tr>';
-    }
-    h += '</tbody></table>';
-    return h;
-  };
-  let out = buildGrid(state.player.wishes, 'ЖЕЛАНИЯ');
-  if(state.player.withTaboos && state.player.taboos.length >= L.total){
-    out += '<div style="page-break-before:always"></div>' + buildGrid(state.player.taboos, 'ТАБУ');
-  }
-  pa.innerHTML = out;
-  window.print();
-}
-function dateStamp(){
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-}
-function downloadFile(content, name, type){
-  const blob = new Blob([content], {type});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = name;
-  document.body.appendChild(a); a.click();
-  setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
-  toast('Файл ' + name + ' сохранён');
-}
-
-// ============ ИГРОК ============
-function shuffle(a){
-  for(let i=a.length-1;i>0;i--){
-    const j = Math.floor(Math.random()*(i+1));
-    [a[i],a[j]] = [a[j],a[i]];
-  }
-  return a;
-}
-function makeCard(layoutKey, withTaboos, playerName){
-  const L = layoutOf(layoutKey || '3x5');
-  const total = L.total;
-  const all = Array.from({length: WISHES.length},(_,i)=>i+1);
-  shuffle(all);
-  const wishes = all.slice(0,total).sort((a,b)=>a-b);
-  let taboos = [];
-  if(withTaboos !== false){
-    const rest = all.slice(total);
-    shuffle(rest);
-    taboos = rest.slice(0,total).sort((a,b)=>a-b);
-  }
-  return {
-    wishes, taboos,
-    marksW: Array(total).fill(false),
-    marksT: Array(total).fill(false),
-    bingo: false,
-    setupDone: true,
-    _bingoSet: [],
-    layout: layoutKey || '3x5',
-    undoStack: [],
-    playerName: playerName || '',
-    withTaboos: withTaboos !== false
-  };
-}
-function goToSetup(){
-  if(!confirm('Собрать новую карточку? Текущие отметки сбросятся.')) return;
-  pendingLayout = state.player.layout || '3x5';
-  pendingWithTaboos = (typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true;
-  state.player = Object.assign(defaultPlayerState(), {
-    layout: pendingLayout,
-    playerName: state.player.playerName || '',
-    withTaboos: pendingWithTaboos
-  });
-  save();
-  showScreen('setup');
-}
-function resetMarks(){
-  if(!confirm('Очистить все отметки?')) return;
-  const L = layoutOf(state.player.layout);
-  state.player.marksW = Array(L.total).fill(false);
-  state.player.marksT = Array(L.total).fill(false);
-  state.player.bingo = false;
-  state.player._bingoSet = [];
-  state.player.undoStack = [];
-  renderPlayer();
-  save();
-}
-function renderPlayer(){
-  const L = layoutOf(state.player.layout);
-  if(!state.player.setupDone || !state.player.wishes || state.player.wishes.length !== L.total){
-    showScreen('setup');
-    return;
-  }
-  const withT = state.player.withTaboos !== false && state.player.taboos.length === L.total;
-  document.getElementById('player-sub').textContent =
-    'РАСКЛАДКА ' + L.name + (withT ? '' : ' · БЕЗ ТАБУ') +
-    (state.player.playerName ? ' · ' + state.player.playerName : '');
-  renderGrid('wishes','marksW','grid-wishes','score-w', L);
-  document.getElementById('taboos-block').style.display = withT ? '' : 'none';
-  if(withT){
-    renderGrid('taboos','marksT','grid-taboos','score-t', L);
-  }
-  checkBingo();
-}
-function renderGrid(dataKey, marksKey, gridId, scoreId, L){
-  const data = state.player[dataKey];
-  const marks = state.player[marksKey];
-  const grid = document.getElementById(gridId);
-  grid.style.gridTemplateColumns = `repeat(${L.cols}, 1fr)`;
-  grid.innerHTML = '';
-  const score = marks.filter(Boolean).length;
-  document.getElementById(scoreId).textContent = score + '/' + L.total;
-  const bingoSet = new Set(state.player._bingoSet || []);
-  data.forEach((num, i)=>{
-    const d = document.createElement('div');
-    d.className = 'cell' + (marks[i]?' hit':'') + (bingoSet.has(dataKey+i)?' bingo':'');
-    const cat = wishCat(num);
-    if(cat===0) d.style.borderLeftColor = '#4a7d2c';
-    if(cat===1) d.style.borderLeftColor = '#a68a1c';
-    if(cat===2) d.style.borderLeftColor = '#a03b3b';
-    d.innerHTML = `<span class="num">${num}</span><span class="t">${escapeHtml(wishText(num))}</span>`;
-    d.onclick = () => {
-      const prev = state.player[marksKey][i];
-      state.player[marksKey][i] = !prev;
-      pushUndo({grid:dataKey, index:i, prev});
-      refreshGridCell(grid, i, marksKey, dataKey, scoreId, L);
-      save();
-    };
-    grid.appendChild(d);
-  });
-}
-function refreshGridCell(grid, i, marksKey, dataKey, scoreId, L){
-  const marks = state.player[marksKey];
-  const cell = grid.children[i];
-  if(!cell) return;
-  cell.classList.toggle('hit', !!marks[i]);
-  const sc = marks.filter(Boolean).length;
-  document.getElementById(scoreId).textContent = sc + '/' + L.total;
-  const prevBingo = new Set(state.player._bingoSet || []);
-  checkBingo();
-  const newBingo = new Set(state.player._bingoSet || []);
-  prevBingo.forEach(key=>{
-    if(!newBingo.has(key) && key.startsWith(dataKey)){
-      const idx = parseInt(key.slice(dataKey.length), 10);
-      const c = grid.children[idx];
-      if(c) c.classList.remove('bingo');
-    }
-  });
-  newBingo.forEach(key=>{
-    if(!prevBingo.has(key) && key.startsWith(dataKey)){
-      const idx = parseInt(key.slice(dataKey.length), 10);
-      const c = grid.children[idx];
-      if(c) c.classList.add('bingo');
-    }
-  });
-}
-function pushUndo(op){
-  if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
-  state.player.undoStack.push(op);
-  if(state.player.undoStack.length > 20) state.player.undoStack.shift();
-}
-function undoLast(){
-  const stack = state.player.undoStack;
-  if(!stack || !stack.length){ toast('Нечего отменять'); return; }
-  const op = stack.pop();
-  if(op.grid === 'wishes'){
-    state.player.marksW[op.index] = op.prev;
-  } else {
-    state.player.marksT[op.index] = op.prev;
-  }
-  renderPlayer();
-  save();
-  toast('Отменено');
-}
-function markFromInput(){
-  const inp = document.getElementById('player-input');
-  const raw = inp.value.trim();
-  if(!/^\d+$/.test(raw)){ toast('Введи число 1–' + WISHES.length); return; }
-  const v = parseInt(raw, 10);
-  if(v<1 || v>WISHES.length){ toast('Введи число 1–' + WISHES.length); return; }
-  let found = false;
-  const iw = state.player.wishes.indexOf(v);
-  if(iw >= 0){
-    const prev = state.player.marksW[iw];
-    if(!prev){ pushUndo({grid:'wishes', index:iw, prev:false}); }
-    state.player.marksW[iw] = true;
-    found = true;
-  }
-  const it = state.player.taboos.indexOf(v);
-  if(it >= 0){
-    const prev = state.player.marksT[it];
-    if(!prev){ pushUndo({grid:'taboos', index:it, prev:false}); }
-    state.player.marksT[it] = true;
-    found = true;
-  }
-  inp.value = '';
-  if(found){
-    if(navigator.vibrate) navigator.vibrate(30);
-    renderPlayer();
-    save();
-  }else{
-    toast('Числа ' + v + ' нет в твоей карточке');
-  }
-}
-function checkBingo(){
-  const L = layoutOf(state.player.layout);
-  const cols = L.cols, rows = L.rows, total = L.total;
-  const bingoSet = new Set();
-  function check(marks, dataKey){
-    let bingoCount = 0;
-    for(let r=0;r<rows;r++){
-      let all = true;
-      for(let c=0;c<cols;c++) if(!marks[r*cols+c]) all=false;
-      if(all){
-        for(let c=0;c<cols;c++) bingoSet.add(dataKey+(r*cols+c));
-        bingoCount++;
-      }
-    }
-    for(let c=0;c<cols;c++){
-      let all = true;
-      for(let r=0;r<rows;r++) if(!marks[r*cols+c]) all=false;
-      if(all){
-        for(let r=0;r<rows;r++) bingoSet.add(dataKey+(r*cols+c));
-        bingoCount++;
-      }
-    }
-    if(marks.every(Boolean)){
-      for(let i=0;i<total;i++) bingoSet.add(dataKey+i);
-      bingoCount++;
-    }
-    return bingoCount;
-  }
-  const bw = check(state.player.marksW, 'wishes');
-  const bt = state.player.withTaboos !== false ? check(state.player.marksT, 'taboos') : 0;
-  state.player._bingoSet = Array.from(bingoSet);
-  const hasBingo = (bw + bt) > 0;
-  const banner = document.getElementById('bingo-banner');
-  if(hasBingo){
-    banner.classList.add('show');
-    if(!state.player.bingo){
-      state.player.bingo = true;
-      playGong();
-      showBingoOverlay(
-        (state.player.playerName ? state.player.playerName + ', т' : 'Т') +
-        'ы собрал линию! Скажи ведущему.'
-      );
-      markBingoInLog();
-    }
-  }else{
-    banner.classList.remove('show');
-  }
-}
-
-// ============ СПИСОК ============
-function renderList(q){
-  const list = document.getElementById('list-content');
-  const query = q.trim().toLowerCase();
-  list.innerHTML = '';
-  document.getElementById('list-total').textContent = '· ' + WISHES.length + ' ПУНКТОВ';
-  for(let i=0;i<WISHES.length;i++){
-    const n = i+1;
-    const text = WISHES[i];
-    if(query && !((n + ' ' + text.toLowerCase()).includes(query))) continue;
-    const el = document.createElement('div');
-    el.className = 'item c' + CATS[i];
-    el.innerHTML = `<span class="n">${n}</span><span class="t">${escapeHtml(text)}</span>`;
-    list.appendChild(el);
-  }
-}
-
-// ============ РАЗРАБ ============
-function renderDev(){
-  document.getElementById('dev-count').textContent = WISHES.length;
-  const status = document.getElementById('dev-a2hs-status');
-  if(status){
-    const standalone = a2hsIsStandalone();
-    const hidden = localStorage.getItem(LS_A2HS) === '1';
-    if(standalone) status.innerHTML = 'Статус: <b>уже установлено как приложение</b>';
-    else if(hidden) status.innerHTML = 'Статус: <b>не показывать</b>';
-    else status.innerHTML = 'Статус: <b>напоминание активно</b>';
-  }
-  const stStatus = document.getElementById('dev-storage-status');
-  if(stStatus){
-    const proto = location.protocol;
-    let info = 'протокол: ' + proto;
-    if(proto !== 'file:' && proto !== 'http:' && proto !== 'https:'){
-      info += ' · <b style="color:var(--red-b)">риск потери данных!</b>';
-    }
-    try{
-      const used = (localStorage.getItem(LS_KEY) || '').length
-        + (localStorage.getItem(LS_WISHES) || '').length;
-      info += ' · ~' + Math.round(used/1024) + ' КБ';
-    }catch(e){}
-    stStatus.innerHTML = 'Хранилище: ' + info;
-  }
-  const rounds = state.archive.length;
-  const totalNumbers = state.archive.reduce((s,r)=>s + r.log.length, 0) + state.host.log.length;
-  const mini = document.getElementById('dev-stats-mini');
-  if(mini){
-    const durations = state.archive
-      .filter(r => r.startedAt && r.finishedAt && r.finishedAt > r.startedAt)
-      .map(r => r.finishedAt - r.startedAt);
-    const avg = durations.length ? durations.reduce((s,v)=>s+v,0)/durations.length : 0;
-    mini.innerHTML = `Раундов: <b>${rounds + (state.host.log.length ? 1 : 0)}</b> · ` +
-      `Чисел: <b>${totalNumbers}</b>` +
-      (avg ? ` · средняя <b>${fmtDuration(avg)}</b>` : '');
-  }
-  const ts = document.getElementById('toggle-sound');
-  if(ts) ts.classList.toggle('on', soundEnabled);
-  const th = document.getElementById('toggle-theme');
-  if(th) th.classList.toggle('on', lightTheme);
-  document.querySelectorAll('.cat-btn[data-cat]').forEach(b=>{
-    b.classList.toggle('active', parseInt(b.dataset.cat)===devCat);
-  });
-  const list = document.getElementById('dev-list');
-  list.innerHTML = '';
-  for(let i=0;i<WISHES.length;i++){
-    const el = document.createElement('div');
-    el.className = 'dev-item c' + CATS[i];
-    el.innerHTML = `
-      <span class="dev-num">${i+1}</span>
-      <span class="dev-text">${escapeHtml(WISHES[i])}</span>
-      <span class="dev-cat-badge c${CATS[i]}">${CAT_NAME[CATS[i]]}</span>
-      <button class="dev-icon" onclick="devEdit(${i})" title="Редактировать">✏️</button>
-      <button class="dev-icon" onclick="devDel(${i})" title="Удалить">🗑</button>
-    `;
-    list.appendChild(el);
-  }
-}
-function devPickCat(c){
-  devCat = c;
-  document.querySelectorAll('.cat-btn[data-cat]').forEach(b=>{
-    b.classList.toggle('active', parseInt(b.dataset.cat)===c);
-  });
-}
-function devAdd(){
-  const inp = document.getElementById('dev-new-text');
-  const text = inp.value.trim();
-  if(!text){ toast('Введи текст'); return; }
-  if(text.length > 200){ toast('Слишком длинно (макс 200)'); return; }
-  WISHES.push(text);
-  CATS.push(devCat);
-  inp.value = '';
-  saveWishes();
-  afterWishesChange();
-  renderDev();
-  toast('Добавлено #' + WISHES.length);
-}
-function devEdit(i){
-  devEditIndex = i;
-  devEditCat = CATS[i];
-  document.getElementById('dev-edit-num').textContent = i+1;
-  document.getElementById('dev-edit-text').value = WISHES[i];
-  document.querySelectorAll('.cat-btn[data-edit-cat]').forEach(b=>{
-    b.classList.toggle('active', parseInt(b.dataset.editCat)===devEditCat);
-  });
-  document.getElementById('modal-dev-edit').classList.add('show');
-}
-function devEditPickCat(c){
-  devEditCat = c;
-  document.querySelectorAll('.cat-btn[data-edit-cat]').forEach(b=>{
-    b.classList.toggle('active', parseInt(b.dataset.editCat)===c);
-  });
-}
-function devEditSave(){
-  const text = document.getElementById('dev-edit-text').value.trim();
-  if(!text){ toast('Пустой текст'); return; }
-  if(text.length > 200){ toast('Слишком длинно (макс 200)'); return; }
-  WISHES[devEditIndex] = text;
-  CATS[devEditIndex] = devEditCat;
-  saveWishes();
-  afterWishesChange();
-  document.getElementById('modal-dev-edit').classList.remove('show');
-  renderDev();
-  toast('Обновлено #' + (devEditIndex+1));
-}
-function devEditCancel(){
-  document.getElementById('modal-dev-edit').classList.remove('show');
-}
-function devDel(i){
-  if(WISHES.length <= 25){ toast('Минимум 25 пунктов (для раскладки 5×5)'); return; }
-  if(!confirm('Удалить пункт #' + (i+1) + '?\n\n"' + WISHES[i] + '"')) return;
-  WISHES.splice(i,1);
-  CATS.splice(i,1);
-  saveWishes();
-  afterWishesChange();
-  renderDev();
-  toast('Удалено. Осталось ' + WISHES.length);
-}
-function devResetAll(){
-  if(!confirm('Сбросить список к стандартному набору?\nВсе твои правки будут потеряны.')) return;
-  WISHES.length = 0;
-  WISHES.push(...DEFAULT_WISHES);
-  CATS.length = 0;
-  CATS.push(...DEFAULT_CATS);
-  saveWishes();
-  afterWishesChange();
-  renderDev();
-  toast('Список сброшен к стандарту');
-}
-function afterWishesChange(){
-  if(state.player && state.player.wishes && state.player.wishes.length){
-    state.player.setupDone = false;
-  }
-  save();
-}
-
-// ============ ЭКСПОРТ / ИМПОРТ ВСЕГО ============
-function exportAll(){
-  const data = {
-    app: 'sexbingo',
-    version: 1,
-    exportedAt: Date.now(),
-    wishes: WISHES,
-    cats: CATS,
-    state: state,
-    settings: { sound: soundEnabled, lightTheme: lightTheme }
-  };
-  downloadFile(JSON.stringify(data, null, 2),
-    `sex_bingo_backup_${dateStamp()}.json`,
-    'application/json');
-}
-function importAll(file){
-  if(!file) return;
-  if(!confirm('Импорт заменит ВСЕ данные приложения. Продолжить?')) return;
-  const reader = new FileReader();
-  reader.onload = e=>{
-    try{
-      const data = JSON.parse(e.target.result);
-      if(!data || data.app !== 'sexbingo' || !Array.isArray(data.wishes) || !Array.isArray(data.cats)){
-        throw new Error('Не тот формат файла');
-      }
-      if(data.wishes.length < 25) throw new Error('В списке меньше 25 пунктов');
-      WISHES.length = 0; WISHES.push(...data.wishes.map(String));
-      CATS.length = 0; CATS.push(...data.cats.map(c=>[0,1,2].includes(c)?c:1));
-      saveWishes();
-      state = Object.assign(state, data.state || {});
-      if(!state.host.hostName) state.host.hostName = '';
-      if(!state.player) state.player = defaultPlayerState();
-      if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
-      if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
-      if(!LAYOUTS[state.player.layout]) state.player.layout = '3x5';
-      if(typeof state.player.playerName !== 'string') state.player.playerName = '';
-      if(typeof state.player.withTaboos !== 'boolean') state.player.withTaboos = true;
-      if(data.settings){
-        soundEnabled = !!data.settings.sound;
-        lightTheme = !!data.settings.lightTheme;
-        try{
-          localStorage.setItem(LS_SOUND, soundEnabled ? '1' : '0');
-          localStorage.setItem(LS_THEME, lightTheme ? '1' : '0');
-        }catch(e){}
-        applyTheme();
-      }
-      save();
-      toast('Импортировано. Перезагрузка…');
-      setTimeout(()=>location.reload(), 800);
-    }catch(err){
-      toast('Ошибка импорта: ' + err.message);
-    }
-  };
-  reader.readAsText(file);
-}
-
-// ============ ИНИЦИАЛИЗАЦИЯ ============
-load();
-applyTheme();
-if(state.accepted18) document.getElementById('modal18').classList.remove('show');
-
-if(!state.player) state.player = defaultPlayerState();
-if(typeof state.player.setupDone !== 'boolean') state.player.setupDone = false;
-if(!Array.isArray(state.player._bingoSet)) state.player._bingoSet = [];
-if(!Array.isArray(state.player.undoStack)) state.player.undoStack = [];
-if(!LAYOUTS[state.player.layout]) state.player.layout = '3x5';
-if(typeof state.player.playerName !== 'string') state.player.playerName = '';
-if(typeof state.player.withTaboos !== 'boolean') state.player.withTaboos = true;
-if(!state.host.hostName) state.host.hostName = '';
-pendingLayout = state.player.layout;
-pendingWithTaboos = state.player.withTaboos;
-
-document.getElementById('player-input').addEventListener('keydown', e=>{
-  if(e.key === 'Enter'){ e.preventDefault(); markFromInput(); }
-});
-document.getElementById('list-search').addEventListener('input', e=>renderList(e.target.value));
-document.getElementById('manual-search').addEventListener('input', ()=>renderManual());
-document.getElementById('dev-new-text').addEventListener('keydown', e=>{
-  if(e.key === 'Enter'){ e.preventDefault(); devAdd(); }
-});
-document.getElementById('round-name-input').addEventListener('keydown', e=>{
-  if(e.key === 'Enter'){ e.preventDefault(); confirmRoundName(); }
-});
-document.getElementById('host-name-input').addEventListener('keydown', e=>{
-  if(e.key === 'Enter'){ e.preventDefault(); saveHostName(); }
-});
-
-// PWA manifest
-try{
-  const icon = 'data:image/svg+xml;utf8,' + encodeURIComponent(
-    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192"><rect width="192" height="192" rx="36" fill="#c00000"/><text x="96" y="118" font-size="110" font-family="Arial" font-weight="900" text-anchor="middle" fill="#fff">🎲</text></svg>'
-  );
-  const manifest = {
-    name: 'Секс Бинго 18+', short_name: 'Секс Бинго',
-    start_url: '.', display: 'standalone',
-    background_color: '#0f0f0f', theme_color: '#c00000',
-    icons: [{src: icon, sizes: '192x192', type: 'image/svg+xml'}]
-  };
-  const blob = new Blob([JSON.stringify(manifest)], {type: 'application/manifest+json'});
-  const link = document.createElement('link');
-  link.rel = 'manifest';
-  link.href = URL.createObjectURL(blob);
-  document.head.appendChild(link);
-}catch(e){}
-
-// Восстанавливаем только «рабочие» экраны. Служебные (dev/stats/help)
-// при перезапуске всегда отправляют в меню, иначе стрелка ← ведёт в никуда.
-const RESTORABLE = ['host', 'player', 'setup', 'list', 'log', 'manual'];
-const initial = RESTORABLE.includes(state.lastScreen) ? state.lastScreen : 'menu';
-navHistory = ['menu'];
-navIndex = 0;
-if(initial !== 'menu'){
-  navHistory.push(initial);
-  navIndex = 1;
-}
-_renderScreen(initial);
-  
-try{
-  if(typeof BroadcastChannel === 'function'){
-    const myId = Math.random().toString(36).slice(2);
-    const bc = new BroadcastChannel('sexbingo');
-    bc.postMessage({type:'hello', id: myId});
-    bc.onmessage = e => {
-      if(e.data && e.data.type === 'hello' && e.data.id !== myId){
-        toast('Игра уже открыта в другой вкладке — данные могут конфликтовать', 5000);
-      }
-    };
-  }
-}catch(e){}
-
-window.addEventListener('pagehide', ()=>save());
-document.addEventListener('visibilitychange', ()=>{ if(document.hidden) save(); });
-
-if(state.accepted18){
-  if(!checkProtocolWarning()){
-    if(a2hsShouldShow()) setTimeout(()=>a2hsShow(false), 1500);
-  }
-}
-</script>
-</body>
-</html>
+    player
