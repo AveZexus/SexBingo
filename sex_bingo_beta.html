@@ -179,6 +179,9 @@ body:not(.light) .cat-tag.c2{color:#d88898}
 body.light .cell.hit{background:rgba(122,34,72,.07)}
 body.light .cell.hit{background:rgba(192,0,0,.08)}
 .cell.hit .t,.cell.hit .num{text-decoration:line-through;text-decoration-color:var(--red-b);text-decoration-thickness:2px}
+.cell.c0{border-left-color:var(--cat-light)}
+.cell.c1{border-left-color:var(--cat-medium)}
+.cell.c2{border-left-color:var(--cat-hard)}  
 .cell.bingo{background:linear-gradient(135deg,#8b0000,#e63946);border-color:#ffd700;opacity:1;color:#fff;animation:pulse .8s ease-in-out infinite alternate}
 .cell.bingo .num,.cell.bingo .t{color:#fff}
 @keyframes pulse{from{box-shadow:0 0 0 0 rgba(255,215,0,.7)}to{box-shadow:0 0 0 8px rgba(255,215,0,0)}}
@@ -2313,9 +2316,7 @@ function renderGrid(dataKey, marksKey, gridId, scoreId, L){
     const d = document.createElement('div');
     d.className = 'cell' + (marks[i]?' hit':'') + (bingoSet.has(dataKey+i)?' bingo':'');
     const cat = wishCat(num);
-    if(cat===0) d.style.borderLeftColor = '#4a7d2c';
-    if(cat===1) d.style.borderLeftColor = '#a68a1c';
-    if(cat===2) d.style.borderLeftColor = '#a03b3b';
+d.className = 'cell c' + cat + (marks[i]?' hit':'') + (bingoSet.has(dataKey+i)?' bingo':'');
     d.innerHTML = '<span class="num">' + num + '</span><span class="t">' + escapeHtml(wishText(num)) + '</span>';
     d.onclick = () => {
       const prev = state.player[marksKey][i];
