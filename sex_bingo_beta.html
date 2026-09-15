@@ -67,8 +67,10 @@ h1 small{display:block;font-size:13px;font-weight:400;color:var(--muted);letter-
 .mode-btn:active{opacity:1;background:var(--red-d);color:#fff}
 .logo{text-align:center;padding:26px 14px 20px;border-radius:20px;background:linear-gradient(135deg,var(--logo-a) 0%,var(--logo-b) 60%,var(--logo-c) 100%);margin-bottom:18px;box-shadow:0 8px 32px rgba(192,0,0,.35)}
 .logo h2{font-size:36px;font-weight:900;letter-spacing:4px;color:#fff;text-shadow:0 2px 8px rgba(0,0,0,.3);line-height:1}
-.logo .dice{display:flex;align-items:center;justify-content:center;margin-bottom:10px;filter:drop-shadow(0 2px 12px rgba(139,42,85,.45))}
-.logo .dice svg{display:block;width:72px;height:72px}
+.logo .dice{display:flex;align-items:center;justify-content:center;margin-bottom:12px;cursor:pointer;user-select:none;transition:transform .15s;filter:drop-shadow(0 4px 16px rgba(139,42,85,.5))}
+.logo .dice:active{transform:scale(.94)}
+.logo .dice svg{display:block;width:108px;height:108px;transition:transform .8s cubic-bezier(.22,1,.36,1)}
+.logo .dice.spin svg{transform:rotate(360deg)}
 .logo .slogan{margin-top:12px;font-size:12px;font-style:italic;color:#ffdcdc;letter-spacing:.3px;line-height:1.5}
 body.light .logo .slogan{color:#fff}
 .logo .adult{margin-top:8px;font-size:10px;color:rgba(255,255,255,.65);letter-spacing:2px}
@@ -494,84 +496,99 @@ body.light .modal h3{color:var(--red-d)}
   <button class="mode-btn" id="mode-btn-menu" onclick="toggleModeFromMenu()" title="Режим">🚀</button>
   <button class="dev-btn mode-full-only" onclick="showScreen('dev')" title="Разраб">⚙️</button>
   <div class="logo">
-    <span class="dice">
-  <svg viewBox="0 0 120 120" width="64" height="64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+   <span class="dice" id="dice-btn">
+  <svg viewBox="0 0 200 200" width="108" height="108" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <defs>
-      <linearGradient id="d10-face-top" x1="0" y1="0" x2="0.5" y2="1">
-        <stop offset="0" stop-color="#7a2248"/>
-        <stop offset="1" stop-color="#3d1430"/>
-      </linearGradient>
-      <linearGradient id="d10-face-side" x1="0" y1="0" x2="0.5" y2="1">
-        <stop offset="0" stop-color="#5c1a38"/>
+      <radialGradient id="d10-top" cx="0.5" cy="0.55" r="0.75">
+        <stop offset="0" stop-color="#4a1838"/>
         <stop offset="1" stop-color="#2a0e20"/>
+      </radialGradient>
+      <linearGradient id="d10-side" x1="0" y1="0" x2="0.6" y2="1">
+        <stop offset="0" stop-color="#3d1430"/>
+        <stop offset="1" stop-color="#1a0812"/>
       </linearGradient>
       <linearGradient id="d10-edge" x1="0" y1="0" x2="1" y2="1">
         <stop offset="0" stop-color="#a83664"/>
         <stop offset="1" stop-color="#c9a04e"/>
       </linearGradient>
+      <linearGradient id="sil" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f0e6ec"/>
+        <stop offset="1" stop-color="#c8b0c0"/>
+      </linearGradient>
     </defs>
 
-    <!-- Внешний пятиугольник (силуэт d10) -->
-    <polygon points="60,8 112,46 92,110 28,110 8,46"
-             fill="url(#d10-face-side)"
-             stroke="url(#d10-edge)"
-             stroke-width="3.5"
+    <!-- Боковые грани (задние — рисуем первыми) -->
+    <polygon points="14.4,72.2 100,10 100,55 57.2,86.1"
+             fill="url(#d10-side)" stroke="url(#d10-edge)" stroke-width="2.5"
+             stroke-linejoin="round" opacity="0.75"/>
+    <polygon points="100,10 185.6,72.2 142.8,86.1 100,55"
+             fill="url(#d10-side)" stroke="url(#d10-edge)" stroke-width="2.5"
+             stroke-linejoin="round" opacity="0.65"/>
+    <polygon points="47.1,172.8 14.4,72.2 57.2,86.1 73.5,136.4"
+             fill="url(#d10-side)" stroke="url(#d10-edge)" stroke-width="2.5"
+             stroke-linejoin="round" opacity="0.55"/>
+    <polygon points="185.6,72.2 152.9,172.8 126.5,136.4 142.8,86.1"
+             fill="url(#d10-side)" stroke="url(#d10-edge)" stroke-width="2.5"
+             stroke-linejoin="round" opacity="0.4"/>
+    <polygon points="152.9,172.8 47.1,172.8 73.5,136.4 126.5,136.4"
+             fill="url(#d10-side)" stroke="url(#d10-edge)" stroke-width="2.5"
+             stroke-linejoin="round" opacity="0.5"/>
+
+    <!-- Верхняя грань -->
+    <polygon points="100,55 142.8,86.1 126.5,136.4 73.5,136.4 57.2,86.1"
+             fill="url(#d10-top)" stroke="url(#d10-edge)" stroke-width="3"
              stroke-linejoin="round"/>
 
-    <!-- 5 боковых граней — рисуются как трапеции -->
-    <!-- Нижняя левая -->
-    <polygon points="60,8 36,50 44,78 28,110 8,46"
-             fill="url(#d10-face-side)" opacity="0.55" stroke="url(#d10-edge)" stroke-width="2" stroke-linejoin="round"/>
-    <!-- Верхняя левая -->
-    <polygon points="60,8 36,50 8,46"
-             fill="url(#d10-face-side)" opacity="0.7" stroke="url(#d10-edge)" stroke-width="2" stroke-linejoin="round"/>
-    <!-- Верхняя правая -->
-    <polygon points="60,8 84,50 112,46"
-             fill="url(#d10-face-side)" opacity="0.4" stroke="url(#d10-edge)" stroke-width="2" stroke-linejoin="round"/>
-    <!-- Нижняя правая -->
-    <polygon points="60,8 84,50 76,78 92,110 112,46"
-             fill="url(#d10-face-side)" opacity="0.35" stroke="url(#d10-edge)" stroke-width="2" stroke-linejoin="round"/>
-    <!-- Нижняя -->
-    <polygon points="44,78 76,78 92,110 28,110"
-             fill="url(#d10-face-side)" opacity="0.45" stroke="url(#d10-edge)" stroke-width="2" stroke-linejoin="round"/>
-
-    <!-- Верхняя грань (светлая) -->
-    <polygon points="60,34 84,50 76,78 44,78 36,50"
-             fill="url(#d10-face-top)"
-             stroke="url(#d10-edge)"
-             stroke-width="3"
-             stroke-linejoin="round"/>
-
-    <!-- Пиктограммы поз — по одной на 2-3 видимых боковых гранях -->
-    <!-- Верхняя грань: пара, стоящая друг напротив друга (символ) -->
-    <g stroke="#ede4f0" stroke-width="2.8" stroke-linecap="round" fill="none" opacity="1">
-      <circle cx="54" cy="52" r="2.6" fill="#ede4f0"/>
-      <circle cx="66" cy="52" r="2.6" fill="#ede4f0"/>
-      <line x1="54" y1="55" x2="54" y2="62"/>
-      <line x1="66" y1="55" x2="66" y2="62"/>
-      <line x1="54" y1="58" x2="66" y2="58"/>
+    <!-- Поза 1: Миссионерская -->
+    <g id="dice-poses-1" fill="url(#sil)">
+      <!-- Нижняя фигура: тело, лежит -->
+      <path d="M 74,112 Q 76,106 86,106 L 112,107 Q 120,107 120,111 Q 120,115 112,116 L 86,117 Q 76,117 74,112 Z"/>
+      <circle cx="70" cy="111" r="4"/>
+      <!-- Ноги нижней фигуры -->
+      <path d="M 116,108 Q 126,98 132,88" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M 118,115 Q 128,119 133,124" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <!-- Верхняя фигура: тело, накрывает -->
+      <path d="M 80,96 Q 82,90 92,90 L 114,92 Q 121,93 120,97 Q 119,101 113,101 L 92,101 Q 82,101 80,96 Z"/>
+      <circle cx="76" cy="95" r="4"/>
+      <!-- Ноги верхней фигуры -->
+      <path d="M 116,95 Q 124,102 128,108" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M 114,99 Q 120,106 122,113" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
     </g>
 
-    <!-- Нижняя левая грань: один лежит, второй сверху -->
-    <g stroke="#ede4f0" stroke-width="2.8" stroke-linecap="round" fill="none" opacity="1">
-      <circle cx="30" cy="88" r="2.4" fill="#ede4f0"/>
-      <circle cx="42" cy="82" r="2.4" fill="#ede4f0"/>
-      <line x1="30" y1="91" x2="40" y2="90"/>
-      <line x1="42" y1="85" x2="42" y2="89"/>
+    <!-- Поза 2: Догги -->
+    <g id="dice-poses-2" fill="url(#sil)" style="display:none">
+      <!-- Передняя фигура: на четвереньках -->
+      <path d="M 76,116 Q 78,110 88,110 L 106,111 Q 113,112 113,116 Q 113,120 106,121 L 88,121 Q 78,121 76,116 Z"/>
+      <circle cx="72" cy="116" r="4"/>
+      <!-- Руки/ноги передней -->
+      <path d="M 86,120 Q 85,126 87,130" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M 102,121 Q 102,127 104,130" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <!-- Задняя фигура: сзади, выпрямлена -->
+      <path d="M 116,122 Q 114,106 120,96 Q 126,86 132,90 Q 136,98 132,112 Q 128,122 122,122 Z"/>
+      <circle cx="126" cy="80" r="4"/>
+      <!-- Рука задней, обхватывает -->
+      <path d="M 120,104 Q 112,108 106,112" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
     </g>
 
-    <!-- Нижняя правая грань: две фигуры под углом -->
-    <g stroke="#ede4f0" stroke-width="2.8" stroke-linecap="round" fill="none" opacity="1">
-      <circle cx="78" cy="86" r="2.4" fill="#ede4f0"/>
-      <circle cx="86" cy="94" r="2.4" fill="#ede4f0"/>
-      <line x1="78" y1="89" x2="85" y2="93"/>
+    <!-- Поза 3: Наездница -->
+    <g id="dice-poses-3" fill="url(#sil)" style="display:none">
+      <!-- Нижняя фигура: на спине -->
+      <path d="M 72,122 Q 74,116 84,116 L 118,117 Q 126,117 126,121 Q 126,125 118,126 L 84,127 Q 74,127 72,122 Z"/>
+      <circle cx="68" cy="122" r="4"/>
+      <!-- Ноги нижней: колени вверх -->
+      <path d="M 118,117 Q 124,110 122,102" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M 120,126 Q 128,124 132,118" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <!-- Верхняя фигура: сидит верхом -->
+      <path d="M 92,108 Q 88,98 92,90 Q 98,84 106,88 Q 112,94 110,106 Q 108,114 100,114 Q 94,114 92,108 Z"/>
+      <circle cx="100" cy="82" r="4.5"/>
+      <!-- Руки верхней -->
+      <path d="M 110,100 Q 116,104 120,110" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <!-- Ноги верхней: обхватывают -->
+      <path d="M 92,112 Q 86,118 82,124" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M 108,112 Q 116,118 122,122" stroke="url(#sil)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
     </g>
-
-    <!-- Блики на рёбрах (лёгкий глянец) -->
-    <line x1="60" y1="8" x2="60" y2="34" stroke="#ede4f0" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
-    <line x1="60" y1="34" x2="84" y2="50" stroke="#ede4f0" stroke-width="1" opacity="0.25" stroke-linecap="round"/>
   </svg>
-    </span>
+</span>
     <h2>СЕКС<br>БИНГО</h2>
     <div class="slogan">Угадай или …<br>здесь не осуждают, тут творят и вытворяют!</div>
     <div class="adult">18+ · только для взрослых</div>
@@ -1463,6 +1480,29 @@ function toast(msg, ms=1800){
   t._t = setTimeout(()=>t.classList.remove('show'), ms);
 }
 
+
+// ============ DICE (тап по кубику) ============
+let dicePoseIndex = 0;
+function spinDice(){
+  const el = document.getElementById('dice-btn');
+  if(!el) return;
+  dicePoseIndex = (dicePoseIndex + 1) % 3;
+  for(let i = 1; i <= 3; i++){
+    const g = document.getElementById('dice-poses-' + i);
+    if(g) g.style.display = (i - 1 === dicePoseIndex) ? 'inline' : 'none';
+  }
+  el.classList.remove('spin');
+  void el.offsetWidth;
+  el.classList.add('spin');
+  setTimeout(()=>el.classList.remove('spin'), 820);
+  if(navigator.vibrate) navigator.vibrate(20);
+}
+
+(function bindDice(){
+  const el = document.getElementById('dice-btn');
+  if(el) el.addEventListener('click', spinDice);
+})();  
+  
 // ============ HOST NAME ============
 function openHostName(){
   document.getElementById('host-name-input').value = state.host.hostName || '';
