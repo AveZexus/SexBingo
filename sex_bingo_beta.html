@@ -533,6 +533,77 @@ body.light .net-hero h2{color:var(--red-d)}
 .toast{position:fixed;bottom:max(24px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(140px);background:var(--card2);padding:14px 22px;border-radius:16px;font-size:14.5px;transition:transform .35s cubic-bezier(.22,1,.36,1);z-index:200;pointer-events:none;border:1px solid var(--line);max-width:92vw;text-align:center;color:var(--text);box-shadow:var(--shadow-md)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
+/* ============ NET QR ============ */
+.net-divider{
+  text-align:center;font-size:12px;color:var(--muted);
+  margin:18px 0 14px;font-style:italic;letter-spacing:.5px;
+  position:relative;
+}
+.net-divider::before,
+.net-divider::after{
+  content:'';position:absolute;top:50%;width:calc(50% - 24px);
+  height:1px;background:var(--line);
+}
+.net-divider::before{left:0}
+.net-divider::after{right:0}
+
+.qr-stage{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:14px;padding:14px;min-height:0;
+}
+.qr-stage-label{
+  font-size:12px;letter-spacing:2px;text-transform:uppercase;
+  color:var(--accent-hover);font-weight:700;text-align:center;
+}
+body.light .qr-stage-label{color:var(--accent)}
+.qr-canvas-wrap{
+  padding:16px;background:#fff;border-radius:20px;
+  box-shadow:0 8px 32px rgba(0,0,0,.35);
+  display:flex;align-items:center;justify-content:center;
+  min-width:220px;min-height:220px;
+}
+.qr-canvas-wrap svg,
+.qr-canvas-wrap img,
+.qr-canvas-wrap canvas{
+  display:block;width:240px;height:240px;image-rendering:pixelated;
+}
+.qr-stage-hint{
+  font-size:12px;color:var(--muted);text-align:center;max-width:280px;
+  line-height:1.4;
+}
+.qr-stage-state{
+  padding:12px 16px;background:var(--card);border:1px solid var(--line);
+  border-radius:14px;font-size:13.5px;text-align:center;
+  color:var(--text-2);margin:0 4px;
+}
+.qr-stage-state.ok{border-color:var(--success);color:var(--success)}
+.qr-stage-state.err{border-color:var(--danger);color:var(--danger)}
+
+/* Камера */
+.qr-scan-stage{
+  flex:1;position:relative;border-radius:20px;overflow:hidden;
+  background:#000;min-height:0;
+}
+#qr-scan-video{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+.qr-scan-frame{
+  position:absolute;inset:15%;border:3px solid var(--accent-hover);
+  border-radius:20px;pointer-events:none;
+  box-shadow:0 0 0 9999px rgba(0,0,0,.35);
+  animation:qrFramePulse 2s ease-in-out infinite;
+}
+@keyframes qrFramePulse{
+  0%,100%{box-shadow:0 0 0 9999px rgba(0,0,0,.35),0 0 0 0 rgba(139,42,85,.5)}
+  50%{box-shadow:0 0 0 9999px rgba(0,0,0,.35),0 0 0 12px rgba(139,42,85,0)}
+}
+.qr-scan-hint{
+  position:absolute;bottom:20px;left:50%;transform:translateX(-50%);
+  padding:10px 18px;background:rgba(0,0,0,.7);
+  color:#fff;border-radius:14px;font-size:13px;font-weight:500;
+  max-width:80%;text-align:center;line-height:1.35;
+}
+  
 @media print {
   body{background:#fff;color:#000;overflow:visible;height:auto}
   .screen,.toast,.modal,.actions,header,.icon-btn,.back,.player-input,.card-label,.bingo-banner,.bingo-overlay,.host-bingo-alert,.dev-btn,.mode-btn{display:none !important}
@@ -1200,6 +1271,17 @@ body.light .net-hero h2{color:var(--red-d)}
     <span class="big-body"><b>Я игрок</b><span>Введу код комнаты и присоединюсь</span></span>
     <span class="big-cta">Подключиться →</span>
   </button>
+   <div class="net-divider">или</div>
+  <button class="big-card" onclick="netGoQRHost()">
+    <span class="big-ico">📡</span>
+    <span class="big-body"><b>Без интернета</b><span>QR-код · чуть дольше, зато автономно</span></span>
+    <span class="big-cta">Показать QR →</span>
+  </button>
+  <button class="big-card" onclick="netGoQRJoin()">
+    <span class="big-ico">📷</span>
+    <span class="big-body"><b>Сканировать QR</b><span>Я игрок, подключаюсь к ведущему</span></span>
+    <span class="big-cta">Открыть камеру →</span>
+  </button>
 </div>
 
 <!-- ============ SCREEN: NET HOST ============ -->
@@ -1249,7 +1331,63 @@ body.light .net-hero h2{color:var(--red-d)}
   </div>
 </div>
 
+<!-- ============ SCREEN: NET QR HOST ============ -->
+<div class="screen" id="screen-net-qr-host">
+  <header>
+    <button class="back" onclick="netLeaveAndBack()">←</button>
+    <h1>Покажи QR игроку<small>ОН СКАНИРУЕТ ЕГО КАМЕРОЙ</small></h1>
+  </header>
+  <div class="qr-stage">
+    <div class="qr-stage-label">ШАГ 1 · Покажи этот QR игроку</div>
+    <div class="qr-canvas-wrap" id="qr-host-canvas"></div>
+    <div class="qr-stage-hint" id="qr-host-hint">Готовим QR, подожди пару секунд…</div>
+  </div>
+  <div class="qr-stage-state" id="qr-host-state">Ждём первого игрока</div>
+  <div class="actions" style="margin-top:auto">
+    <button class="btn btn-secondary" onclick="netQrHostCancel()" style="flex:1">Отмена</button>
+    <button class="btn btn-primary" onclick="netQrHostScanAnswer()" style="flex:1">Сканировать ответ →</button>
+  </div>
+</div>
+
+<!-- ============ SCREEN: NET QR SCAN ============ -->
+<div class="screen" id="screen-net-qr-scan">
+  <header>
+    <button class="back" onclick="netQrScanCancel()">←</button>
+    <h1>Сканирование<small id="qr-scan-sub">НАВЕДИ КАМЕРУ НА QR</small></h1>
+  </header>
+  <div class="qr-scan-stage">
+    <video id="qr-scan-video" playsinline muted autoplay></video>
+    <div class="qr-scan-frame"></div>
+    <div class="qr-scan-hint" id="qr-scan-hint">Наведи камеру на QR-код</div>
+  </div>
+  <div class="actions" style="margin-top:auto">
+    <button class="btn btn-secondary" onclick="netQrScanCancel()" style="flex:1">Отмена</button>
+  </div>
+</div>
+
+<!-- ============ SCREEN: NET QR ANSWER (игрок показывает ответ) ============ -->
+<div class="screen" id="screen-net-qr-answer">
+  <header>
+    <button class="back" onclick="netQrAnswerCancel()">←</button>
+    <h1>Твой ответ<small>ПОКАЖИ ЕГО ВЕДУЩЕМУ</small></h1>
+  </header>
+  <div class="qr-stage">
+    <div class="qr-stage-label">ШАГ 2 · Ведущий сканирует этот QR</div>
+    <div class="qr-canvas-wrap" id="qr-answer-canvas"></div>
+    <div class="qr-stage-hint" id="qr-answer-hint">Готовим QR, подожди пару секунд…</div>
+  </div>
+  <div class="qr-stage-state" id="qr-answer-state">Ждём подтверждения от ведущего</div>
+  <div class="actions" style="margin-top:auto">
+    <button class="btn btn-secondary" onclick="netQrAnswerCancel()" style="flex:1">Отмена</button>
+  </div>
+</div>
+
+<script src="lz-string.min.js"></script>
+<script src="qrcode.js"></script>
+  
 <script src="net-p2p.js"></script>
+
+<script src="net-p2p-qr.js"></script>
   
 <script>
 /* =========================================================
