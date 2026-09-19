@@ -1,0 +1,15 @@
+{
+  "name": "sexbingo-server",
+  "version": "1.0.0",
+  "description": "Signaling server for SexBingo P2P game",
+  "main": "net-server.js",
+  "scripts": {
+    "start": "node net-server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
