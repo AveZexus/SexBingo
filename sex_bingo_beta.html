@@ -1536,10 +1536,13 @@ function openPlayerFromHost(){
   if(state.player.setupDone && state.player.wishes.length === L.total){
     showScreen('player');
   } else {
+    // Карточки нет — ведём на сборку и подсказываем
     showScreen('setup');
+    setTimeout(()=>{
+      toast('Собери карточку — потом вернёшься сюда к ведущему', 2500);
+    }, 400);
   }
 }
-
 function accept18(){
   state.accepted18 = true;
   document.getElementById('modal18').classList.remove('show');
@@ -2110,13 +2113,7 @@ function renderHost(){
     spinBtn.disabled = total >= WISHES.length;
     spinBtn.classList.toggle('waiting', total === 0 && !spinBtn.disabled);
   }
-  // 🎴 показываем только если у игрока есть готовая карточка
-  const cardBtn = document.getElementById('host-card-btn');
-  if(cardBtn){
-    const L = layoutOf(state.player.layout);
-    const hasCard = state.player.setupDone && state.player.wishes.length === L.total;
-    cardBtn.style.display = hasCard ? '' : 'none';
-  }
+
   const alert = document.getElementById('host-bingo-alert');
   if(state.player && state.player.bingo){
     alert.classList.add('show');
