@@ -1986,63 +1986,64 @@ function getNoiseBuffer(ctx, duration){
   return buf;
 }
 
-// СПИН — шорох шариков + мягкая нота
+// СПИН — шорох шариков + низкая тёплая нота
 function playDing(){
   if(!soundEnabled) return;
   try{
     const ctx = getAudioCtx();
     const t0 = ctx.currentTime;
 
-    // Шумовой слой — «шшш» шариков в барабане
+    // Шумовой слой — низкий «шшш» шариков в барабане
     const noise = ctx.createBufferSource();
     noise.buffer = getNoiseBuffer(ctx, 0.55);
     const nFilter = ctx.createBiquadFilter();
     nFilter.type = 'bandpass';
-    nFilter.frequency.value = 1800;
-    nFilter.Q.value = 0.8;
+    nFilter.frequency.value = 550;   // было 1800 — в разы ниже
+    nFilter.Q.value = 1.2;
     const nGain = ctx.createGain();
     nGain.gain.setValueAtTime(0.001, t0);
-    nGain.gain.exponentialRampToValueAtTime(0.055, t0 + 0.08);
+    nGain.gain.exponentialRampToValueAtTime(0.06, t0 + 0.08);
     nGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.5);
     noise.connect(nFilter).connect(nGain).connect(ctx.destination);
     noise.start(t0); noise.stop(t0 + 0.55);
 
-    // Мягкая нота — «динь» через lowpass, не резкий
+    // Низкая нота 220→330 Гц — «динь» как тёплое дерево
     const o = ctx.createOscillator();
     const oFilter = ctx.createBiquadFilter();
     const oGain = ctx.createGain();
     o.type = 'sine';
-    o.frequency.setValueAtTime(660, t0 + 0.08);
-    o.frequency.exponentialRampToValueAtTime(1320, t0 + 0.2);
+    o.frequency.setValueAtTime(220, t0 + 0.08);
+    o.frequency.exponentialRampToValueAtTime(330, t0 + 0.22);
     oFilter.type = 'lowpass';
-    oFilter.frequency.value = 2600;
+    oFilter.frequency.value = 700;   // срезаем всё выше — только низ
     oGain.gain.setValueAtTime(0.001, t0 + 0.08);
-    oGain.gain.exponentialRampToValueAtTime(0.13, t0 + 0.10);
-    oGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.62);
+    oGain.gain.exponentialRampToValueAtTime(0.16, t0 + 0.10);
+    oGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.75);
     o.connect(oFilter).connect(oGain).connect(ctx.destination);
-    o.start(t0 + 0.08); o.stop(t0 + 0.65);
+    o.start(t0 + 0.08); o.stop(t0 + 0.8);
 
     // Немного reverb на ноту
     const rev = ctx.createGain();
-    rev.gain.value = 0.35;
+    rev.gain.value = 0.4;
     oGain.connect(rev).connect(getReverb(ctx));
     getReverb(ctx).connect(ctx.destination);
   }catch(e){}
 }
 
-// БИНГО — аккорд A-moll с reverb
+// БИНГО — низкий аккорд A-moll с reverb
 function playGong(){
   if(!soundEnabled) return;
   try{
     const ctx = getAudioCtx();
     const t0 = ctx.currentTime;
-    const freqs = [110, 220, 261.63, 329.63, 440, 523.25];
-    const gains = [0.22, 0.13, 0.10, 0.09, 0.06, 0.04];
+    // A-moll в низком регистре: суб-бас + бас + квинта + октава + малая терция
+    const freqs = [55, 82.41, 110, 164.81, 220, 329.63];
+    const gains = [0.24, 0.16, 0.14, 0.10, 0.08, 0.05];
 
     const rev = getReverb(ctx);
     rev.connect(ctx.destination);
     const revSend = ctx.createGain();
-    revSend.gain.value = 0.55;
+    revSend.gain.value = 0.6;
     revSend.connect(rev);
 
     freqs.forEach((f, i)=>{
@@ -2051,68 +2052,76 @@ function playGong(){
       const g = ctx.createGain();
       o.type = 'sine';
       o.frequency.value = f;
-      o.detune.value = (i - 2) * 4;  // лёгкая расстройка — «хор»
+      o.detune.value = (i - 2) * 4;
       filt.type = 'lowpass';
-      filt.frequency.value = 3500;
+      filt.frequency.value = 700;   // срезаем верх — только низ
       g.gain.setValueAtTime(0.001, t0);
-      g.gain.exponentialRampToValueAtTime(gains[i], t0 + 0.03 + i * 0.01);
-      g.gain.exponentialRampToValueAtTime(0.001, t0 + 3.6 + i * 0.08);
+      g.gain.exponentialRampToValueAtTime(gains[i], t0 + 0.03 + i * 0.012);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 3.8 + i * 0.1);
       o.connect(filt).connect(g);
       g.connect(ctx.destination);
       g.connect(revSend);
-      o.start(t0); o.stop(t0 + 4);
+      o.start(t0); o.stop(t0 + 4.2);
     });
   }catch(e){}
 }
 
-// ОТМЕТКА КЛЕТКИ — тихий кап
+// ОТМЕТКА КЛЕТКИ — низкий «кап»
 function playMark(){
   if(!soundEnabled) return;
   try{
     const ctx = getAudioCtx();
     const t0 = ctx.currentTime;
     const o = ctx.createOscillator();
+    const filt = ctx.createBiquadFilter();
     const g = ctx.createGain();
     o.type = 'sine';
-    o.frequency.setValueAtTime(1400, t0);
-    o.frequency.exponentialRampToValueAtTime(650, t0 + 0.11);
+    o.frequency.setValueAtTime(660, t0);   // было 1400
+    o.frequency.exponentialRampToValueAtTime(220, t0 + 0.14);   // было 650
+    filt.type = 'lowpass';
+    filt.frequency.value = 700;   // срез
     g.gain.setValueAtTime(0.001, t0);
-    g.gain.exponentialRampToValueAtTime(0.05, t0 + 0.008);
-    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.22);
-    o.connect(g).connect(ctx.destination);
-    o.start(t0); o.stop(t0 + 0.24);
+    g.gain.exponentialRampToValueAtTime(0.07, t0 + 0.008);   // было 0.05
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.26);
+    o.connect(filt).connect(g).connect(ctx.destination);
+    o.start(t0); o.stop(t0 + 0.28);
   }catch(e){}
 }
 
-// СОХРАНЕНИЕ В АРХИВ — деревянный «тук»
+// СОХРАНЕНИЕ В АРХИВ — глубокий деревянный «тук»
 function playSave(){
   if(!soundEnabled) return;
   try{
     const ctx = getAudioCtx();
     const t0 = ctx.currentTime;
 
+    // Шумовой слой — глухой удар по дереву
     const noise = ctx.createBufferSource();
-    noise.buffer = getNoiseBuffer(ctx, 0.15);
+    noise.buffer = getNoiseBuffer(ctx, 0.2);
     const f = ctx.createBiquadFilter();
     f.type = 'bandpass';
-    f.frequency.value = 600;
-    f.Q.value = 4;
+    f.frequency.value = 350;   // было 600 — глубже
+    f.Q.value = 5;
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.001, t0);
-    g.gain.exponentialRampToValueAtTime(0.07, t0 + 0.005);
-    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.12);
+    g.gain.exponentialRampToValueAtTime(0.09, t0 + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.16);
     noise.connect(f).connect(g).connect(ctx.destination);
-    noise.start(t0); noise.stop(t0 + 0.15);
+    noise.start(t0); noise.stop(t0 + 0.2);
 
+    // Бас-нота — низкий «тук»
     const o = ctx.createOscillator();
+    const filt = ctx.createBiquadFilter();
     const og = ctx.createGain();
     o.type = 'sine';
-    o.frequency.value = 220;
+    o.frequency.value = 165;   // было 220 — ниже
+    filt.type = 'lowpass';
+    filt.frequency.value = 500;
     og.gain.setValueAtTime(0.001, t0);
-    og.gain.exponentialRampToValueAtTime(0.05, t0 + 0.01);
-    og.gain.exponentialRampToValueAtTime(0.001, t0 + 0.16);
-    o.connect(og).connect(ctx.destination);
-    o.start(t0); o.stop(t0 + 0.18);
+    og.gain.exponentialRampToValueAtTime(0.08, t0 + 0.01);
+    og.gain.exponentialRampToValueAtTime(0.001, t0 + 0.2);
+    o.connect(filt).connect(og).connect(ctx.destination);
+    o.start(t0); o.stop(t0 + 0.22);
   }catch(e){}
 }
 
