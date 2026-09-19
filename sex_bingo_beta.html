@@ -418,7 +418,25 @@ body:not(.light) .log-bingo-mark{color:var(--gold)}
 
 .modal{position:fixed;inset:0;background:var(--overlay);display:none;align-items:center;justify-content:center;padding:22px;z-index:100;text-align:center}
 .modal.show{display:flex}
-.modal-inner{max-width:420px;width:100%;background:var(--card);border-radius:28px;padding:36px 26px;border:1px solid var(--line);text-align:center;max-height:90dvh;overflow-y:auto;box-shadow:var(--shadow-md)}
+.modal-inner{position:relative;max-width:420px;width:100%;background:var(--card);border-radius:28px;padding:52px 26px 28px;border:1px solid var(--line);text-align:center;max-height:90dvh;overflow-y:auto;box-shadow:var(--shadow-md)}
+#modal18 .modal-inner{padding-top:36px}
+.modal-x{
+  position:absolute;top:12px;right:12px;
+  width:36px;height:36px;border-radius:50%;
+  background:var(--card2);border:1px solid var(--line);
+  color:var(--muted);font-size:16px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-family:inherit;padding:0;z-index:2;
+  transition:background .2s,color .2s,transform .15s cubic-bezier(.22,1,.36,1);
+}
+.modal-x:active{background:var(--accent);color:#fff;transform:scale(.9)}
+.modal-close-btn{
+  display:block;width:100%;margin-top:14px;padding:12px;
+  background:transparent;border:none;
+  color:var(--muted);font-size:14px;font-family:inherit;
+  cursor:pointer;letter-spacing:.3px;font-weight:500;
+}
+.modal-close-btn:active{color:var(--accent-hover)}
 .modal h3{font-size:24px;font-weight:600;color:var(--text);margin-bottom:14px;letter-spacing:.3px}
 body.light .modal h3{color:var(--red-d)}
 .modal p{font-size:15px;line-height:1.6;color:var(--muted);margin-bottom:24px}
@@ -1087,6 +1105,67 @@ body.light .modal h3{color:var(--red-d)}
    СЕКС БИНГО — полный JS
    ========================================================= */
 
+// ============ MODAL CLOSE ============
+const MODAL_CLOSE_MAP = {
+  'modal-welcome':   'closeWelcomeModal',
+  'modal-rules-ask': 'rulesAskSkip',
+  'modal-a2hs':      'a2hsClose',
+  'modal-protocol':  'protocolDismiss',
+  'modal-dev-edit':  'devEditCancel',
+  'modal-round-name':'cancelRoundName',
+  'modal-host-name': 'cancelHostName'
+};
+function closeAnyModal(m){
+  if(!m) return;
+  const fnName = MODAL_CLOSE_MAP[m.id];
+  if(fnName && typeof window[fnName] === 'function'){
+    window[fnName]();
+  } else {
+    m.classList.remove('show');
+  }
+}
+// Тап по фону закрывает модалку
+document.addEventListener('click', function(e){
+  if(e.target.classList && e.target.classList.contains('modal')){
+    if(e.target.id === 'modal18') return;
+    closeAnyModal(e.target);
+  }
+}, true);
+
+// Автоматически добавляем крестик и кнопку «Закрыть» во все модалки (кроме 18+)
+(function injectModalClose(){
+  document.querySelectorAll('.modal').forEach(function(m){
+    if(m.id === 'modal18') return;
+    const inner = m.querySelector('.modal-inner');
+    if(!inner) return;
+    // Крестик в углу
+    if(!inner.querySelector('.modal-x')){
+      const x = document.createElement('button');
+      x.type = 'button';
+      x.className = 'modal-x';
+      x.setAttribute('aria-label', 'Закрыть');
+      x.textContent = '✕';
+      x.addEventListener('click', function(e){
+        e.stopPropagation();
+        closeAnyModal(m);
+      });
+      inner.appendChild(x);
+    }
+    // Кнопка «Закрыть» внизу
+    if(!inner.querySelector('.modal-close-btn')){
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'modal-close-btn';
+      b.textContent = 'Закрыть';
+      b.addEventListener('click', function(e){
+        e.stopPropagation();
+        closeAnyModal(m);
+      });
+      inner.appendChild(b);
+    }
+  });
+})();
+  
 const DEFAULT_WISHES = [
 "Секс под дождем за окном","Проснуться и заняться любовью на рассвете","Медленный танец, переходящий в секс","Смотреть друг другу в глаза весь процесс","Секс у камина на мягком ковре","Ванна вдвоем с пеной и свечами","Секс под открытым звездным небом","Массаж всего тела с маслом","Шепотом говорить нежности во время секса","Заниматься этим под любимую медленную музыку",
 "Долгие прелюдии без спешки (час+)","Секс в гостиничном номере с панорамным видом","Заниматься этим, глядя на свое отражение в зеркале","Кормить друг друга фруктами во время прелюдии","Секс после душа, когда волосы мокрые","Целовать каждую родинку на теле партнера","Секс в гамаке","Утренний секс с кофе в постель после","Заниматься этим под одеялом, спрятавшись от мира","Уснуть сразу после, обнявшись",
