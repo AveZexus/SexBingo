@@ -478,20 +478,56 @@
     qr.videoEl = video;
     qr.scanning = true;
 
+    let stream;
+    // Сначала пробуем высокое разрешение — оно лучше для распознавания
     try{
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: { ideal: 'environment' },
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        },
         audio: false
       });
-      qr.stream = stream;
-      video.srcObject = stream;
-      await video.play();
     }catch(err){
-      log('Camera error:', err);
-      toast2('Нет доступа к камере: ' + err.message, 4000);
-      showScreenSafe('net');
-      return;
+      log('Camera error (high-res):', err);
+      try{
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: { ideal: 'environment' } },
+          audio: false
+        });
+      }catch(err2){
+        log('Camera error (default):', err2);
+        toast2('Нет доступа к камере: ' + err2.message, 4000);
+        showScreenSafe('net');
+        return;
+      }
     }
+
+    qr.stream = stream;
+    video.srcObject = stream;
+    try{ await video.play(); }catch(e){}
+
+    // ВАЖНО: включаем автофокус. Без этого камера смотрит в бесконечность.
+    try{
+      const track = stream.getVideoTracks()[0];
+      const caps = track.getCapabilities ? track.getCapabilities() : {};
+      log('Focus modes:', caps.focusMode);
+      if(caps.focusMode && caps.focusMode.indexOf('continuous') >= 0){
+        await track.applyConstraints({ advanced: [{ focusMode: 'continuous' }] });
+        log('Autofocus: continuous');
+      } else if(caps.focusMode && caps.focusMode.indexOf('auto') >= 0){
+        await track.applyConstraints({ advanced: [{ focusMode: 'auto' }] });
+        log('Autofocus: auto');
+      } else {
+        log('Autofocus not supported');
+      }
+    }catch(err){
+      log('Focus constraint error (ignore):', err);
+    }
+
+    // Ждём 800 мс, пока камера сфокусируется
+    await new Promise(r => setTimeout(r, 800));
 
     try{
       qr.detector = new BarcodeDetector({ formats: ['qr_code'] });
@@ -504,6 +540,7 @@
       }
     }
 
+    let attempts = 0;
     function loop(){
       if(!qr.scanning) return;
       qr.detector.detect(qr.videoEl).then(codes => {
@@ -517,13 +554,18 @@
           onSuccess(value);
           return;
         }
-        qr.timerId = setTimeout(loop, 150);
+        attempts++;
+        if(attempts > 0 && attempts % 30 === 0){
+          const hint = document.getElementById('qr-scan-hint');
+          if(hint) hint.textContent = 'Приблизь камеру. Держи оба экрана ровно, яркость максимальная.';
+        }
+        qr.timerId = setTimeout(loop, 120);
       }).catch(() => {
         if(!qr.scanning) return;
         qr.timerId = setTimeout(loop, 200);
       });
     }
-    qr.timerId = setTimeout(loop, 300);
+    qr.timerId = setTimeout(loop, 100);
   }
 
   function stopStream(){
