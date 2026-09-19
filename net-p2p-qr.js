@@ -461,12 +461,6 @@
 
   // ============ КАМЕРА / СКАНЕР ============
   async function scanOnce(onSuccess){
-    if(!('BarcodeDetector' in window)){
-      alert('Твой браузер не поддерживает сканирование QR прямо в игре.\n\nНужен Chrome для Android версии 83+ или новее.');
-      showScreenSafe('net');
-      return;
-    }
-
     stopScan();
 
     const video = document.getElementById('qr-scan-video');
@@ -479,36 +473,27 @@
     qr.scanning = true;
 
     let stream;
-    // Сначала пробуем высокое разрешение — оно лучше для распознавания
     try{
       stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: { ideal: 'environment' },
-          width: { ideal: 1920 },
-          height: { ideal: 1080 }
+          width: { ideal: 1280 },
+          height: { ideal: 720 }
         },
         audio: false
       });
     }catch(err){
-      log('Camera error (high-res):', err);
-      try{
-        stream = await navigator.mediaDevices.getUserMedia({
-          video: { facingMode: { ideal: 'environment' } },
-          audio: false
-        });
-      }catch(err2){
-        log('Camera error (default):', err2);
-        toast2('Нет доступа к камере: ' + err2.message, 4000);
-        showScreenSafe('net');
-        return;
-      }
+      log('Camera error:', err);
+      toast2('Нет доступа к камере: ' + err.message, 4000);
+      showScreenSafe('net');
+      return;
     }
 
     qr.stream = stream;
     video.srcObject = stream;
     try{ await video.play(); }catch(e){}
 
-    // ВАЖНО: включаем автофокус. Без этого камера смотрит в бесконечность.
+    // Пробуем включить автофокус
     try{
       const track = stream.getVideoTracks()[0];
       const caps = track.getCapabilities ? track.getCapabilities() : {};
@@ -519,55 +504,71 @@
       } else if(caps.focusMode && caps.focusMode.indexOf('auto') >= 0){
         await track.applyConstraints({ advanced: [{ focusMode: 'auto' }] });
         log('Autofocus: auto');
-      } else {
-        log('Autofocus not supported');
       }
-    }catch(err){
-      log('Focus constraint error (ignore):', err);
-    }
+    }catch(err){ log('Focus error:', err); }
 
-    // Ждём 800 мс, пока камера сфокусируется
-    await new Promise(r => setTimeout(r, 800));
+    // Ждём фокусировки
+    await new Promise(r => setTimeout(r, 700));
 
-    try{
-      qr.detector = new BarcodeDetector({ formats: ['qr_code'] });
-    }catch(err){
-      try{ qr.detector = new BarcodeDetector(); }
-      catch(e2){
-        toast2('Не удалось запустить сканер', 3000);
-        stopScan();
-        return;
-      }
-    }
+    // Скрытый canvas для обработки кадров
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
 
     let attempts = 0;
-    function loop(){
+    const tick = () => {
       if(!qr.scanning) return;
-      qr.detector.detect(qr.videoEl).then(codes => {
-        if(!qr.scanning) return;
-        if(codes && codes.length > 0){
-          const value = codes[0].rawValue;
-          log('QR scanned:', value.slice(0, 40) + '…');
-          qr.scanning = false;
-          stopStream();
-          if(navigator.vibrate) navigator.vibrate(40);
-          onSuccess(value);
-          return;
-        }
-        attempts++;
-        if(attempts > 0 && attempts % 30 === 0){
-          const hint = document.getElementById('qr-scan-hint');
-          if(hint) hint.textContent = 'Приблизь камеру. Держи оба экрана ровно, яркость максимальная.';
-        }
-        qr.timerId = setTimeout(loop, 120);
-      }).catch(() => {
-        if(!qr.scanning) return;
-        qr.timerId = setTimeout(loop, 200);
-      });
-    }
-    qr.timerId = setTimeout(loop, 100);
-  }
+      if(video.readyState !== video.HAVE_ENOUGH_DATA){
+        qr.timerId = setTimeout(tick, 150);
+        return;
+      }
 
+      // Обрезаем центральную область — детектор смотрит только на QR
+      const vw = video.videoWidth;
+      const vh = video.videoHeight;
+      const cropSize = Math.min(vw, vh);
+      const sx = (vw - cropSize) / 2;
+      const sy = (vh - cropSize) / 2;
+
+      canvas.width = cropSize;
+      canvas.height = cropSize;
+      ctx.drawImage(video, sx, sy, cropSize, cropSize, 0, 0, cropSize, cropSize);
+
+      let imageData;
+      try{
+        imageData = ctx.getImageData(0, 0, cropSize, cropSize);
+      }catch(e){
+        qr.timerId = setTimeout(tick, 200);
+        return;
+      }
+
+      // jsQR — основной детектор
+      let code = null;
+      try{
+        code = jsQR(imageData.data, cropSize, cropSize, {
+          inversionAttempts: 'dontInvert'
+        });
+      }catch(e){}
+
+      if(code && code.data){
+        log('QR scanned via jsQR:', code.data.slice(0, 40) + '…');
+        qr.scanning = false;
+        stopStream();
+        if(navigator.vibrate) navigator.vibrate(40);
+        onSuccess(code.data);
+        return;
+      }
+
+      attempts++;
+      if(attempts > 0 && attempts % 40 === 0){
+        const hint = document.getElementById('qr-scan-hint');
+        if(hint) hint.textContent = 'Приблизь камеру. Держи оба экрана ровно.';
+      }
+
+      qr.timerId = setTimeout(tick, 120);
+    };
+
+    qr.timerId = setTimeout(tick, 300);
+  }
   function stopStream(){
     if(qr.stream){
       qr.stream.getTracks().forEach(t => { try{ t.stop(); }catch(e){} });
