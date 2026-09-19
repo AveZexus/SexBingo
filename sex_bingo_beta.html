@@ -2928,8 +2928,12 @@ function spin(){
   renderHost();
   save();
   // Если мы ведущий в сетевой игре — рассылаем число игрокам
-  if(netMode && netAsHost && window.SexBingoNet){
+ if(netMode && netAsHost && window.SexBingoNet){
     try{ SexBingoNet.spin(n); }catch(e){}
+  }
+  // QR-режим: рассылка через DataChannel
+  if(netMode && netAsHost && window.SexBingoQr && SexBingoQr.isActive()){
+    try{ SexBingoQr.spin(n); }catch(e){}
   }
   // Если у ведущего тоже есть своя карточка (режим «Ведущий + Игрок») —
   // отмечаем число и у себя, и показываем плашку
@@ -2953,8 +2957,11 @@ function resetHost(){
     renderHost();
     save();
     // Если мы в сетевой игре — рассылаем сброс
-    if(netMode && netAsHost && window.SexBingoNet){
+  if(netMode && netAsHost && window.SexBingoNet){
       try{ SexBingoNet.reset(); }catch(e){}
+    }
+    if(netMode && netAsHost && window.SexBingoQr && SexBingoQr.isActive()){
+      try{ SexBingoQr.reset(); }catch(e){}
     }
     toast('Новый раунд №' + state.host.round);
     return;
@@ -3483,6 +3490,9 @@ function checkBingo(){
       // Если мы игрок в сетевой — сообщаем ведущему
       if(netMode && netAsPlayer && window.SexBingoNet){
         try{ SexBingoNet.sendBingo(); }catch(e){}
+      }
+      if(netMode && netAsPlayer && window.SexBingoQr && SexBingoQr.isActive()){
+        try{ SexBingoQr.sendBingo(); }catch(e){}
       }
     }
   } else {
