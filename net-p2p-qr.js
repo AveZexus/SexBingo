@@ -267,7 +267,7 @@
       await pc.setLocalDescription(offer);
       await waitIceComplete(pc, 5000);
 
-     const sdp = JSON.stringify({ sdp: pc.localDescription });
+      const sdp = JSON.stringify(pc.localDescription);
       const compressed = LZString.compressToBase64(sdp);
       const payload = PREFIX_OFFER + compressed;
 
@@ -349,7 +349,7 @@
       if(!json) throw new Error('не удалось распаковать');
       const answer = JSON.parse(json);
 
-      await qr.currentPc.setRemoteDescription(new RTCSessionDescription(answer.sdp));
+      await qr.currentPc.setRemoteDescription(new RTCSessionDescription(answer));
       log('Answer set, waiting for DataChannel');
 
       // Показываем экран QR и статус «соединяемся»
@@ -432,12 +432,12 @@
         attachDataChannel(e.channel, pc, 'host');
       };
 
-      await pc.setRemoteDescription(new RTCSessionDescription(offer.sdp));
+ await pc.setRemoteDescription(new RTCSessionDescription(offer));
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
       await waitIceComplete(pc, 5000);
 
-      const sdp = JSON.stringify({ sdp: pc.localDescription });
+      const sdp = JSON.stringify(pc.localDescription);
       const compressed = LZString.compressToBase64(sdp);
       const payload = PREFIX_ANSWER + compressed;
 
