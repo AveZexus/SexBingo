@@ -938,6 +938,9 @@ body.light .modal h3{color:var(--red-d)}
     </div>
     <div class="dev-section-body">
       <div class="dev-status" id="dev-storage-status">Хранилище: —</div>
+      <div class="dev-row">
+        <button class="btn" onclick="forceUpdate()" style="width:100%">🔄 Обновить приложение</button>
+      </div>
       <div class="dev-row" style="margin-top:8px">
         <button class="btn" onclick="exportAll()">Экспорт JSON</button>
         <label class="btn-alt" style="cursor:pointer">
@@ -2434,6 +2437,30 @@ function downloadFile(content, name, type){
   document.body.appendChild(a); a.click();
   setTimeout(()=>{ document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
   toast('Файл ' + name + ' сохранён');
+}
+
+// ============ FORCE UPDATE ============
+function forceUpdate(){
+  toast('Обновляем…', 1200);
+
+  const afterCache = () => {
+    try{
+      const url = new URL(location.href);
+      url.searchParams.set('_v', Date.now().toString(36));
+      location.replace(url.toString());
+    }catch(e){
+      location.reload();
+    }
+  };
+
+  if(window.caches && caches.keys){
+    caches.keys()
+      .then(names => Promise.all(names.map(n => caches.delete(n))))
+      .then(afterCache)
+      .catch(afterCache);
+  } else {
+    afterCache();
+  }
 }
 
 // ============ PLAYER ============
