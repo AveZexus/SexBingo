@@ -1,6 +1,6 @@
 /* =========================================================
-   SexBingo — QR-путь без интернета
-   WebRTC P2P через ручное рукопожатие QR-кодами.
+   SexBingo — QR-путь без интернета, МНОГОИГРОВОЙ
+   Хост ведёт лобби, подключает до 8 игроков по одному через QR.
    ========================================================= */
 
 (function(){
@@ -8,58 +8,47 @@
 
   const PREFIX_OFFER  = 'SBQR:O:';
   const PREFIX_ANSWER = 'SBQR:A:';
+  const MAX_PLAYERS = 8;
 
-  // Состояние QR-сессии
   const qr = {
-    role: null,          // 'host' | 'player'
-    pc: null,            // RTCPeerConnection
-    dc: null,            // RTCDataChannel
-    // Несколько игроков: map peerId -> { pc, dc, name }
-    peers: new Map(),
+    role: null,                 // 'host' | 'player'
+    peers: new Map(),           // peerId -> { pc, dc, name, connected }
+    currentPc: null,            // PeerConnection, для которого сейчас показываем QR
+    currentPeerId: null,
+    pendingName: '',
+    nextPeerId: 1,
     // Сканирование
     scanning: false,
     stream: null,
     videoEl: null,
     detector: null,
-    timerId: null,
-    // Данные, ожидающие обработки
-    pendingName: ''
+    timerId: null
   };
 
-  // ============ UTILS ============
   function log(...args){ console.log('[QR]', ...args); }
   function toast2(msg, ms){ try{ toast(msg, ms); }catch(e){ console.warn(msg); } }
   function showScreenSafe(id){ try{ showScreen(id); }catch(e){ console.warn('showScreen', id, e); } }
 
-  function safeEmit(event, data){
-    // Дублируем событие в основной модуль, если он есть
-    try{
-      if(window.SexBingoNet && SexBingoNet._emit) SexBingoNet._emit(event, data);
-    }catch(e){}
-  }
-
   // ============ RENDER QR ============
   function renderQRToContainer(containerId, text){
     const container = document.getElementById(containerId);
-    if(!container) return;
+    if(!container) return false;
     container.innerHTML = '';
     try{
-      // qrcode-generator: typeNumber=0 (auto), errorCorrectionLevel='L'
       const gen = qrcode(0, 'L');
       gen.addData(text);
       gen.make();
-      const svg = gen.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
-      container.innerHTML = svg;
+      container.innerHTML = gen.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
       log('QR ready, length:', text.length);
       return true;
     }catch(err){
       log('QR generation failed:', err);
-      container.innerHTML = '<div style="padding:20px;color:#c00;text-align:center;font-size:14px">QR не поместился. Попробуй ещё раз или используй подключение через интернет.</div>';
+      container.innerHTML = '<div style="padding:20px;color:#c00;text-align:center;font-size:14px">QR не поместился. Попробуй подключение через интернет.</div>';
       return false;
     }
   }
 
-  // ============ WAIT ICE ============
+  // ============ ICE WAIT ============
   function waitIceComplete(pc, timeout){
     timeout = timeout || 5000;
     return new Promise(resolve => {
@@ -79,63 +68,65 @@
     });
   }
 
-  // ============ CREATE PEER ============
+  // ============ PEER CREATION ============
   function createPc(isInitiator){
-    const pc = new RTCPeerConnection({
+    return new RTCPeerConnection({
       iceServers: [
         { urls: 'stun:stun.l.google.com:19302' },
         { urls: 'stun:stun1.l.google.com:19302' }
       ]
     });
-    if(isInitiator){
-      const dc = pc.createDataChannel('sexbingo', { ordered: true });
-      attachDataChannel(dc, pc);
-    } else {
-      pc.ondatachannel = (e) => attachDataChannel(e.channel, pc);
-    }
-    return pc;
   }
 
-  function attachDataChannel(dc, pc){
-    qr.dc = dc;
-    qr.pc = pc;
+  function attachDataChannel(dc, pc, peerId){
+    const entry = { pc, dc, name: '', connected: false };
+    qr.peers.set(peerId, entry);
 
     dc.onopen = () => {
-      log('DataChannel open');
-      // Сообщаем имя ведущему (если мы игрок)
+      log('DataChannel open for', peerId);
+      entry.connected = true;
       if(qr.role === 'player'){
-        try{
-          dc.send(JSON.stringify({ type: 'hello', name: qr.pendingName || 'Игрок' }));
-        }catch(e){}
+        // Игрок сообщает имя хосту
+        try{ dc.send(JSON.stringify({ type: 'hello', name: qr.pendingName || 'Игрок' })); }catch(e){}
+        onPlayerConnected();
+      } else if(qr.role === 'host'){
+        // Хост: ждём hello от игрока, потом обновим лобби
+        // На всякий случай — обновим интерфейс через небольшую задержку
+        setTimeout(() => {
+          if(!entry.name) entry.name = 'Игрок';
+          onHostLobbyUpdate();
+        }, 500);
       }
-      onConnectionReady();
     };
 
     dc.onclose = () => {
-      log('DataChannel closed');
-      safeEmit('peer-lost', { peerId: 'qr', name: qr.pendingName });
+      log('DataChannel closed for', peerId);
+      qr.peers.delete(peerId);
+      if(qr.role === 'host') onHostLobbyUpdate();
     };
 
     dc.onmessage = (e) => {
       let msg;
       try{ msg = JSON.parse(e.data); }catch{ return; }
-      handleDcMessage(msg);
+      handleDcMessage(msg, peerId);
     };
   }
 
-  function handleDcMessage(msg){
+  function handleDcMessage(msg, peerId){
     switch(msg.type){
       case 'hello':
-        // Хост: игрок представился
         if(qr.role === 'host'){
-          qr.pendingName = msg.name || 'Игрок';
-          log('Player identified:', qr.pendingName);
-          try{ toast('Подключился: ' + qr.pendingName, 1800); }catch(e){}
+          const entry = qr.peers.get(peerId);
+          if(entry){
+            entry.name = (msg.name || 'Игрок').slice(0, 20);
+            log('Player identified:', entry.name);
+            toast('Подключился: ' + entry.name, 1800);
+            onHostLobbyUpdate();
+          }
         }
         break;
 
       case 'spin':
-        // Игрок получил число
         if(qr.role === 'player' && typeof markFromNetwork === 'function'){
           const matched = markFromNetwork(msg.n);
           if(typeof showNetNumber === 'function') showNetNumber(msg.n, matched);
@@ -158,63 +149,117 @@
         break;
 
       case 'bingo':
-        // Хост: игрок объявил бинго
         if(qr.role === 'host'){
+          const entry = qr.peers.get(peerId);
+          const name = (entry && entry.name) || msg.name || 'Игрок';
           try{ playGong(); }catch(e){}
           const alert = document.getElementById('host-bingo-alert');
           if(alert){
             alert.classList.add('show');
-            alert.textContent = '🎉 ' + (msg.name || qr.pendingName || 'Игрок').toUpperCase() + ' — БИНГО!';
+            alert.textContent = '🎉 ' + name.toUpperCase() + ' — БИНГО!';
           }
-          try{ toast('🎉 ' + (msg.name || qr.pendingName || 'Игрок') + ' собрал линию!', 3500); }catch(e){}
+          toast('🎉 ' + name + ' собрал линию!', 3500);
         }
         break;
     }
   }
 
-  function onConnectionReady(){
-    if(qr.role === 'host'){
-      // Хост: соединение с новым игроком установлено
-      try{ toast('Игрок подключён', 1500); }catch(e){}
-      // Возвращаемся на экран ведущего, чтобы продолжить
-      setTimeout(() => {
-        showScreenSafe('host');
-        try{ netMode = true; netAsHost = true; netAsPlayer = false; }catch(e){}
-      }, 800);
+  function onPlayerConnected(){
+    // Игрок: соединение с хостом установлено
+    try{ toast('Подключено!', 1500); }catch(e){}
+    setTimeout(() => {
+      try{
+        netMode = true; netAsHost = false; netAsPlayer = true;
+      }catch(e){}
+      try{
+        const L = layoutOf(state.player.layout);
+        if(state.player.setupDone && state.player.wishes.length === L.total){
+          showScreenSafe('player');
+        } else {
+          showScreenSafe('setup');
+        }
+      }catch(e){ showScreenSafe('menu'); }
+    }, 800);
+  }
+
+  // ============ ХОСТ — лобби ============
+  function startHost(){
+    qr.role = 'host';
+    qr.peers.clear();
+    qr.currentPc = null;
+    qr.currentPeerId = null;
+    qr.nextPeerId = 1;
+    qr.pendingName = '';
+    showHostLobby();
+  }
+
+  function showHostLobby(){
+    showScreenSafe('net-qr-host');
+    document.getElementById('qr-host-qr-state').style.display = 'none';
+    const lobby = document.getElementById('qr-host-lobby-state');
+    lobby.style.display = 'flex';
+    onHostLobbyUpdate();
+  }
+
+  function showHostQrState(){
+    document.getElementById('qr-host-lobby-state').style.display = 'none';
+    const qrState = document.getElementById('qr-host-qr-state');
+    qrState.style.display = 'flex';
+  }
+
+  function onHostLobbyUpdate(){
+    const list = document.getElementById('qr-host-players-list');
+    const counter = document.getElementById('qr-host-players-count');
+    const startBtn = document.getElementById('qr-host-start-btn');
+    if(!list) return;
+
+    const players = [];
+    qr.peers.forEach((entry, id) => {
+      if(entry.connected) players.push({ id, name: entry.name || 'Игрок' });
+    });
+
+    counter.textContent = players.length;
+
+    if(players.length === 0){
+      list.innerHTML = '<div class="net-empty">Пока никто. Жми «Добавить игрока».</div>';
     } else {
-      // Игрок: соединение с ведущим установлено
-      try{ toast('Подключено!', 1500); }catch(e){}
-      setTimeout(() => {
-        try{ netMode = true; netAsHost = false; netAsPlayer = true; }catch(e){}
-        // Куда идти дальше — на карточку игрока или в setup
-        try{
-          const L = layoutOf(state.player.layout);
-          if(state.player.setupDone && state.player.wishes.length === L.total){
-            showScreenSafe('player');
-          } else {
-            showScreenSafe('setup');
-          }
-        }catch(e){ showScreenSafe('menu'); }
-      }, 800);
+      list.innerHTML = players.map(p =>
+        '<span class="net-player-chip">' + escapeHtml(p.name) + '</span>'
+      ).join('');
+    }
+
+    // Кнопка "Начать" активна, если есть хоть один игрок
+    if(startBtn){
+      startBtn.disabled = players.length === 0;
+      startBtn.style.opacity = players.length === 0 ? '0.5' : '1';
     }
   }
 
-  // ============ QR HOST — ведущий показывает оффер ============
-  async function startHost(){
-    qr.role = 'host';
-    qr.peers.clear();
-    qr.pendingName = '';
+  function hostAddPlayer(){
+    if(qr.peers.size >= MAX_PLAYERS){
+      toast2('Максимум ' + MAX_PLAYERS + ' игроков', 2500);
+      return;
+    }
+    addPlayerForCurrentHost();
+  }
 
-    // Показываем экран
-    showScreenSafe('net-qr-host');
+  async function addPlayerForCurrentHost(){
+    const peerId = 'p' + qr.nextPeerId++;
+    qr.currentPeerId = peerId;
+
+    showHostQrState();
+    document.getElementById('qr-host-step').textContent = 'ШАГ 1 · ПОКАЖИ QR НОВОМУ ИГРОКУ';
     document.getElementById('qr-host-hint').textContent = 'Готовим QR…';
-    document.getElementById('qr-host-state').textContent = 'Ждём первого игрока';
+    document.getElementById('qr-host-state').textContent = 'Ждём игрока';
     document.getElementById('qr-host-state').className = 'qr-stage-state';
     document.getElementById('qr-host-canvas').innerHTML = '';
 
     try{
       const pc = createPc(true);
-      qr.pc = pc;
+      qr.currentPc = pc;
+
+      const dc = pc.createDataChannel('sexbingo', { ordered: true });
+      attachDataChannel(dc, pc, peerId);
 
       const offer = await pc.createOffer();
       await pc.setLocalDescription(offer);
@@ -224,49 +269,130 @@
       const compressed = LZString.compressToBase64(sdp);
       const payload = PREFIX_OFFER + compressed;
 
-      if(!renderQRToContainer('qr-host-canvas', payload)){
-        return;
-      }
+      if(!renderQRToContainer('qr-host-canvas', payload)) return;
 
-      const sizeInfo = payload.length + ' символов';
       document.getElementById('qr-host-hint').textContent =
-        'Игрок: «Сетевая игра → Сканировать QR». Держи экраны ближе. ' + sizeInfo;
+        'Игрок: «Сетевая игра → Сканировать QR». Держите экраны рядом.';
     }catch(err){
-      log('Host error:', err);
+      log('Add player error:', err);
       toast2('Не удалось создать QR: ' + err.message, 3000);
-      document.getElementById('qr-host-hint').textContent = 'Ошибка: ' + err.message;
+      showHostLobby();
     }
   }
 
-  // ============ QR JOIN — игрок сканирует оффер ============
+  function hostCancelAdd(){
+    // Отменяем текущее добавление — закрываем pc, возвращаемся в лобби
+    if(qr.currentPc){
+      try{ qr.currentPc.close(); }catch(e){}
+      qr.peers.delete(qr.currentPeerId);
+      qr.currentPc = null;
+      qr.currentPeerId = null;
+    }
+    showHostLobby();
+  }
+
+  function hostStartGame(){
+    if(qr.peers.size === 0){
+      toast2('Сначала подключи игрока', 2000);
+      return;
+    }
+    try{ netMode = true; netAsHost = true; netAsPlayer = false; }catch(e){}
+    // Сбрасываем лог ведущего и переходим на экран
+    try{
+      state.host.log = [];
+      state.host.current = null;
+      state.host.round += 1;
+      state.host.startedAt = Date.now();
+      save();
+    }catch(e){}
+    showScreenSafe('host');
+    toast('Раунд пошёл · спины летят игрокам', 2500);
+  }
+
+  // ============ ХОСТ — сканирование ответа ============
+  async function hostScanAnswer(){
+    if(!qr.currentPc){
+      toast2('Сначала создай QR для игрока', 2500);
+      return;
+    }
+    showScreenSafe('net-qr-scan');
+    document.getElementById('qr-scan-hint').textContent = 'Наведи камеру на QR-ответ игрока';
+    document.getElementById('qr-scan-sub').textContent = 'СКАНИРУЙ ОТВЕТ ИГРОКА';
+
+    await scanOnce((value) => handleScannedAnswer(value));
+  }
+
+  async function handleScannedAnswer(value){
+    if(!value || value.indexOf(PREFIX_ANSWER) !== 0){
+      toast2('Это не ответ игрока. Нужен второй QR.', 3000);
+      // Возвращаемся на экран QR и пробуем снова
+      showScreenSafe('net-qr-host');
+      showHostQrState();
+      return;
+    }
+    try{
+      const compressed = value.slice(PREFIX_ANSWER.length);
+      const json = LZString.decompressFromBase64(compressed);
+      if(!json) throw new Error('не удалось распаковать');
+      const answer = JSON.parse(json);
+
+      await qr.currentPc.setRemoteDescription(new RTCSessionDescription(answer.sdp));
+      log('Answer set, waiting for DataChannel');
+
+      // Показываем экран QR и статус «соединяемся»
+      showScreenSafe('net-qr-host');
+      showHostQrState();
+      document.getElementById('qr-host-state').textContent = 'Устанавливаем соединение…';
+      document.getElementById('qr-host-state').className = 'qr-stage-state';
+      document.getElementById('qr-host-hint').textContent = 'Держи экраны рядом, соединение завершается.';
+
+      // DataChannel.onopen сам вызовет onHostLobbyUpdate()
+      // Плюс защита: если через 12 сек всё ещё нет открытия — подскажем
+      const peerId = qr.currentPeerId;
+      setTimeout(() => {
+        const entry = qr.peers.get(peerId);
+        if(!entry || !entry.connected){
+          const stateEl = document.getElementById('qr-host-state');
+          if(stateEl && stateEl.textContent.indexOf('Устанавливаем') >= 0){
+            stateEl.textContent = 'Долго… Попробуй ещё раз или отмени.';
+            stateEl.className = 'qr-stage-state err';
+          }
+        }
+      }, 12000);
+    }catch(err){
+      log('Answer error:', err);
+      toast2('Ошибка ответа: ' + err.message, 3000);
+      showScreenSafe('net-qr-host');
+      showHostQrState();
+    }
+  }
+
+  // ============ ИГРОК — сканирование оффера ============
   async function startJoin(){
     qr.role = 'player';
     qr.peers.clear();
-    qr.pendingName = 'Игрок';
+    qr.currentPc = null;
+    qr.currentPeerId = null;
 
+    // Имя игрока
     const nameInp = document.getElementById('net-join-name');
     if(nameInp && nameInp.value.trim()){
       qr.pendingName = nameInp.value.trim();
     } else {
-      // Попробуем взять последнее имя игрока
-      try{
-        if(state.player.playerName) qr.pendingName = state.player.playerName;
-      }catch(e){}
+      try{ if(state.player.playerName) qr.pendingName = state.player.playerName; }catch(e){}
+      if(!qr.pendingName) qr.pendingName = 'Игрок';
     }
 
     showScreenSafe('net-qr-scan');
     document.getElementById('qr-scan-hint').textContent = 'Наведи камеру на QR ведущего';
     document.getElementById('qr-scan-sub').textContent = 'НАВЕДИ КАМЕРУ НА QR';
 
-    await scanOnce((value) => {
-      handleScannedOffer(value);
-    });
+    await scanOnce((value) => handleScannedOffer(value));
   }
 
   async function handleScannedOffer(value){
     if(!value || value.indexOf(PREFIX_OFFER) !== 0){
-      toast2('Это не тот QR. Нужен QR ведущего.', 3000);
-      // Пробуем снова
+      toast2('Это не QR ведущего. Попробуй снова.', 3000);
       startJoin();
       return;
     }
@@ -286,9 +412,14 @@
 
     try{
       const pc = createPc(false);
-      qr.pc = pc;
-      await pc.setRemoteDescription(new RTCSessionDescription(offer.sdp));
+      qr.currentPc = pc;
 
+      // Ждём DataChannel от хоста
+      pc.ondatachannel = (e) => {
+        attachDataChannel(e.channel, pc, 'host');
+      };
+
+      await pc.setRemoteDescription(new RTCSessionDescription(offer.sdp));
       const answer = await pc.createAnswer();
       await pc.setLocalDescription(answer);
       await waitIceComplete(pc, 5000);
@@ -297,7 +428,6 @@
       const compressed = LZString.compressToBase64(sdp);
       const payload = PREFIX_ANSWER + compressed;
 
-      // Показываем экран с ответом
       showScreenSafe('net-qr-answer');
       document.getElementById('qr-answer-hint').textContent = 'Готовим QR…';
       document.getElementById('qr-answer-state').textContent = 'Ждём подтверждения от ведущего';
@@ -305,7 +435,7 @@
 
       if(renderQRToContainer('qr-answer-canvas', payload)){
         document.getElementById('qr-answer-hint').textContent =
-          'Ведущий сканирует этот QR. Держи экраны ближе. ' + payload.length + ' символов';
+          'Ведущий сканирует этот QR. Держите экраны рядом.';
       }
     }catch(err){
       log('Offer handling error:', err);
@@ -314,73 +444,14 @@
     }
   }
 
-  // ============ QR HOST SCAN ANSWER — ведущий сканирует ответ игрока ============
-  async function hostScanAnswer(){
-    if(!qr.pc){
-      toast2('Сначала покажи свой QR игроку', 2500);
-      return;
-    }
-    qr.role = 'host';
-    showScreenSafe('net-qr-scan');
-    document.getElementById('qr-scan-hint').textContent = 'Наведи камеру на QR-ответ игрока';
-    document.getElementById('qr-scan-sub').textContent = 'СКАНИРУЙ ОТВЕТ ИГРОКА';
-
-    await scanOnce((value) => {
-      handleScannedAnswer(value);
-    });
-  }
-
-  async function handleScannedAnswer(value){
-    if(!value || value.indexOf(PREFIX_ANSWER) !== 0){
-      toast2('Это не ответ игрока. Нужен второй QR.', 3000);
-      hostScanAnswer();
-      return;
-    }
-    try{
-      const compressed = value.slice(PREFIX_ANSWER.length);
-      const json = LZString.decompressFromBase64(compressed);
-      if(!json) throw new Error('не удалось распаковать');
-      const answer = JSON.parse(json);
-
-      await qr.pc.setRemoteDescription(new RTCSessionDescription(answer.sdp));
-      log('Answer set, waiting for connection');
-
-      // Пока ждём открытия DataChannel, вернёмся на экран ведущего QR
-      // (соединение установится автоматически, onConnectionReady() сработает)
-      showScreenSafe('net-qr-host');
-      document.getElementById('qr-host-state').textContent = 'Устанавливаем соединение…';
-      document.getElementById('qr-host-state').className = 'qr-stage-state';
-
-      // Дополнительный таймаут на случай проблем
-      setTimeout(() => {
-        if(qr.dc && qr.dc.readyState === 'open'){
-          // всё ок, уже сработал onopen
-        } else {
-          const state = document.getElementById('qr-host-state');
-          if(state && state.textContent.indexOf('Устанавливаем') >= 0){
-            state.textContent = 'Долго… Попробуй ещё раз или перезапусти.';
-            state.className = 'qr-stage-state err';
-          }
-        }
-      }, 8000);
-
-    }catch(err){
-      log('Answer handling error:', err);
-      toast2('Ошибка ответа: ' + err.message, 3000);
-      hostScanAnswer();
-    }
-  }
-
-  // ============ SCANNER (камера) ============
+  // ============ КАМЕРА / СКАНЕР ============
   async function scanOnce(onSuccess){
-    // Проверяем поддержку
     if(!('BarcodeDetector' in window)){
       alert('Твой браузер не поддерживает сканирование QR прямо в игре.\n\nНужен Chrome для Android версии 83+ или новее.');
       showScreenSafe('net');
       return;
     }
 
-    // Останавливаем прошлое сканирование, если было
     stopScan();
 
     const video = document.getElementById('qr-scan-video');
@@ -394,11 +465,7 @@
 
     try{
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: { ideal: 'environment' },
-          width: { ideal: 1280 },
-          height: { ideal: 720 }
-        },
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1280 }, height: { ideal: 720 } },
         audio: false
       });
       qr.stream = stream;
@@ -414,8 +481,6 @@
     try{
       qr.detector = new BarcodeDetector({ formats: ['qr_code'] });
     }catch(err){
-      log('BarcodeDetector init error:', err);
-      // Попробуем без параметров
       try{ qr.detector = new BarcodeDetector(); }
       catch(e2){
         toast2('Не удалось запустить сканер', 3000);
@@ -438,8 +503,7 @@
           return;
         }
         qr.timerId = setTimeout(loop, 150);
-      }).catch(err => {
-        // Иногда detect падает на первых кадрах — просто продолжаем
+      }).catch(() => {
         if(!qr.scanning) return;
         qr.timerId = setTimeout(loop, 200);
       });
@@ -463,43 +527,33 @@
     stopStream();
   }
 
-  // ============ CANCEL / LEAVE ============
-  function hostCancel(){
-    stopScan();
-    if(qr.pc){ try{ qr.pc.close(); }catch(e){} qr.pc = null; }
-    qr.dc = null;
-    qr.peers.clear();
-    try{ netMode = false; netAsHost = false; }catch(e){}
-    showScreenSafe('net');
-  }
-
+  // ============ ОТМЕНЫ ============
   function scanCancel(){
     stopScan();
-    showScreenSafe('net');
+    // Смотрим, откуда пришли: ведущий или игрок
+    if(qr.role === 'host') showHostLobby();
+    else showScreenSafe('net');
   }
 
   function answerCancel(){
     stopScan();
-    if(qr.pc){ try{ qr.pc.close(); }catch(e){} qr.pc = null; }
-    qr.dc = null;
+    if(qr.currentPc){ try{ qr.currentPc.close(); }catch(e){} qr.currentPc = null; }
+    qr.peers.clear();
     try{ netMode = false; netAsPlayer = false; }catch(e){}
     showScreenSafe('net');
   }
 
-  // ============ SEND via DataChannel ============
-  function sendToHost(msg){
-    if(qr.role !== 'player') return;
-    if(qr.dc && qr.dc.readyState === 'open'){
-      try{ qr.dc.send(JSON.stringify(msg)); }catch(e){}
-    }
+  // ============ ОТПРАВКА ============
+  function sendToAllPlayers(msg){
+    let sent = 0;
+    qr.peers.forEach(entry => {
+      if(entry.dc && entry.dc.readyState === 'open'){
+        try{ entry.dc.send(JSON.stringify(msg)); sent++; }catch(e){}
+      }
+    });
+    return sent;
   }
-  function sendToPlayers(msg){
-    if(qr.role !== 'host') return;
-    // У хоста может быть несколько игроков (map), но в простой версии — один активный dc
-    if(qr.dc && qr.dc.readyState === 'open'){
-      try{ qr.dc.send(JSON.stringify(msg)); }catch(e){}
-    }
-    // Плюс те, кто уже был добавлен в peers (не реализовано в этой версии)
+  function sendToHost(msg){
     qr.peers.forEach(entry => {
       if(entry.dc && entry.dc.readyState === 'open'){
         try{ entry.dc.send(JSON.stringify(msg)); }catch(e){}
@@ -507,41 +561,38 @@
     });
   }
 
-  // ============ EXPORT ============
-  window.netGoQRHost = function(){
-    startHost();
-  };
-  window.netGoQRJoin = function(){
-    startJoin();
-  };
-  window.netQrHostScanAnswer = function(){
-    hostScanAnswer();
-  };
-  window.netQrHostCancel = function(){
-    hostCancel();
-  };
-  window.netQrScanCancel = function(){
-    scanCancel();
-  };
-  window.netQrAnswerCancel = function(){
-    answerCancel();
-  };
+  // ============ ЭКСПОРТ ============
+  window.netGoQRHost = function(){ startHost(); };
+  window.netGoQRJoin = function(){ startJoin(); };
+  window.netQrHostScanAnswer = function(){ hostScanAnswer(); };
+  window.netQrHostAddPlayer = function(){ hostAddPlayer(); };
+  window.netQrHostCancelAdd = function(){ hostCancelAdd(); };
+  window.netQrHostStartGame = function(){ hostStartGame(); };
+  window.netQrScanCancel = function(){ scanCancel(); };
+  window.netQrAnswerCancel = function(){ answerCancel(); };
 
-  // Публичный интерфейс для игры
   window.SexBingoQr = {
     spin: function(n){
-      if(qr.role === 'host') sendToPlayers({ type: 'spin', n: n });
+      if(qr.role === 'host') return sendToAllPlayers({ type: 'spin', n: n });
+      return 0;
     },
     reset: function(){
-      if(qr.role === 'host') sendToPlayers({ type: 'reset' });
+      if(qr.role === 'host') sendToAllPlayers({ type: 'reset' });
     },
     sendBingo: function(){
       if(qr.role === 'player') sendToHost({ type: 'bingo', name: qr.pendingName });
     },
     isActive: function(){
-      return qr.dc && qr.dc.readyState === 'open';
+      let any = false;
+      qr.peers.forEach(e => { if(e.connected) any = true; });
+      return any;
+    },
+    playerCount: function(){
+      let n = 0;
+      qr.peers.forEach(e => { if(e.connected) n++; });
+      return n;
     }
   };
 
-  log('SexBingoQr loaded');
+  log('SexBingoQr (multi-player) loaded');
 })();
