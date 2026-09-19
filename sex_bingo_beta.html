@@ -506,6 +506,30 @@ body.light .modal h3{color:var(--red-d)}
 .bingo-overlay-sub{margin-top:20px;font-size:17px;color:#ffdcdc;font-style:italic;letter-spacing:1px}
 .bingo-overlay-close{margin-top:38px;padding:16px 44px;background:rgba(0,0,0,.35);color:#fff;border:2px solid rgba(255,255,255,.45);border-radius:14px;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer}
 
+/* ============ NET ============ */
+.net-hero{background:var(--card);border-radius:16px;padding:18px;margin-bottom:14px;border:1px solid var(--line)}
+.net-hero h2{font-size:16px;margin-bottom:6px;color:var(--red-b);font-weight:700}
+body.light .net-hero h2{color:var(--red-d)}
+.net-hero p{font-size:13px;color:var(--muted);line-height:1.5}
+
+.net-code-card{background:linear-gradient(135deg,var(--accent-deep),var(--accent));border-radius:20px;padding:24px;margin-bottom:18px;text-align:center;box-shadow:0 12px 32px var(--accent-glow)}
+.net-code-label{font-size:11px;letter-spacing:3px;color:rgba(255,255,255,.7);margin-bottom:8px}
+.net-code{font-size:56px;font-weight:500;letter-spacing:12px;color:#fff;line-height:1;margin-bottom:10px;font-variant-numeric:tabular-nums}
+.net-code-hint{font-size:11.5px;color:rgba(255,255,255,.65);line-height:1.4}
+
+.net-players{background:var(--card);border-radius:16px;padding:14px;border:1px solid var(--line);margin-bottom:14px}
+.net-players-title{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
+.net-players-title span:last-child{background:var(--accent);color:#fff;padding:2px 10px;border-radius:10px;font-size:11px}
+.net-players-list{display:flex;flex-wrap:wrap;gap:6px;min-height:40px}
+.net-player-chip{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:var(--card2);border-radius:14px;font-size:13.5px;font-weight:600;color:var(--text)}
+.net-player-chip::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--success)}
+.net-empty{font-size:13px;color:var(--muted);font-style:italic;text-align:center;width:100%;padding:8px 0}
+
+.net-code-input,.net-name-input{width:100%;padding:18px;border-radius:18px;border:1.5px solid var(--line);background:var(--card);color:var(--text);font-size:22px;font-weight:600;text-align:center;font-family:inherit;outline:none;letter-spacing:6px;margin-bottom:10px;min-height:72px}
+.net-code-input:focus,.net-name-input:focus{border-color:var(--accent)}
+.net-name-input{font-size:18px;letter-spacing:0;text-align:left;padding:16px 18px;min-height:60px}
+.net-code-input::placeholder,.net-name-input::placeholder{color:var(--muted);letter-spacing:0;font-weight:400;font-size:15px}
+  
 .toast{position:fixed;bottom:max(24px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(140px);background:var(--card2);padding:14px 22px;border-radius:16px;font-size:14.5px;transition:transform .35s cubic-bezier(.22,1,.36,1);z-index:200;pointer-events:none;border:1px solid var(--line);max-width:92vw;text-align:center;color:var(--text);box-shadow:var(--shadow-md)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
@@ -773,6 +797,11 @@ body.light .modal h3{color:var(--red-d)}
     <span class="big-ico">🎴</span>
     <span class="big-body"><b>Игрок</b><span>Начать игру с картой (можно распечатать)</span></span>
     <span class="big-cta">Начать →</span>
+  </button>
+    <button class="big-card mode-full-only" onclick="openNet()">
+    <span class="big-ico">🌐</span>
+    <span class="big-body"><b>Сетевая игра</b><span>Ведущий и игроки на разных телефонах</span></span>
+    <span class="big-cta">Открыть →</span>
   </button>
    <div class="tile-row">
     <button class="tile" onclick="showLog()">
@@ -1147,6 +1176,77 @@ body.light .modal h3{color:var(--red-d)}
 <div class="print-area" id="print-area"></div>
 <div class="toast" id="toast"></div>
 
+<!-- ============ SCREEN: NET ============ -->
+<div class="screen" id="screen-net">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Сетевая игра<small>ЧЕРЕЗ ИНТЕРНЕТ · КОМНАТА</small></h1>
+  </header>
+  <div class="net-hero">
+    <h2>Кто ты в этой игре?</h2>
+    <p>Ведущий крутит числа, игроки отмечают. Все телефоны должны быть в одном Wi-Fi или у ведущего включён хот-спот.</p>
+  </div>
+  <button class="big-card" onclick="netGoHost()">
+    <span class="big-ico">🎡</span>
+    <span class="big-body"><b>Я ведущий</b><span>Создам комнату, покажу код игрокам</span></span>
+    <span class="big-cta">Создать →</span>
+  </button>
+  <button class="big-card" onclick="netGoJoin()">
+    <span class="big-ico">🎴</span>
+    <span class="big-body"><b>Я игрок</b><span>Введу код комнаты и присоединюсь</span></span>
+    <span class="big-cta">Подключиться →</span>
+  </button>
+</div>
+
+<!-- ============ SCREEN: NET HOST ============ -->
+<div class="screen" id="screen-net-host">
+  <header>
+    <button class="back" onclick="netLeaveAndBack()">←</button>
+    <h1>Комната открыта<small>ПОКАЖИ КОД ИГРОКАМ</small></h1>
+  </header>
+  <div class="net-code-card">
+    <div class="net-code-label">КОД КОМНАТЫ</div>
+    <div class="net-code" id="net-room-code">----</div>
+    <div class="net-code-hint">Игроки: Сетевая игра → Я игрок → ввести этот код</div>
+  </div>
+  <div class="net-players">
+    <div class="net-players-title">
+      <span>Подключились</span>
+      <span id="net-players-count">0</span>
+    </div>
+    <div class="net-players-list" id="net-players-list">
+      <div class="net-empty">Пока никто. Ждём игроков…</div>
+    </div>
+  </div>
+  <div class="actions" style="margin-top:auto">
+    <button class="btn btn-secondary" onclick="netLeaveAndBack()" style="flex:1">Закрыть комнату</button>
+    <button class="btn btn-primary" onclick="netStartHostGame()" style="flex:1">Начать раунд →</button>
+  </div>
+</div>
+
+<!-- ============ SCREEN: NET JOIN ============ -->
+<div class="screen" id="screen-net-join">
+  <header>
+    <button class="back" onclick="navBack()">←</button>
+    <h1>Подключение<small>ВВЕДИ КОД И ИМЯ</small></h1>
+  </header>
+  <div class="net-hero">
+    <h2>Код комнаты</h2>
+    <p>Ведущий покажет его на своём экране. Обычно 4 символа.</p>
+  </div>
+  <input class="net-code-input" id="net-join-code" type="text" inputmode="text" autocomplete="off" autocorrect="off" autocapitalize="characters" spellcheck="false" maxlength="6" placeholder="КОД">
+  <div class="net-hero" style="margin-top:14px">
+    <h2>Твоё имя</h2>
+    <p>Увидят ведущий и другие игроки.</p>
+  </div>
+  <input class="net-name-input" id="net-join-name" type="text" maxlength="20" placeholder="Например, Миша">
+  <div class="actions" style="margin-top:auto">
+    <button class="btn btn-primary" onclick="netDoJoin()" style="flex:1">Подключиться →</button>
+  </div>
+</div>
+
+<script src="net-p2p.js"></script>
+  
 <script>
 /* =========================================================
    СЕКС БИНГО — полный JS
@@ -1720,6 +1820,191 @@ function toast(msg, ms=1800){
   t._t = setTimeout(()=>t.classList.remove('show'), ms);
 }
 
+// ============ NETWORK ============
+let netMode = false;       // true, когда играем в сети
+let netAsHost = false;     // мы хост?
+let netAsPlayer = false;   // мы игрок?
+
+function openNet(){
+  showScreen('net');
+}
+
+function netGoHost(){
+  const name = state.host.hostName || 'Ведущий';
+  showScreen('net-host');
+  document.getElementById('net-room-code').textContent = '----';
+  document.getElementById('net-players-list').innerHTML = '<div class="net-empty">Создаём комнату…</div>';
+  document.getElementById('net-players-count').textContent = '0';
+  SexBingoNet.createRoom(name).catch(err => {
+    toast('Не удалось создать комнату: ' + err.message, 3000);
+    navBack();
+  });
+}
+
+function netGoJoin(){
+  const inp = document.getElementById('net-join-code');
+  inp.value = '';
+  const nm = document.getElementById('net-join-name');
+  nm.value = state.player.playerName || '';
+  showScreen('net-join');
+  setTimeout(()=>inp.focus(), 200);
+}
+
+function netDoJoin(){
+  const code = (document.getElementById('net-join-code').value || '').toUpperCase().trim();
+  const name = (document.getElementById('net-join-name').value || '').trim() || 'Игрок';
+  if(code.length < 3){ toast('Введи код комнаты'); return; }
+  toast('Подключаемся…', 1200);
+  SexBingoNet.joinRoom(code, name).catch(err => {
+    toast('Ошибка: ' + err.message, 3000);
+  });
+}
+
+function netLeaveAndBack(){
+  SexBingoNet.leave();
+  netMode = false;
+  netAsHost = false;
+  netAsPlayer = false;
+  showScreen('menu');
+}
+
+function netStartHostGame(){
+  if(netMode && netAsHost){
+    showScreen('host');
+    return;
+  }
+  // Подтверждение: с этого момента спин рассылается игрокам
+  netMode = true;
+  netAsHost = true;
+  netAsPlayer = false;
+  state.host.log = [];
+  state.host.current = null;
+  state.host.round += 1;
+  state.host.startedAt = Date.now();
+  save();
+  showScreen('host');
+  toast('Режим ведущего · спины рассылаются игрокам', 2500);
+}
+
+// ============ ПОДПИСКИ НА СОБЫТИЯ СЕТИ ============
+if(window.SexBingoNet){
+  SexBingoNet.on('room-created', (data) => {
+    document.getElementById('net-room-code').textContent = data.roomCode;
+    document.getElementById('net-players-list').innerHTML = '<div class="net-empty">Пока никто. Ждём игроков…</div>';
+    renderNetPlayers();
+  });
+
+  SexBingoNet.on('player-joined', (data) => {
+    toast('Подключился: ' + data.playerName, 1800);
+    renderNetPlayers();
+  });
+
+  SexBingoNet.on('player-left', (data) => {
+    toast('Отключился: ' + data.playerName, 1800);
+    renderNetPlayers();
+  });
+
+  SexBingoNet.on('joined', (data) => {
+    netMode = true;
+    netAsHost = false;
+    netAsPlayer = true;
+    toast('Комната ' + data.roomCode + ' · ведущий: ' + data.hostName, 2200);
+    // Показать карточку игрока; если её нет — собрать
+    const L = layoutOf(state.player.layout);
+    if(state.player.setupDone && state.player.wishes.length === L.total){
+      showScreen('player');
+    } else {
+      showScreen('setup');
+    }
+  });
+
+  SexBingoNet.on('join-error', (data) => {
+    toast('Не удалось: ' + data.reason, 3000);
+  });
+
+  SexBingoNet.on('spin', (data) => {
+    // Игрок получил число от ведущего
+    if(!netAsPlayer) return;
+    markFromNetwork(data.n);
+  });
+
+  SexBingoNet.on('reset', () => {
+    if(!netAsPlayer) return;
+    const L = layoutOf(state.player.layout);
+    state.player.marksW = Array(L.total).fill(false);
+    state.player.marksT = Array(L.total).fill(false);
+    state.player.bingo = false;
+    state.player._bingoSet = [];
+    renderPlayer();
+    save();
+    toast('Новый раунд', 1500);
+  });
+
+  SexBingoNet.on('bingo', (data) => {
+    // Ведущий узнал про бинго игрока
+    if(!netAsHost) return;
+    playGong();
+    const alert = document.getElementById('host-bingo-alert');
+    if(alert){
+      alert.classList.add('show');
+      alert.textContent = '🎉 ' + (data.playerName || 'Игрок').toUpperCase() + ' — БИНГО!';
+    }
+    toast('🎉 ' + data.playerName + ' собрал линию!', 3500);
+  });
+
+  SexBingoNet.on('disconnected', () => {
+    if(!netMode) return;
+    toast('Связь с сервером потеряна', 3000);
+  });
+
+  SexBingoNet.on('host-left', () => {
+    toast('Ведущий закрыл комнату', 3000);
+    netMode = false;
+    netAsHost = false;
+    netAsPlayer = false;
+    showScreen('menu');
+  });
+}
+
+function renderNetPlayers(){
+  const list = document.getElementById('net-players-list');
+  const counter = document.getElementById('net-players-count');
+  if(!list) return;
+  const st = SexBingoNet.getState();
+  const players = st.players || [];
+  counter.textContent = players.length;
+  if(players.length === 0){
+    list.innerHTML = '<div class="net-empty">Пока никто. Ждём игроков…</div>';
+    return;
+  }
+  list.innerHTML = players.map(p =>
+    '<span class="net-player-chip">' + escapeHtml(p.name) + '</span>'
+  ).join('');
+}
+
+// Приём числа от ведущего — то же, что и ручной ввод, но без вибрации
+function markFromNetwork(n){
+  if(!n || n < 1 || n > WISHES.length) return;
+  let found = false;
+  const iw = state.player.wishes.indexOf(n);
+  if(iw >= 0){
+    if(!state.player.marksW[iw]){ pushUndo({grid:'wishes', index:iw, prev:false}); }
+    state.player.marksW[iw] = true;
+    found = true;
+  }
+  const it = state.player.taboos.indexOf(n);
+  if(it >= 0){
+    if(!state.player.marksT[it]){ pushUndo({grid:'taboos', index:it, prev:false}); }
+    state.player.marksT[it] = true;
+    found = true;
+  }
+  if(found){
+    playMark();
+    if(navigator.vibrate) navigator.vibrate(30);
+    renderPlayer();
+    save();
+  }
+}  
 
 // ============ DICE (тап по кубику) ============
 let dicePoseIndex = 0;
@@ -2409,8 +2694,12 @@ function spin(){
   const el = document.getElementById('host-number');
   el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   if(navigator.vibrate) navigator.vibrate(40);
-  renderHost();
+   renderHost();
   save();
+  // Если мы ведущий в сетевой игре — рассылаем число
+  if(netMode && netAsHost && window.SexBingoNet){
+    try{ SexBingoNet.spin(n); }catch(e){}
+  }
 }
 function resetHost(){
   if(state.host.log.length === 0){ toast('Журнал пуст'); return; }
@@ -2424,6 +2713,10 @@ function resetHost(){
     if(state.player) state.player.bingo = false;
     renderHost();
     save();
+    // Если мы в сетевой игре — рассылаем сброс
+    if(netMode && netAsHost && window.SexBingoNet){
+      try{ SexBingoNet.reset(); }catch(e){}
+    }
     toast('Новый раунд №' + state.host.round);
     return;
   }
@@ -2942,11 +3235,16 @@ function checkBingo(){
     banner.classList.add('show');
     if(!state.player.bingo){
       state.player.bingo = true;
-      playGong();
+        playGong();
       showBingoOverlay(
-        (state.player.playerName ? state.player.playerName + ', т' : 'Т') + 'ы собрал линию! Скажи ведущему.'
+        (state.player.playerName ? state.player.playerName + ', т' : 'Т') + 'ы собрал линию!' +
+        (netAsPlayer ? ' Ведущий уже знает.' : ' Скажи ведущему.')
       );
       markBingoInLog();
+      // Если мы игрок в сетевой — сообщаем ведущему
+      if(netMode && netAsPlayer && window.SexBingoNet){
+        try{ SexBingoNet.sendBingo(); }catch(e){}
+      }
     }
   } else {
     banner.classList.remove('show');
