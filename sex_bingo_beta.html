@@ -713,13 +713,11 @@ body.light .modal h3{color:var(--red-d)}
 
 <!-- ============ SCREEN: HOST ============ -->
 <div class="screen" id="screen-host">
-  <header>
+ <header>
     <button class="back" onclick="navBack()">←</button>
-    <h1>Ведущий<small>РАУНД <span id="host-round">1</span> · <span id="host-count">0</span>/<span id="host-total">150</span></small></h1>
-    <button class="icon-btn mode-full-only" onclick="openHostName()" title="Имя ведущего" id="host-name-btn">👤</button>
+    <h1>Ведущий<small><span id="host-count">0</span> из <span id="host-total">150</span></small></h1>
     <button class="icon-btn" id="host-card-btn" onclick="openPlayerFromHost()" title="Моя карточка">🎴</button>
     <button class="icon-btn" onclick="showLog()" title="Журнал">📋</button>
-    <button class="icon-btn" onclick="resetHost()" title="Новый раунд">↻</button>
   </header>
   <div class="host-display">
     <div class="big-number" id="host-number">—</div>
