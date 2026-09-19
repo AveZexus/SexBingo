@@ -1395,17 +1395,38 @@ body.light .qr-stage-label{color:var(--accent)}
 <div class="screen" id="screen-net-qr-host">
   <header>
     <button class="back" onclick="netLeaveAndBack()">←</button>
-    <h1>Покажи QR игроку<small>ОН СКАНИРУЕТ ЕГО КАМЕРОЙ</small></h1>
+    <h1>Комната QR<small>ПОДКЛЮЧАЙ ИГРОКОВ ПО ОДНОМУ</small></h1>
   </header>
-  <div class="qr-stage">
-    <div class="qr-stage-label">ШАГ 1 · Покажи этот QR игроку</div>
-    <div class="qr-canvas-wrap" id="qr-host-canvas"></div>
-    <div class="qr-stage-hint" id="qr-host-hint">Готовим QR, подожди пару секунд…</div>
+
+  <!-- Состояние 1: показываем QR для нового игрока -->
+  <div id="qr-host-qr-state" style="display:none;flex-direction:column;flex:1;min-height:0">
+    <div class="qr-stage">
+      <div class="qr-stage-label" id="qr-host-step">ШАГ 1 · ПОКАЖИ QR ИГРОКУ</div>
+      <div class="qr-canvas-wrap" id="qr-host-canvas"></div>
+      <div class="qr-stage-hint" id="qr-host-hint">Готовим QR…</div>
+    </div>
+    <div class="qr-stage-state" id="qr-host-state">Ждём игрока</div>
+    <div class="actions" style="margin-top:auto">
+      <button class="btn btn-secondary" onclick="netQrHostCancelAdd()" style="flex:1">Отмена</button>
+      <button class="btn btn-primary" onclick="netQrHostScanAnswer()" style="flex:1">Сканировать ответ →</button>
+    </div>
   </div>
-  <div class="qr-stage-state" id="qr-host-state">Ждём первого игрока</div>
-  <div class="actions" style="margin-top:auto">
-    <button class="btn btn-secondary" onclick="netQrHostCancel()" style="flex:1">Отмена</button>
-    <button class="btn btn-primary" onclick="netQrHostScanAnswer()" style="flex:1">Сканировать ответ →</button>
+
+  <!-- Состояние 2: лобби со списком игроков -->
+  <div id="qr-host-lobby-state" style="display:none;flex-direction:column;flex:1;min-height:0">
+    <div class="net-players" style="flex-shrink:0">
+      <div class="net-players-title">
+        <span>Подключились</span>
+        <span id="qr-host-players-count">0</span>
+      </div>
+      <div class="net-players-list" id="qr-host-players-list">
+        <div class="net-empty">Пока никто. Жми «Добавить игрока».</div>
+      </div>
+    </div>
+    <div class="actions" style="margin-top:auto">
+      <button class="btn btn-secondary" onclick="netQrHostAddPlayer()" style="flex:1">➕ Добавить игрока</button>
+      <button class="btn btn-primary" onclick="netQrHostStartGame()" style="flex:1" id="qr-host-start-btn">Начать →</button>
+    </div>
   </div>
 </div>
 
