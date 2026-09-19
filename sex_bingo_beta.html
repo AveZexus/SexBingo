@@ -728,6 +728,7 @@ body.light .modal h3{color:var(--red-d)}
   </div>
   <div class="host-bingo-alert mode-full-only" id="host-bingo-alert">🎉 У ИГРОКА БИНГО!</div>
   <div class="host-actions">
+    <button class="btn-announce" onclick="resetHost()" title="Новый раунд">↻</button>
     <button class="btn-announce" onclick="announceBingo()" title="Объявить БИНГО">📢</button>
     <button class="btn-spin waiting" id="btn-spin" onclick="spin()">
       <span class="btn-spin-icon">🎲</span>
@@ -895,6 +896,9 @@ body.light .modal h3{color:var(--red-d)}
       <div class="toggle-row">
         <span>🌞 Светлая тема</span>
         <div class="toggle-switch" id="toggle-theme" onclick="event.stopPropagation();toggleTheme()"></div>
+           <div class="dev-row" style="margin-top:10px">
+        <button class="btn-alt" onclick="openHostName()" style="width:100%">👤 Имя ведущего</button>
+      </div>
       </div>
     </div>
   </div>
