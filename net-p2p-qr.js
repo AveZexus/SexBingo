@@ -50,7 +50,7 @@
 
   // ============ ICE WAIT ============
   function waitIceComplete(pc, timeout){
-    timeout = timeout || 5000;
+    timeout = timeout || 700;
     return new Promise(resolve => {
       if(pc.iceGatheringState === 'complete') return resolve();
       let done = false;
@@ -71,10 +71,12 @@
   // ============ PEER CREATION ============
   function createPc(isInitiator){
     return new RTCPeerConnection({
-      iceServers: [
-        { urls: 'stun:stun.l.google.com:19302' },
-        { urls: 'stun:stun1.l.google.com:19302' }
-      ]
+      // В локальной сети STUN не нужен. Только host candidates.
+      // Это уменьшает SDP в 2-3 раза — иначе QR не помещается.
+      iceServers: [],
+      iceCandidatePoolSize: 0,
+      bundlePolicy: 'max-bundle',
+      rtcpMuxPolicy: 'require'
     });
   }
 
@@ -265,14 +267,25 @@
       await pc.setLocalDescription(offer);
       await waitIceComplete(pc, 5000);
 
-      const sdp = JSON.stringify({ sdp: pc.localDescription });
+     const sdp = JSON.stringify({ sdp: pc.localDescription });
       const compressed = LZString.compressToBase64(sdp);
       const payload = PREFIX_OFFER + compressed;
+
+      console.log('[QR] SDP size:', sdp.length, '→ compressed:', payload.length);
+
+      if(payload.length > 2800){
+        console.warn('[QR] Payload too big:', payload.length);
+        toast('QR получился слишком большим (' + payload.length + ' симв). Пробуем ещё раз…', 3000);
+        // Один повтор — иногда ICE успевает собраться меньше
+        hostCancelAdd();
+        setTimeout(() => addPlayerForCurrentHost(), 500);
+        return;
+      }
 
       if(!renderQRToContainer('qr-host-canvas', payload)) return;
 
       document.getElementById('qr-host-hint').textContent =
-        'Игрок: «Сетевая игра → Сканировать QR». Держите экраны рядом.';
+        'Игрок: «Сетевая игра → Сканировать QR». Держите экраны рядом. Размер: ' + payload.length;
     }catch(err){
       log('Add player error:', err);
       toast2('Не удалось создать QR: ' + err.message, 3000);
@@ -428,6 +441,8 @@
       const compressed = LZString.compressToBase64(sdp);
       const payload = PREFIX_ANSWER + compressed;
 
+      console.log('[QR] Answer SDP size:', sdp.length, '→ compressed:', payload.length);
+       
       showScreenSafe('net-qr-answer');
       document.getElementById('qr-answer-hint').textContent = 'Готовим QR…';
       document.getElementById('qr-answer-state').textContent = 'Ждём подтверждения от ведущего';
