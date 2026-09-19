@@ -1172,7 +1172,11 @@ body.light .net-hero h2{color:var(--red-d)}
     <p style="font-size:12px;color:var(--muted);font-style:italic">Спасибо ❤️ что играете. Веселитесь, но не забывайте про уважение и здравый смысл.</p>
   </div>
 </div>
-
+<div class="net-number-pop" id="net-number-pop">
+  <div class="net-pop-num" id="net-pop-num">0</div>
+  <div class="net-pop-text" id="net-pop-text"></div>
+  <div class="net-pop-tag" id="net-pop-tag"></div>
+</div>
 <div class="print-area" id="print-area"></div>
 <div class="toast" id="toast"></div>
 
@@ -2694,11 +2698,19 @@ function spin(){
   const el = document.getElementById('host-number');
   el.classList.remove('pop'); void el.offsetWidth; el.classList.add('pop');
   if(navigator.vibrate) navigator.vibrate(40);
-   renderHost();
+  renderHost();
   save();
-  // Если мы ведущий в сетевой игре — рассылаем число
+  // Если мы ведущий в сетевой игре — рассылаем число игрокам
   if(netMode && netAsHost && window.SexBingoNet){
     try{ SexBingoNet.spin(n); }catch(e){}
+  }
+  // Если у ведущего тоже есть своя карточка (режим «Ведущий + Игрок») —
+  // отмечаем число и у себя, и показываем плашку
+  const L = layoutOf(state.player.layout);
+  const hasCard = state.player.setupDone && state.player.wishes.length === L.total;
+  if(hasCard){
+    const matched = markFromNetwork(n);
+    showNetNumber(n, matched);
   }
 }
 function resetHost(){
