@@ -1930,7 +1930,7 @@ let navIndex = 0;
 
 function _renderScreen(id){
   // Защита от захода в служебные экраны в простом режиме
-  if(currentMode === 'quick' && ['dev','stats'].includes(id)){
+   if(currentMode === 'quick' && ['dev','stats','setup'].includes(id)){
     id = 'menu';
   }
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
@@ -2000,21 +2000,33 @@ function openPlayer(){
   const L = layoutOf(state.player.layout);
   if(state.player.setupDone && state.player.wishes.length === L.total){
     showScreen('player');
-  } else {
-    showScreen('setup');
+    return;
   }
+  // В простом режиме — сразу собираем авто-карточку, без экрана setup
+  if(currentMode === 'quick'){
+    state.player = makeCard('3x5', false, '');
+    save();
+    showScreen('player');
+    return;
+  }
+  showScreen('setup');
 }
 function openPlayerFromHost(){
   const L = layoutOf(state.player.layout);
   if(state.player.setupDone && state.player.wishes.length === L.total){
     showScreen('player');
-  } else {
-    // Карточки нет — ведём на сборку и подсказываем
-    showScreen('setup');
-    setTimeout(()=>{
-      toast('Собери карточку — потом вернёшься сюда к ведущему', 2500);
-    }, 400);
+    return;
   }
+  if(currentMode === 'quick'){
+    state.player = makeCard('3x5', false, '');
+    save();
+    showScreen('player');
+    return;
+  }
+  showScreen('setup');
+  setTimeout(()=>{
+    toast('Собери карточку — потом вернёшься сюда к ведущему', 2500);
+  }, 400);
 }
 function accept18(){
   state.accepted18 = true;
@@ -3330,12 +3342,21 @@ function makeCard(layoutKey, withTaboos, playerName){
   };
 }
 function goToSetup(){
+  // В простом режиме кнопка «Новая карточка» пересобирает сразу на месте
+  if(currentMode === 'quick'){
+    if(!confirm('Собрать новую карточку?')) return;
+    state.player = makeCard('3x5', false, '');
+    save();
+    renderPlayer();
+    toast('Новая карточка готова');
+    return;
+  }
   if(!confirm('Собрать новую карточку? Текущие отметки сбросятся.')) return;
-  pendingLayout = (currentMode === 'quick') ? '3x5' : (state.player.layout || '3x5');
-  pendingWithTaboos = (currentMode === 'quick') ? false : ((typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true);
+  pendingLayout = state.player.layout || '3x5';
+  pendingWithTaboos = (typeof state.player.withTaboos === 'boolean') ? state.player.withTaboos : true;
   state.player = Object.assign(defaultPlayerState(), {
     layout: pendingLayout,
-    playerName: (currentMode === 'full') ? (state.player.playerName || '') : '',
+    playerName: state.player.playerName || '',
     withTaboos: pendingWithTaboos
   });
   save();
