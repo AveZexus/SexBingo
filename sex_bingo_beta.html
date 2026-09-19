@@ -149,6 +149,17 @@ body.light .logo .slogan{color:#fff}
 .small-card .small-body{flex:1;min-width:0}
 .small-card .small-body b{display:block;font-size:13.5px;font-weight:700;margin-bottom:2px}
 .small-card .small-body span{font-size:10.5px;color:var(--muted);line-height:1.3}
+.tile-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:14px;margin-bottom:10px}
+.tile{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
+  padding:16px 8px;min-height:88px;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:16px;color:var(--text);font-family:inherit;
+  cursor:pointer;transition:transform .15s cubic-bezier(.22,1,.36,1),background .2s;
+}
+.tile:active{transform:scale(.96);background:var(--card2)}
+.tile-ico{font-size:26px;line-height:1}
+.tile-label{font-size:12px;font-weight:600;letter-spacing:.2px;text-align:center;color:var(--text-2)}
 .help-card{display:flex;align-items:center;gap:14px;padding:16px 18px;min-height:64px;background:linear-gradient(135deg,rgba(139,42,85,.12) 0%,rgba(92,26,56,.18) 100%);border:1px solid rgba(168,54,100,.35);border-radius:16px;margin-top:16px;margin-bottom:10px;cursor:pointer;transition:transform .15s cubic-bezier(.22,1,.36,1);text-align:left;color:var(--text);width:100%;font-family:inherit}
 .help-card:active{transform:scale(.985)}
 .help-card .help-ico{font-size:24px;flex-shrink:0}
@@ -158,14 +169,22 @@ body.light .help-card .help-body b{color:var(--red-d)}
 .help-card .help-body span{font-size:11px;color:var(--muted);line-height:1.3}
 .help-card .help-arrow{color:var(--red-b);font-size:18px;font-weight:900;flex-shrink:0}
 
-.quick-toggles{margin-top:14px;margin-bottom:8px}
-.quick-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-bottom:6px;font-size:13px;cursor:pointer;font-family:inherit;color:var(--text)}
+.quick-toggles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px;margin-bottom:10px}
+.quick-toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:14px;font-size:15px;cursor:pointer;font-family:inherit;color:var(--text);transition:background .15s}
 .quick-toggle-row:active{background:var(--card2)}
 .quick-toggle-row .toggle-switch{width:42px;height:24px}
 .quick-toggle-row .toggle-switch::after{width:18px;height:18px}
 .quick-toggle-row .toggle-switch.on::after{left:21px}
-.mode-switch-link{display:block;width:100%;padding:12px;background:transparent;border:none;color:var(--muted);font-size:12px;font-style:italic;cursor:pointer;text-align:center;margin-top:4px;margin-bottom:14px;font-family:inherit}
-.mode-switch-link:active{color:var(--red-b)}
+.mode-switch-link{
+  display:block;width:100%;padding:14px;margin-top:6px;margin-bottom:14px;
+  background:transparent;
+  border:1px dashed var(--line);
+  border-radius:14px;
+  color:var(--muted);font-size:13.5px;font-weight:500;
+  cursor:pointer;text-align:center;font-family:inherit;
+  transition:background .15s,color .15s,border-color .15s;
+}
+.mode-switch-link:active{background:var(--card);color:var(--text-2);border-color:var(--accent)}
 
 .mode-h{font-size:22px;font-weight:800;text-align:center;margin:20px 0 24px;letter-spacing:.3px}
 .mode-card{display:flex;align-items:flex-start;gap:14px;padding:20px 18px;background:var(--card);border:1px solid var(--line);border-left:4px solid var(--red);border-radius:18px;margin-bottom:14px;cursor:pointer;text-align:left;color:var(--text);width:100%;font-family:inherit;transition:.15s}
@@ -755,26 +774,27 @@ body.light .modal h3{color:var(--red-d)}
     <span class="big-body"><b>Игрок</b><span>Начать игру с картой (можно распечатать)</span></span>
     <span class="big-cta">Начать →</span>
   </button>
-  <button class="small-card" onclick="showLog()">
-    <span class="small-ico">📋</span>
-    <span class="small-body"><b>Журнал раунда</b><span>Таблица выпавших чисел · экспорт · печать</span></span>
-  </button>
-  <button class="small-card" onclick="showScreen('list')">
-    <span class="small-ico">📜</span>
-    <span class="small-body"><b>Список</b><span>Все пункты с категориями</span></span>
-  </button>
-  <button class="help-card" onclick="openHelp()">
-    <span class="help-ico">❓</span>
-    <span class="help-body"><b id="help-card-title">Как в это играть???</b><span>Правила и описание работы приложения</span></span>
-    <span class="help-arrow">›</span>
-  </button>
-  <div class="quick-toggles">
+   <div class="tile-row">
+    <button class="tile" onclick="showLog()">
+      <span class="tile-ico">📋</span>
+      <span class="tile-label">Журнал</span>
+    </button>
+    <button class="tile" onclick="showScreen('list')">
+      <span class="tile-ico">📜</span>
+      <span class="tile-label">Список</span>
+    </button>
+    <button class="tile" onclick="openHelp()">
+      <span class="tile-ico">❓</span>
+      <span class="tile-label" id="help-card-title">Правила</span>
+    </button>
+  </div>
+ <div class="quick-toggles">
     <div class="quick-toggle-row" onclick="toggleSound()">
-      <span>🔊 Звук</span>
+      <span>🔊</span>
       <div class="toggle-switch" id="qt-sound"></div>
     </div>
     <div class="quick-toggle-row" onclick="toggleTheme()">
-      <span>🌞 Светлая тема</span>
+      <span>🌞</span>
       <div class="toggle-switch" id="qt-theme"></div>
     </div>
   </div>
