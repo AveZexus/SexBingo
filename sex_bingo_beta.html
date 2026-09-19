@@ -212,6 +212,33 @@ body:not(.light) .cat-tag.c1{color:#d8b878}
 body:not(.light) .cat-tag.c2{color:#d88898}
 .wish-text{font-size:clamp(15px,4.5vw,22px);line-height:1.35;font-weight:500;max-width:600px;padding:0 6px;word-wrap:break-word}
 .host-history{margin-top:12px;padding:10px 14px;background:var(--card);border-radius:14px;max-height:80px;overflow-y:auto;font-size:13px;line-height:1.6;color:var(--muted);flex-shrink:0}
+/* Новые стили экрана ведущего */
+.host-actions{display:flex;gap:10px;margin-top:14px;flex-shrink:0;padding-bottom:4px;width:100%}
+.btn-announce{
+  flex:0 0 64px;height:72px;border-radius:20px;
+  background:var(--card2);border:1px solid var(--line);
+  color:var(--text);font-size:26px;cursor:pointer;
+  transition:transform .15s cubic-bezier(.22,1,.36,1),background .2s;
+}
+.btn-announce:active{transform:scale(.94);background:var(--card3)}
+.btn-spin{
+  flex:1;height:72px;border-radius:20px;
+  background:linear-gradient(135deg,var(--accent),var(--accent-hover));
+  border:none;color:#fff;font-family:inherit;font-size:17px;font-weight:600;
+  letter-spacing:1.5px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  transition:transform .15s cubic-bezier(.22,1,.36,1),box-shadow .2s;
+  box-shadow:0 8px 32px var(--accent-glow);
+}
+.btn-spin:active{transform:scale(.97)}
+.btn-spin:disabled{background:var(--card2);color:var(--muted);box-shadow:none;cursor:default}
+.btn-spin-icon{font-size:26px;line-height:1}
+.btn-spin-text{letter-spacing:2px}
+.btn-spin.waiting{animation:glowPulse 2.4s ease-in-out infinite}
+@keyframes glowPulse{
+  0%,100%{box-shadow:0 8px 32px var(--accent-glow)}
+  50%{box-shadow:0 8px 48px var(--accent-glow),0 0 80px var(--accent-glow)}
+}
 .host-history b{color:var(--text);font-weight:600}
 .host-bingo-alert{display:none;margin-top:10px;padding:14px;background:linear-gradient(135deg,#8b0000,var(--accent-hover));border-radius:12px;text-align:center;font-weight:900;font-size:17px;letter-spacing:2px;color:#ffd700;text-shadow:0 2px 8px rgba(0,0,0,.5);animation:pulse 1s infinite alternate;flex-shrink:0}
 .host-bingo-alert.show{display:block}
@@ -693,22 +720,24 @@ body.light .modal h3{color:var(--red-d)}
 <div class="screen" id="screen-host">
   <header>
     <button class="back" onclick="navBack()">←</button>
-    <h1>Ведущий<small>РАУНД <span id="host-round">1</span> · ВЫПАЛО <span id="host-count">0</span>/<span id="host-total">150</span></small></h1>
+    <h1>Ведущий<small>РАУНД <span id="host-round">1</span> · <span id="host-count">0</span>/<span id="host-total">150</span></small></h1>
     <button class="icon-btn mode-full-only" onclick="openHostName()" title="Имя ведущего" id="host-name-btn">👤</button>
-    <button class="icon-btn" onclick="openPlayerFromHost()" title="Моя карточка игрока">🎴</button>
+    <button class="icon-btn" id="host-card-btn" onclick="openPlayerFromHost()" title="Моя карточка">🎴</button>
     <button class="icon-btn" onclick="showLog()" title="Журнал">📋</button>
+    <button class="icon-btn" onclick="resetHost()" title="Новый раунд">↻</button>
   </header>
   <div class="host-display">
     <div class="big-number" id="host-number">—</div>
     <span class="cat-tag" id="host-cat" style="display:none"></span>
     <div class="wish-text" id="host-text">Нажми «Крутить», чтобы начать</div>
   </div>
-  <div class="host-history" id="host-history" style="display:none"></div>
   <div class="host-bingo-alert mode-full-only" id="host-bingo-alert">🎉 У ИГРОКА БИНГО!</div>
-  <div class="actions">
-    <button class="btn btn-secondary" onclick="resetHost()" title="Новый раунд">↻</button>
-    <button class="btn btn-secondary" onclick="announceBingo()" title="Объявить БИНГО">📢</button>
-    <button class="btn btn-primary" id="btn-spin" onclick="spin()">КРУТИТЬ</button>
+  <div class="host-actions">
+    <button class="btn-announce" onclick="announceBingo()" title="Объявить БИНГО">📢</button>
+    <button class="btn-spin waiting" id="btn-spin" onclick="spin()">
+      <span class="btn-spin-icon">🎲</span>
+      <span class="btn-spin-text">КРУТИТЬ</span>
+    </button>
   </div>
 </div>
 
@@ -2072,17 +2101,19 @@ function renderHost(){
     } else cat.style.display='none';
     document.getElementById('host-text').textContent = wishText(n);
   }
-  const h = document.getElementById('host-history');
-  if(total === 0){ h.style.display='none'; h.innerHTML=''; }
-  else {
-    h.style.display='block';
-    h.innerHTML = state.host.log.slice().reverse().slice(0,15)
-      .map(x=>{
-        const b = x.bingo ? ' 🎉' : '';
-        return '<b>' + x.n + '</b> · ' + escapeHtml(logText(x)) + b;
-      }).join('<br>');
+
+ const spinBtn = document.getElementById('btn-spin');
+  if(spinBtn){
+    spinBtn.disabled = total >= WISHES.length;
+    spinBtn.classList.toggle('waiting', total === 0 && !spinBtn.disabled);
   }
-  document.getElementById('btn-spin').disabled = total >= WISHES.length;
+  // 🎴 показываем только если у игрока есть готовая карточка
+  const cardBtn = document.getElementById('host-card-btn');
+  if(cardBtn){
+    const L = layoutOf(state.player.layout);
+    const hasCard = state.player.setupDone && state.player.wishes.length === L.total;
+    cardBtn.style.display = hasCard ? '' : 'none';
+  }
   const alert = document.getElementById('host-bingo-alert');
   if(state.player && state.player.bingo){
     alert.classList.add('show');
