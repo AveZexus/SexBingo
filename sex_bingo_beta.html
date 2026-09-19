@@ -533,6 +533,66 @@ body.light .net-hero h2{color:var(--red-d)}
 .toast{position:fixed;bottom:max(24px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%) translateY(140px);background:var(--card2);padding:14px 22px;border-radius:16px;font-size:14.5px;transition:transform .35s cubic-bezier(.22,1,.36,1);z-index:200;pointer-events:none;border:1px solid var(--line);max-width:92vw;text-align:center;color:var(--text);box-shadow:var(--shadow-md)}
 .toast.show{transform:translateX(-50%) translateY(0)}
 
+/* ============ NET NUMBER POP ============ */
+.net-number-pop{
+  position:fixed;
+  top:max(20px,env(safe-area-inset-top));
+  left:50%;
+  transform:translateX(-50%) translateY(-120%);
+  z-index:400;
+  padding:18px 24px;
+  background:linear-gradient(135deg,var(--accent-deep),var(--accent));
+  border-radius:20px;
+  box-shadow:0 12px 40px rgba(0,0,0,.5),0 0 60px var(--accent-glow);
+  color:#fff;
+  text-align:center;
+  min-width:200px;
+  max-width:90vw;
+  pointer-events:none;
+  opacity:0;
+  transition:transform .35s cubic-bezier(.22,1,.36,1),opacity .3s;
+}
+.net-number-pop.show{
+  transform:translateX(-50%) translateY(0);
+  opacity:1;
+}
+.net-number-pop.miss{
+  background:linear-gradient(135deg,#3a2430,#5a3040);
+  box-shadow:0 12px 40px rgba(0,0,0,.5);
+}
+.net-pop-num{
+  font-size:52px;
+  font-weight:500;
+  line-height:1;
+  letter-spacing:-2px;
+  margin-bottom:8px;
+}
+.net-pop-text{
+  font-size:13.5px;
+  line-height:1.35;
+  color:rgba(255,255,255,.9);
+  margin-bottom:8px;
+  max-width:280px;
+  word-break:break-word;
+}
+.net-pop-tag{
+  display:inline-block;
+  padding:4px 12px;
+  border-radius:10px;
+  font-size:11.5px;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+}
+.net-pop-tag.hit{
+  background:rgba(255,255,255,.22);
+  color:#fff;
+}
+.net-pop-tag.miss{
+  background:rgba(255,255,255,.12);
+  color:rgba(255,255,255,.7);
+}
+  
 /* ============ NET QR ============ */
 .net-divider{
   text-align:center;font-size:12px;color:var(--muted);
@@ -2064,10 +2124,11 @@ if(window.SexBingoNet){
     toast('Не удалось: ' + data.reason, 3000);
   });
 
-  SexBingoNet.on('spin', (data) => {
+SexBingoNet.on('spin', (data) => {
     // Игрок получил число от ведущего
     if(!netAsPlayer) return;
-    markFromNetwork(data.n);
+    const matched = markFromNetwork(data.n);
+    showNetNumber(data.n, matched);
   });
 
   SexBingoNet.on('reset', () => {
@@ -2124,9 +2185,9 @@ function renderNetPlayers(){
   ).join('');
 }
 
-// Приём числа от ведущего — то же, что и ручной ввод, но без вибрации
+// Приём числа от ведущего — отмечает и возвращает true/false (попало в карточку или нет)
 function markFromNetwork(n){
-  if(!n || n < 1 || n > WISHES.length) return;
+  if(!n || n < 1 || n > WISHES.length) return false;
   let found = false;
   const iw = state.player.wishes.indexOf(n);
   if(iw >= 0){
@@ -2146,7 +2207,35 @@ function markFromNetwork(n){
     renderPlayer();
     save();
   }
-}  
+  return found;
+}
+
+// Всплывающая плашка с выпавшим числом
+let netPopTimer = null;
+function showNetNumber(n, matched){
+  const pop = document.getElementById('net-number-pop');
+  if(!pop) return;
+  document.getElementById('net-pop-num').textContent = n;
+  document.getElementById('net-pop-text').textContent = wishText(n);
+  const tag = document.getElementById('net-pop-tag');
+  if(matched){
+    tag.textContent = '✓ Есть в карточке';
+    tag.className = 'net-pop-tag hit';
+    pop.classList.remove('miss');
+  } else {
+    tag.textContent = '× Нет в карточке';
+    tag.className = 'net-pop-tag miss';
+    pop.classList.add('miss');
+  }
+  // Перезапуск анимации
+  pop.classList.remove('show');
+  void pop.offsetWidth;
+  pop.classList.add('show');
+  clearTimeout(netPopTimer);
+  netPopTimer = setTimeout(() => {
+    pop.classList.remove('show');
+  }, 2600);
+}
 
 // ============ DICE (тап по кубику) ============
 let dicePoseIndex = 0;
