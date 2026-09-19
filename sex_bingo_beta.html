@@ -1946,12 +1946,127 @@ function a2hsReset(){
 
 // ============ SOUND ============
 let audioCtx = null;
+let reverbNode = null;
+let noiseBuffers = {};
+
 function getAudioCtx(){
   if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   if(audioCtx.state === 'suspended') audioCtx.resume();
   return audioCtx;
 }
+
+// Программный reverb — сгенерированный impulse response
+function getReverb(ctx){
+  if(reverbNode && reverbNode._ctx === ctx) return reverbNode;
+  const duration = 2.5;
+  const length = Math.floor(ctx.sampleRate * duration);
+  const impulse = ctx.createBuffer(2, length, ctx.sampleRate);
+  for(let ch = 0; ch < 2; ch++){
+    const data = impulse.getChannelData(ch);
+    for(let i = 0; i < length; i++){
+      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, 2.5);
+    }
+  }
+  reverbNode = ctx.createConvolver();
+  reverbNode.buffer = impulse;
+  reverbNode._ctx = ctx;
+  return reverbNode;
+}
+
+// Кэшированный шумовой буфер
+function getNoiseBuffer(ctx, duration){
+  const key = Math.round(duration * 100);
+  if(noiseBuffers[key] && noiseBuffers[key]._ctx === ctx) return noiseBuffers[key];
+  const length = Math.floor(ctx.sampleRate * duration);
+  const buf = ctx.createBuffer(1, length, ctx.sampleRate);
+  const data = buf.getChannelData(0);
+  for(let i = 0; i < length; i++) data[i] = Math.random() * 2 - 1;
+  buf._ctx = ctx;
+  noiseBuffers[key] = buf;
+  return buf;
+}
+
+// СПИН — шорох шариков + мягкая нота
 function playDing(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    const t0 = ctx.currentTime;
+
+    // Шумовой слой — «шшш» шариков в барабане
+    const noise = ctx.createBufferSource();
+    noise.buffer = getNoiseBuffer(ctx, 0.55);
+    const nFilter = ctx.createBiquadFilter();
+    nFilter.type = 'bandpass';
+    nFilter.frequency.value = 1800;
+    nFilter.Q.value = 0.8;
+    const nGain = ctx.createGain();
+    nGain.gain.setValueAtTime(0.001, t0);
+    nGain.gain.exponentialRampToValueAtTime(0.055, t0 + 0.08);
+    nGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.5);
+    noise.connect(nFilter).connect(nGain).connect(ctx.destination);
+    noise.start(t0); noise.stop(t0 + 0.55);
+
+    // Мягкая нота — «динь» через lowpass, не резкий
+    const o = ctx.createOscillator();
+    const oFilter = ctx.createBiquadFilter();
+    const oGain = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(660, t0 + 0.08);
+    o.frequency.exponentialRampToValueAtTime(1320, t0 + 0.2);
+    oFilter.type = 'lowpass';
+    oFilter.frequency.value = 2600;
+    oGain.gain.setValueAtTime(0.001, t0 + 0.08);
+    oGain.gain.exponentialRampToValueAtTime(0.13, t0 + 0.10);
+    oGain.gain.exponentialRampToValueAtTime(0.001, t0 + 0.62);
+    o.connect(oFilter).connect(oGain).connect(ctx.destination);
+    o.start(t0 + 0.08); o.stop(t0 + 0.65);
+
+    // Немного reverb на ноту
+    const rev = ctx.createGain();
+    rev.gain.value = 0.35;
+    oGain.connect(rev).connect(getReverb(ctx));
+    getReverb(ctx).connect(ctx.destination);
+  }catch(e){}
+}
+
+// БИНГО — аккорд A-moll с reverb
+function playGong(){
+  if(!soundEnabled) return;
+  try{
+    const ctx = getAudioCtx();
+    const t0 = ctx.currentTime;
+    const freqs = [110, 220, 261.63, 329.63, 440, 523.25];
+    const gains = [0.22, 0.13, 0.10, 0.09, 0.06, 0.04];
+
+    const rev = getReverb(ctx);
+    rev.connect(ctx.destination);
+    const revSend = ctx.createGain();
+    revSend.gain.value = 0.55;
+    revSend.connect(rev);
+
+    freqs.forEach((f, i)=>{
+      const o = ctx.createOscillator();
+      const filt = ctx.createBiquadFilter();
+      const g = ctx.createGain();
+      o.type = 'sine';
+      o.frequency.value = f;
+      o.detune.value = (i - 2) * 4;  // лёгкая расстройка — «хор»
+      filt.type = 'lowpass';
+      filt.frequency.value = 3500;
+      g.gain.setValueAtTime(0.001, t0);
+      g.gain.exponentialRampToValueAtTime(gains[i], t0 + 0.03 + i * 0.01);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + 3.6 + i * 0.08);
+      o.connect(filt).connect(g);
+      g.connect(ctx.destination);
+      g.connect(revSend);
+      o.start(t0); o.stop(t0 + 4);
+    });
+  }catch(e){}
+}
+
+// ОТМЕТКА КЛЕТКИ — тихий кап
+function playMark(){
   if(!soundEnabled) return;
   try{
     const ctx = getAudioCtx();
@@ -1959,43 +2074,45 @@ function playDing(){
     const o = ctx.createOscillator();
     const g = ctx.createGain();
     o.type = 'sine';
-    o.frequency.setValueAtTime(880, t0);
-    o.frequency.exponentialRampToValueAtTime(1400, t0 + 0.09);
+    o.frequency.setValueAtTime(1400, t0);
+    o.frequency.exponentialRampToValueAtTime(650, t0 + 0.11);
     g.gain.setValueAtTime(0.001, t0);
-    g.gain.exponentialRampToValueAtTime(0.18, t0 + 0.012);
-    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.42);
-    o.connect(g); g.connect(ctx.destination);
-    o.start(t0); o.stop(t0 + 0.45);
+    g.gain.exponentialRampToValueAtTime(0.05, t0 + 0.008);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.22);
+    o.connect(g).connect(ctx.destination);
+    o.start(t0); o.stop(t0 + 0.24);
   }catch(e){}
 }
-function playGong(){
+
+// СОХРАНЕНИЕ В АРХИВ — деревянный «тук»
+function playSave(){
   if(!soundEnabled) return;
   try{
     const ctx = getAudioCtx();
     const t0 = ctx.currentTime;
-    const freqs  = [196.00, 293.66, 392.00, 587.33];
-    const gains  = [0.22,   0.15,   0.10,   0.06];
-    freqs.forEach((f, i)=>{
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.type = 'sine';
-      o.frequency.value = f;
-      g.gain.setValueAtTime(0.001, t0);
-      g.gain.exponentialRampToValueAtTime(gains[i], t0 + 0.02);
-      g.gain.exponentialRampToValueAtTime(0.001, t0 + 2.6);
-      o.connect(g); g.connect(ctx.destination);
-      o.start(t0); o.stop(t0 + 2.7);
-    });
-    const o2 = ctx.createOscillator();
-    const g2 = ctx.createGain();
-    o2.type = 'triangle';
-    o2.frequency.setValueAtTime(1200, t0);
-    o2.frequency.exponentialRampToValueAtTime(800, t0 + 0.15);
-    g2.gain.setValueAtTime(0.001, t0);
-    g2.gain.exponentialRampToValueAtTime(0.12, t0 + 0.01);
-    g2.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3);
-    o2.connect(g2); g2.connect(ctx.destination);
-    o2.start(t0); o2.stop(t0 + 0.35);
+
+    const noise = ctx.createBufferSource();
+    noise.buffer = getNoiseBuffer(ctx, 0.15);
+    const f = ctx.createBiquadFilter();
+    f.type = 'bandpass';
+    f.frequency.value = 600;
+    f.Q.value = 4;
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.001, t0);
+    g.gain.exponentialRampToValueAtTime(0.07, t0 + 0.005);
+    g.gain.exponentialRampToValueAtTime(0.001, t0 + 0.12);
+    noise.connect(f).connect(g).connect(ctx.destination);
+    noise.start(t0); noise.stop(t0 + 0.15);
+
+    const o = ctx.createOscillator();
+    const og = ctx.createGain();
+    o.type = 'sine';
+    o.frequency.value = 220;
+    og.gain.setValueAtTime(0.001, t0);
+    og.gain.exponentialRampToValueAtTime(0.05, t0 + 0.01);
+    og.gain.exponentialRampToValueAtTime(0.001, t0 + 0.16);
+    o.connect(og).connect(ctx.destination);
+    o.start(t0); o.stop(t0 + 0.18);
   }catch(e){}
 }
 
@@ -2335,8 +2452,9 @@ function confirmRoundName(repeat){
       state.player.undoStack = [];
     }
   }
-  renderHost();
+ renderHost();
   save();
+  playSave();
   toast(repeat ? 'Раунд ' + name + ' сохранён. Играем заново!' : 'Раунд сохранён: ' + name);
 }
 function cancelRoundName(){
@@ -2706,6 +2824,7 @@ d.className = 'cell c' + cat + (marks[i]?' hit':'') + (bingoSet.has(dataKey+i)?'
       const prev = state.player[marksKey][i];
       state.player[marksKey][i] = !prev;
       pushUndo({grid:dataKey, index:i, prev});
+      if(state.player[marksKey][i]) playMark();
       refreshGridCell(grid, i, marksKey, dataKey, scoreId, L);
       save();
     };
@@ -2776,6 +2895,7 @@ function markFromInput(){
   inp.value = '';
   if(found){
     if(navigator.vibrate) navigator.vibrate(30);
+    playMark();
     renderPlayer();
     save();
   } else {
